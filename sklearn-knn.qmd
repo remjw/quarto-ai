@@ -1,0 +1,478 @@
+---
+title: 1:k-Nearest Neighbors
+---
+
+> The code snippets on the page are NOT stand-alone; they should be run consecutively one after another in the order.
+
+> If running all the code snippets in one py script, unless you dynamically uncomment the print statements already tested, the output from all the prints might cause confusion (like the test data confuses a classification estimator). The best code format for AI/ML modeling and testing is a Jupyter Notebook (ipynb) file. In a notebook, organize the code by cells and run the cells one by one from top to bottom.
+
+> If your local Jupyter server won't run, always log in to your Google account, open [the Colab](https://colab.research.google.com/), and make a New Notebook. Do the work online on the Colab server.
+
+## Discussion
+
+Please study (*py4csds*) **book sections 15.1 through 15.3**. The sections presents a general introduction to two types of machine learning, supervised and unsupervised; followed by a walk-through of a case study of classification. The case applies **k-nearest neighbors** for identifying the digit in an image.
+
+The discussion is purposed to help you understand the following aspects of machine learning:
+
+-   Discuss two major types of machine learning: `supervised` and `unsupervised learning` in terms of learning output. Give each a couple of use cases.
+
+-   Know the meaning of `target/label/class` and `attribute/feature` in machine learning. Give an example.
+
+-   Describe the difference between `labeled data` and `unlabeled data`
+
+-   Describe both required data set and output expected from a classification process for supervised learning
+
+-   List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
+
+-   Describe the k-Nearest Neighbors algorithm. What is a lazy classifier/estimator? Why is an odd integer a better choice for number of neighbors in kNN estimators?
+
+-   Discuss the purpose of `data split` in supervised learning, and list the sklearn functions for splitting data into training and test sets.
+
+-   Describe the use of the popular Python libraries for machine learning: *Scikit-learn*, *Pandas*, *Matplotlib* and *Seaborn*.
+
+-   Discuss how to represent an gray-scaled image in a numerical 2-dimensional array (a 2D matrix), and map the color intensity to the integers from the lowest for white to the darkest for black
+
+-   Know the *matplotlib functions* for plotting a numerical 2-D array.
+
+-   Describe the `k-fold cross validation` method for model selection
+
+-   What are the hyperparameters of an estimator?
+
+-   Will the prediction cost (in terms of execution time) increase as the k value increases in the kNN estimator?
+
+-   Refer to [the Estimator Diagram](https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html). List the estimator candidates which is suitable for classifying a labeled dataset over 100K and below 100K, respectively.
+
+
+## Classification for Digit Recognition
+
+The following is a snippet of only 12 lines. Take a look (you do not need to run it) and see how **sklearn** makes the classification easy to implement.
+
+```{r echo=F}
+knitr::include_url("https://scikit-learn.org/stable/auto_examples/exercises/plot_digits_classification_exercise.html#sphx-glr-auto-examples-exercises-plot-digits-classification-exercise-py")
+```
+
+## Terms
+
+> Question: Define the following terms
+
+Classification, supervised learning, k-nearest neighbors, labeled data, label/class/target, attributes/features, training set, test set, Scikit-learn, estimator, Pandas,
+
+## Steps
+
+> Question: List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
+
+
+
+## Confusion Matrix
+
+```{python echo=T, eval=T, results='hold'}
+#| cap-location: margin
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# make two lists for expected/true and predicted/estimate target/label values
+expected = [2, 0, 0, 2, 4, 4, 1, 0, 3, 3, 3]
+predicted = [2, 1, 0, 2, 4, 3, 1, 0, 1, 3, 3]
+
+# Create confusion matrix
+cmat = confusion_matrix(expected, predicted)
+
+# Visualize confusion matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+ax.set_title('Confusion matrix')
+#plt.title('Confusion matrix')
+fig.colorbar(img)
+ticks = np.arange(5)
+ax.set_xticks(ticks)
+ax.set_yticks(ticks)
+ax.set_ylabel('True/expected labels')
+ax.set_xlabel('Predicted labels')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+
+# Classification report
+classes = ['Class-0', 'Class-1', 'Class-2', 'Class-3', 'Class-4']
+print('\n', classification_report(expected, predicted, target_names=classes))
+```
+
+
+
+
+
+
+## The digits Dataset
+
+```{r echo=F}
+knitr::include_url("https://scikit-learn.org/stable/auto_examples/datasets/plot_digits_last_image.html")
+```
+
+### Load data and check Type
+
+sklearn stores its datasets in a Bunch object, specific to Sklearn. Each Bunch object contains several components storing values and metadata of the dataset.
+
+```{python}
+from sklearn.datasets import load_digits
+digits = load_digits()
+print(type(digits))
+```
+
+### The features and target names
+
+```{python}
+print(digits.feature_names)
+print(digits.target_names)
+```
+
+### The sample and target sizes
+
+`digits.data` returns the samples. Each row is one sample. Each column in a given row represents one feature for that sample. `digits.target` returns the target values.
+
+```{python}
+# Data: number of rows, number of columns
+print(digits.data.shape)
+# target: one-dimensional array
+print(digits.target.shape)
+```
+
+### View target
+
+```{python}
+# display the target values of every 50th sample
+digits.target[::50] # Python slicing notation
+```
+
+### View a sample and its target value
+
+Each sample is represented by a 8 by 8 2d-array. Each element/cell value is for one pixel, indicating the intensity in grayscale shades from 0 (white) to 16 (black).
+
+```{python}
+# 
+digits.images[599]
+```
+
+```{python}
+# the target of the sample
+digits.target[599]
+```
+
+### Plot a digit sample image
+
+Access a digit sample by its index. The index `-1` gets the last sample. Its target is 8 in `digits.target[-1]`.
+
+```{python eval=T}
+#| label: fig-digitsdataset
+#| fig-cap: "The image of the last digit sample"
+
+# stand-alone
+from sklearn import datasets
+import matplotlib.pyplot as plt
+# Load the digits dataset
+digits = datasets.load_digits()
+# Display the last digit
+plt.figure(1, figsize=(3, 3))
+plt.imshow(digits.images[-1], cmap=plt.cm.gray_r, interpolation="nearest")
+plt.show()
+#plt.savefig('imgs/digits_dataset_plot_image.png')
+```
+
+<!--
+::: {.column-margin}
+![The image of the last digit sample](imgs/digits_dataset_plot_image.png)
+:::
+-->
+
+## Data Partition/Splitting
+
+Read text 15.2.4 for splitting the Data for training and testing. Note that the random_state argument is set to an integer for reproducibility. As long as passing the same int to the split function, the function always returns the the same four subsets.
+
+**X** denotes features/sample data, and **y** denotes target data.
+
+```{python}
+# digits has been loaded
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+  digits.data, digits.target, random_state=11)
+```
+
+By default, the split ratio is 75$\%$ for training and 25$\%$ for testing. To check the shape of `X_train` and `X_test`,
+
+```{python}
+print(X_train.shape)
+print(X_test.shape)
+```
+
+To get a different split ratio, add either `test_size` or `train_size` to the function call:
+
+```{python eval=F}
+X_train, X_test, y_train, y_test = train_test_split(
+  digits.data, digits.target, random_state=11, test_size=0.3)
+```
+
+## Model Creating and Training
+
+Read 15.2.5 and 15.2.6. Answer the following questions:
+
+> What is a Lazy Estimator?
+
+> Why is an odd integer a better choice for number of neighbors in kNN estimators?
+
+Calling the `KNeighborsClassifier` constructor without any argument will return an kNN estimator with the default setting. The number of neighbors $k$ in the `n_neighbors` parameter, defaults to **5**.
+
+```{python results='hold'}
+# Model training
+# import the estimator
+from sklearn.neighbors import KNeighborsClassifier
+# create/instantiate a model named knn
+knn = KNeighborsClassifier()
+# Training the Model
+knn.fit(X=X_train, y=y_train)
+# print the estimator parameters
+print(knn.get_params())
+```
+
+## Predicting Digit Classes
+
+Read 15.2.7. Run the model with the test data `X_test`. Return the predictions in `predicted` . Compare `predicted` with the true labels in `y_test`. Get the accuracy percentage.
+
+```{python}
+# Predicting Digit Classes
+predicted = knn.predict(X=X_test)
+expected = y_test
+```
+
+Inspect the first 20 test samples for both prediction and expected values:
+
+```{python }
+print(f'Prediction: {predicted[:20]}')
+print(f'Expected target: {expected[:20]}')
+```
+
+Compute the accuracy of the model by finding all the incorrect predictions:
+
+```{python}
+wrong = [ (p, e) for (p, e) in zip(predicted, expected) if p != e ]
+
+print(f'Wrong predictions:\n{wrong}')
+```
+
+Get the accuracy percentage:
+
+```{python}
+( len(expected) - len(wrong) ) / len(expected)
+```
+
+## Evaluating the Estimator
+
+Read 15.3.1 for the two evaluation methods: The **method `score`** and **confusion matrix**. ([The official documentation for model evaluation](https://scikit-learn.org/stable/modules/model_evaluation.html))
+
+### Estimator method `score`
+
+Each estimator object has a `score` method of evaluating the performance of the estimator for a given test data. The default score for classification estimators is the prediction accuracy for the test data. The `score` method expects two arguments for the test data and the expected target data.
+
+```{python}
+# score for k = 5
+print(f'The knn score with 5 neighbors = {knn.score(X_test, y_test):.5f}')
+```
+
+### Confusion matrix
+
+The following creates the confusion matrix for the knn estimator with two sets of labels: expected and predicted:
+
+```{python}
+from sklearn.metrics import confusion_matrix
+confusion = confusion_matrix(y_true=expected, y_pred=predicted)
+print(f'Confusion matrix with the test data:\n{confusion}')
+```
+
+A confusion matrix is a 2-dimensional matrix/table. Each row represents one distinct class/label. The digits data has ten distinct classes, the digits 0 through 9, and there are 10 rows in the matrix.
+
+The *primary/principal diagonal* from top left to bottom right shows the correct predictions for each distinct class/label. The values on other positions are wrong predictions.
+
+In each row, each column is the number of test cases which were classified into one distinct class.
+
+For instance, the first row represents the digit 0 class. According to the first row of the confusion matrix,
+
+```{python}
+# first row of confusion matrix
+confusion[0]
+```
+
+we know that all the 0 cases, 45 in total, have been classified as 0. With the test data, the estimator is capable of recognize all the 0 digits with the prediction accuracy being 100$%$.
+
+> Question: Consider the 8th row in the confusion matrix. What is the prediction accuracy of the estimator for the digit 8?
+
+### Classification Report
+
+The classification report lists several [classification metrics]() in a table. To get the report,
+
+```{python}
+from sklearn.metrics import classification_report
+names = [ str(digit) for digit in digits.target_names ]
+report = classification_report(expected, predicted, target_names=names)
+print(report)
+```
+
+> Question:
+
+Define the metrics: precision, recall, f1-score, support
+
+### Visualize the confusion matrix
+
+> Question: What kind of data should you visualize in a heat map?
+
+To visualize a 2D data in a heat map, it requires two more libraries: **Pandas** and **Seaborn**.
+
+> If the code in the text gives you multiple colormap bars, try the following code.
+
+```{python eval=T, results='hold'}
+#| label: fig-heatmap-confusion-matrix
+#| fig-cap: "The heatmap of confusion matrix for a classification estimator"
+
+# Visualize confusion matrix
+import pandas as pd
+confusion_df = pd.DataFrame(confusion, index=range(10),
+     columns=range(10))
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+fig, ax = plt.subplots()
+sns.heatmap(confusion_df, annot=True, cmap='nipy_spectral_r')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+#plt.savefig('imgs/heatmap_confusion_matrix.png')
+```
+
+<!--
+![The heatmap of confusion matrix for a classification estimator](imgs/heatmap_confusion_matrix.png)
+-->
+
+
+
+## K-Fold Cross-Validation
+
+Read 15.3.2.
+
+K-fold cross-validation is a model evaluation method for overcoming model overfitting issue from a small-sized sample dataset. The method is used in selecting one learning model among several candidates. The method makes well use of every sample in a small data set. Say you have a set of one hundred or no more than one thousand samples. Apply K-fold cross-validation to model evaluation. Split the data into k equally-sized **folds/subsets**. Repeat modeling for k times and rotate the test set over every subset. Take as the overall score, the average performance of k resulting estimators.
+
+**sklearn.model_selection** module provides the `KFold` class and `cross_val_score function`.
+
+Shuffle the digits data (if data is ordered or grouped) and split the whole set into 10 equal-size folds. Run 10-fold cross-validation
+
+```{python results='hold'}
+'''KFold Cross-Validation'''
+# 1. use the KFold Object. shuffle data and create 10 folds
+from sklearn.model_selection import KFold
+kfold = KFold(n_splits=10, random_state=11, shuffle=True)
+
+# 2. use the Function cross_val_score
+# train knn with feature and target data
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(estimator=knn, X=digits.data, y=digits.target, cv=kfold)
+# 3. Print 10 scores
+print(scores)
+```
+
+Get the overall score by taking the mean of 10 scores:
+
+```{python}
+print(f'Mean accuracy of 5-nn estimators is {scores.mean():.3%}.')
+```
+
+## Model Selection
+
+Read 15.3.3.
+
+Before performing the learning, the best estimator is unknown in any machine learning job. Need to train multiple models and choose **the best fit for a particular learning task**.
+
+To compare three types of classification models: (all models are trained with default parameters in sklearn.)
+
+1.  KNeighborsClassifier
+2.  SVC (Support vector machine)
+3.  GaussianNB (Naive Bayes)
+
+Due to a larger number of modeling repetitions (=3\*10), expect a much longer execution time than all the preceding ones.
+
+```{python results='hold'}
+'''Run multiple models. Select the best one.'''
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+# group three estimator argument values in a dictionary object
+estimators = {
+     'KNeighborsClassifier': knn, 
+     'SVC': SVC(gamma='scale'),
+     'GaussianNB': GaussianNB()}
+
+for estimator_name, estimator_object in estimators.items():
+     kfold = KFold(n_splits=10, random_state=11, shuffle=True)
+     scores = cross_val_score(estimator=estimator_object, 
+         X=digits.data, y=digits.target, cv=kfold)
+     print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores.mean():.2%}; ' +
+           f'standard deviation={scores.std():.2%}')
+```
+
+The values in your output may be slightly different from the ones in the text. Text page 618 explains how to read the output and how to choose the best one according to the results.
+
+> Both kNN and SVC can be computationally expensive and may not be the best fit for large data sets. Find the right model choices using the estimator diagram in the next part.
+
+### Estimator diagram
+
+A useful diagram for choosing the right type of estimator based on the three conditions: data type, data size and learning type.
+
+```{r echo=F}
+knitr::include_url("https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html")
+```
+
+## Hyperparameter Tuning
+
+> What are the hyperparameters of an estimator?
+
+> Will the prediction cost (in terms of execution time) increase as the k value increases in kNN estimator?
+
+Read 15.3.4.
+
+Number of neighbors $k$ in a kNN estimator is a hyperparameter as $k$ must be predetermined/set to an integer before the model training step. Different k values produces kNN estimators of different performance. The hyperparameter tuning function in sklearn provides a search for the k value with the best prediction performance.
+
+Pick a range for the k value, `range(1, 20, 2)`. The loop iterates over every k value and prints the mean accuracy of 10-fold cross validation per k value. You can find the k value with the highest accuracy.
+
+However, be aware that a model with the highest accuracy is often not the best one when in real world, people always must take other cost terms into consideration, including the cost for execution time, hardware cost and model maintenance.
+
+```{python results='hold'}
+'''Hyperparameter Tuning: number of neighbors'''
+for k in range(1, 20, 2):
+     kfold = KFold(n_splits=10, random_state=11, shuffle=True)
+     knn = KNeighborsClassifier(n_neighbors=k)
+     scores = cross_val_score(estimator=knn, 
+         X=digits.data, y=digits.target, cv=kfold)
+     print(f'k={k:<2}; mean accuracy={scores.mean():.2%}; ' +
+           f'standard deviation={scores.std():.2%}')
+```
+
+## Submission
+
+Repeat the same learning process with either data set in the following.
+
+-   [The wine data](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html#sklearn.datasets.load_wine)
+
+-   [The breast cancer wisconsin dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html#sklearn.datasets.load_breast_cancer)
+
+Required for submission:
+
+-   Anwser the questions embeded on the page
+-   The ipynb file or an URL to your online ipynb.
+-   A recording of a test run
