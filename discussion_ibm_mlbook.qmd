@@ -1,0 +1,92 @@
+---
+title: IBM ML Book
+---
+
+## IBM ML Book
+
+```{r echo=FALSE}
+knitr::include_url("https://www.ibm.com/downloads/cas/GB8ZMQZ3 ")
+```
+
+## Look Inside ML
+
+Chapter 3
+
+-   Transforming applications through machine learning
+-   Types of machine learning algorithms
+-   Understanding your data
+-   The machine learning cycle
+
+While reading the chapter, think about the following statements. You may need to search on the Internet for more information.
+
+1.  (True of False?) As long as we incorporate machine learning into a business for profit boosting or apply a machine learning model to solve a particular problem, the result will always be positive. We can always discover amazing patterns underlying any data and the patters will always turn to bright insights and help the business transform and grow. The investment on AI and machine learning is always worthwhile.
+
+2.  It is stated in the chapter that "one of the greatest benefits of ML-based approach is to remove business assumptions and biases that can cause leaders to adapt a strategy that might not be the best." How would you convince your clients that your model outputs unbiased results with the given data? Would you repeat augmenting the model with new data? Would you experiment with multiple machine learning algorithms and perform the evaluation until finding the best performing algorithm?
+
+3.  Do we have to implement a machine learning project from scratch? Do we typically use the existing AI and ML libraries and frameworks? List a few of the most popular Python libraries for AI and ML.
+
+4.  Prior to applying a machine learning algorithm, do we have to first gain a deep understanding of each learning algorithm from the mathematical and statistical perspective?
+
+5.  What is the difference between the output from a clustering algorithm and a decision tree algorithm?
+
+6 Is the clustering technique popular in customer management?
+
+7.  Give a few applications of the dimensionality reduction technique.
+
+## Getting Started with ML
+
+Chapter 4 Getting started with ML
+
+-   How ML supports your goal
+-   Focusing on your business problem
+-   Requiring collaboration
+-   Selecting a pilot project
+-   Determining the best learning model
+
+Please discuss the following questions:
+
+1.  What are some typical/general questions you should ask yourself when applying machine learning to a business while there is no specific goal?
+
+2.  What are the hidden data sources? Where do you find them? Why are they important in some scenarios?
+
+3.  The modern data spreads over multiple places and it is stored in a variety of formats. When creating a data set for machine learning, you often need to merge data from multiple sources. Search the Internet about data integration and information fusion. Share your findings here.
+
+4.  How would you execute a pilot project?
+
+5.  What are the tools to determine the best learning model?
+
+## Learning Machine Skills
+
+This discussion forum covers the following parts of the IBM book:
+
+Chapter 5 Learning Machine Skills
+
+The chapter takes a perspective of a team leader who need to supervise a group who are responsible for applying machine learning to solve some of the most complex business problems and support the organization's business goals. After reading the chapter, you are able to do the following:
+
+1.  Discuss the ten areas of (technical) skill expected from a data science team
+
+2.  Identify the skills for your team members
+
+3.  Know the resources for the team to learn more about machine learning and keep abreast of the state-of-the-art
+
+4.  Use a checklist on page 52 as reference when you need to build a data science team
+
+Please discuss the following questions with your classmates:
+
+1.  Read through the ten areas of skill. The areas covers the five (5) aspects of a machine learning/data science project: data, tools, algorithms/models, math foundations, life-cycle management of software. Assume you need to help the team understand the required areas. You decide to send them a paragraph summarizing the areas. Please share your paragraph.
+
+2.  When you plan to build a data science team, among the items in the given checklist (p52),
+
+    -   Which are the top-3 you would prioritize over the others? And why? Please discuss for each of the two types of company, a small company and a large company.
+    -   Does the checklist focus more on the non-technical aspect than technical aspect?
+
+3.  Among the online resources in the recommendation list, please explore the following three. Post one interesting finding for each.
+
+-   Medium
+-   edX courses
+-   Google Research Blog
+
+Submission:
+
+-   (15 points) One post
+-   (5 points) At least one comment

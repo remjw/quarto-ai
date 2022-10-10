@@ -62,53 +62,6 @@ Classification, supervised learning, k-nearest neighbors, labeled data, label/cl
 > Question: List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
 
 
-
-## Confusion Matrix
-
-```{python echo=T, eval=T, results='hold'}
-#| cap-location: margin
-
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import AutoMinorLocator
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-
-# make two lists for expected/true and predicted/estimate target/label values
-expected = [2, 0, 0, 2, 4, 4, 1, 0, 3, 3, 3]
-predicted = [2, 1, 0, 2, 4, 3, 1, 0, 1, 3, 3]
-
-# Create confusion matrix
-cmat = confusion_matrix(expected, predicted)
-
-# Visualize confusion matrix
-# The viridis scale is good for colour blindness
-fig, ax = plt.subplots()
-img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
-ax.set_title('Confusion matrix')
-#plt.title('Confusion matrix')
-fig.colorbar(img)
-ticks = np.arange(5)
-ax.set_xticks(ticks)
-ax.set_yticks(ticks)
-ax.set_ylabel('True/expected labels')
-ax.set_xlabel('Predicted labels')
-ax.minorticks_on()
-ax.xaxis.set_minor_locator(AutoMinorLocator(2))
-ax.yaxis.set_minor_locator(AutoMinorLocator(2))
-ax.grid(linestyle = '--', which='minor')
-plt.show()
-
-# Classification report
-classes = ['Class-0', 'Class-1', 'Class-2', 'Class-3', 'Class-4']
-print('\n', classification_report(expected, predicted, target_names=classes))
-```
-
-
-
-
-
-
 ## The digits Dataset
 
 ```{r echo=F}
@@ -311,6 +264,7 @@ we know that all the 0 cases, 45 in total, have been classified as 0. With the t
 
 > Question: Consider the 8th row in the confusion matrix. What is the prediction accuracy of the estimator for the digit 8?
 
+
 ### Classification Report
 
 The classification report lists several [classification metrics]() in a table. To get the report,
@@ -325,6 +279,8 @@ print(report)
 > Question:
 
 Define the metrics: precision, recall, f1-score, support
+
+
 
 ### Visualize the confusion matrix
 

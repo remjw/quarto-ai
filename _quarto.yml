@@ -7,9 +7,10 @@ toc: true
 number-sections: true
 tbl-cap-location: top
 editor: visual
-#bibliography: references.bib
-reference-location: margin
-citation-location: margin
+bibliography: teachref.bib
+#biblio-style: apalike
+#reference-location: margin
+#citation-location: margin
 
 metadata-files:
   - _website.yml

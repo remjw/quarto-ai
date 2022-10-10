@@ -11,38 +11,55 @@ website:
     left:
       - text: "Home"
         file: index.qmd
-      - text: "Lessons"
-
-        file: sklearn-knn.qmd
-      - text: "How-To"
-        file: index.qmd
-      - text: "Fundamentals"
-        file: index.qmd
-      - text: "Reference"
-        file: reference.qmd
+      - sidebar:lessons
+      - sidebar:fundamentals
+      - sidebar:discussions
+      - sidebar:competition
+      - sidebar:programming
+      - sidebar:reference
 
   sidebar:
-    - title: "Lessons"
+    - id: lessons
+      title: "Lessons"
       style: "docked"
       background: light
       contents:
         - sklearn-knn.qmd
 
-    - title: "How-To"
+    - id: fundamentals
+      title: "Fundamentals"
       contents:
-        - index.qmd
+        - learning_types.qmd
+        - confusion_matrix.qmd
+        - kfold_validation.qmd
+        - model_select.qmd
         # navigation items
 
-    - title: "Fundamentals"
+    - id: discussions
+      title: "Discussions"
       contents:
-        - index.qmd
+        - discussion_database.qmd
+        - discussion_ibm_mlbook.qmd
+        - discussion_ai.qmd
+        - discussion_cloudcomputing.qmd
+
+    - id: competition
+      title: "Competition"
+      contents:
+        - competition.qmd
         # navigation items
 
-    - title: "Reference"
+    - id: programming
+      title: "Programming"
+      contents:
+        - tortoisehare.qmd
+        # navigation items
+
+    - id: reference
+      title: "Reference"
       contents:
         - reference.qmd
         # navigation items
-
 
   # sidebar:
   #   style: "docked" #"floating"

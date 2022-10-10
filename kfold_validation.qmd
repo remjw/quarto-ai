@@ -1,0 +1,80 @@
+---
+title: K-Fold Cross-Validation
+---
+
+Read 15.3.2.
+
+K-fold cross-validation is a model evaluation method for overcoming model overfitting issue from a small-sized sample dataset. The method is used in selecting one learning model among several candidates. The method makes well use of every sample in a small data set. Say you have a set of one hundred or no more than one thousand samples. Apply K-fold cross-validation to model evaluation. Split the data into k equally-sized **folds/subsets**. Repeat modeling for k times and rotate the test set over every subset. The overall score is taken as the average performance of k resulting estimators.
+
+**sklearn.model_selection** module provides the `KFold` class and `cross_val_score function`.
+
+
+
+
+# Stratified 10-fold Cross Validation
+
+```{python eval=FALSE, echo=TRUE}
+import sklearn
+assert sklearn.__version__ >= "0.24"
+print(sklearn.__version__)
+import numpy as np
+from sklearn.datasets import fetch_openml
+from sklearn.model_selection import StratifiedKFold
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import cross_val_score
+
+mnist_df = fetch_openml('mnist_784', version=1) 
+X, y = mnist_df.data, mnist_df.target
+#print(X.shape, y.shape, X.columns)
+
+y = y.astype(np.uint8) #string to int
+X_train, X_test, y_train, y_test = X.iloc[:60000], X.iloc[60000:], y[:60000], y[60000:]
+y_train = (y_train == 0) # digit 0 detector
+y_test = (y_test == 0)
+
+model = SGDClassifier(max_iter=1000, tol=1e-3, random_state=42)
+num_folds = 3 # To have a quick test, we do 3 folds instead of 10 folds
+skf = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state=42)
+```
+
+
+```{python echo=TRUE,eval=FALSE}
+accuracy_scores = cross_val_score(model, X_train, y_train, cv=skf, scoring='accuracy')
+print("Accuracy: " + str(round(100*accuracy_scores.mean(), 2)) + "%")
+
+precision_scores = cross_val_score(model, X_train, y_train, scoring='precision_weighted', cv=skf)
+print("Precision: " + str(round(100*precision_scores.mean(), 2)) + "%")
+
+recall_scores = cross_val_score(model, X_train, y_train, scoring='recall_weighted', cv=skf)
+print("Recall: " + str(round(100*recall_scores.mean(), 2)) + "%")
+
+f1_scores = cross_val_score(model, X_train, y_train, scoring='f1_weighted', cv=skf)
+print("F1: " + str(round(100*f1_scores.mean(), 2)) + "%")
+```
+
+
+
+Shuffle the digits data (if data is ordered or grouped) and split the whole set into 10 equal-size folds. Run 10-fold cross-validation
+
+```{python results='hold'}
+#| eval: false
+#| 
+'''KFold Cross-Validation'''
+# 1. use the KFold Object. shuffle data and create 10 folds
+from sklearn.model_selection import KFold
+kfold = KFold(n_splits=10, random_state=11, shuffle=True)
+
+# 2. use the Function cross_val_score
+# train knn with feature and target data
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(estimator=knn, X=digits.data, y=digits.target, cv=kfold)
+# 3. Print 10 scores
+print(scores)
+```
+
+Get the overall score by taking the mean of 10 scores:
+
+```{python}
+#| eval: false
+print(f'Mean accuracy of 5-nn estimators is {scores.mean():.3%}.')
+```

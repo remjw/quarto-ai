@@ -1,0 +1,144 @@
+---
+title: Database
+---
+
+```{r}
+#| include: false
+1
+```
+
+## Database Types {#quest1}
+
+1. Tell us about some of the most difficult problems relevant to data (if any) you worked on and how you solved them.
+1. Give a few principles which help us choose between relational and non-relational database. For each type, list some database products currently popular in the database market.
+1. How do you choose database products for OLTP and OLAP, respectively? What are the factors you would take into consideration?
+1. Distinguish Row-oriented database (row store) from column-oriented database (column store). If a data store is used for aggregating columns to calculate summary statistics, which type of SQL database performs faster? Row store or column store? Why?
+1. What four properties should be promised for an ACID transaction? Elaborate each property. 
+1. Does relational database require a primary key in every table? Does a relational DBMS allow us to store a data table without a primary key?
+1. Compare vertical partitions with horizontal partitions in database.
+1. Distinguish transient/in-memory database from persistent database. Give each a use case example.
+1. What are the major properties that are prioritized in NoSQL database? 
+
+
+## DBMS {#quest2}
+
+1.  Why should we use a DBMS for data storage and management?
+1.  what are the functions of a DBMS?
+1.  What are the functions of a database applications?
+1.  What is in the metadata?
+1.  Describe multiple roles in a database system and data-related system, and the
+    things you can do in relevant fields
+1.  What are the three database design scenarios
+1.  What is the client-server architecture and the components in database application development?
+1.  Why should we never allow end users to directly access database and run SQL queries in their client programs?
+
+
+## SQL {#quest3}
+
+1. List a few database vendors which implement (Standard-)SQL, T-SQL (Transact-SQL) and PL/SQL, respectively. (Related to [the SQL Types of P3 Home](https://cisjw.sitehost.iu.edu/dbs/p3.html#sql-types))
+
+1. Both `DISTINCT keyword` and `GROUP BY clause` can list distinct values in a column. Give each an example and explain the difference in terms of their execution plan. 
+
+```{sql}
+#| connection: flight
+#| eval: false
+#| echo: false
+#| include: false
+-- The major difference between the DISTINCT and GROUP BY is, GROUP BY operator aggregates data rows into partitions/groups for aggregate values, sum,avg,max,etc; 
+-- whereas DISTINCT is applied to a single column, and removes duplicates and returns the unique values.
+```
+
+
+1. Give a SQL Select example of using `ternary if-expression` for conditional counting.
+
+```{sql}
+#| connection: flight
+#| eval: false
+#| echo: false
+-- SQL conditional count 
+set @x = 10;
+select count(if(@x > 0, 1, null)) as result;
+set @y = -5;
+select count(if(@y > 0, 1, null)) as result;
+select count(if(@x > 0 and @y > 0, 1, null)) as result;
+```
+
+```{sql}
+#| connection: flight
+#| eval: false
+#| echo: false
+select 
+  count( if (hwy >= 90, 1, NULL)) as cnt_hwy_90_or_higher
+from 
+  vehicles
+;
+```
+
+4. Both the SQL `WINDOW function` and `GROUP BY clause` separate data rows into partitions/groups and compute an aggregate value, for instance, the total rows in each group. Use an example to illustrate the difference between the resulting table from the SQL `WINDOW function` and `GROUP BY clause`.
+
+
+
+5. Write a statement in MySQL dialect which performs `cross product (cross join)` of two relational tables A and B and returns all the data columns from both tables.
+
+
+6. Give a database example of two tables A and B. Write SQL join statements to distinguish multiple join types: cross, `equi-`, `inner-` (left & right), `outer-` (left & right).
+
+7. How do we break down complex queries using `CTE` in `WITH-AS` clause? Give an example.
+
+```{sql eval=F,echo=F}
+-- without CTE
+
+```
+
+```{sql eval=F,echo=F}
+-- with CTE
+
+```
+
+8. Give an example of SQL `CASE WHEN statement` to make more than two decisions in tagging data (generating a new categorical column) in a report.
+
+
+9. What is the difference between IN and EXISTS operators? Give each an example.
+
+
+
+
+
+## Database Design
+
+1. Reverse engineer a relational database to an enhanced ER diagram.
+1. Given an ER diagram, e.g. _flight_, _cape_codd_ and _vrg_ schema. Depict the objects in the ER diagram and interpret the restrictions and constraints which are enforced in each schema.
+1. From the relational database perspective, is `lookup` table equivalent to `parent table` in one-to-many relationship?
+1. Do we have to separate data in multiple tables in a relational data store? When should we merge all data into a single table a.k.a de-normalization?
+1. Define `database normalization`. When should we normalize a database? 
+1. How do we verify whether or not a SQL database is in `BCNF`? Describe the steps in normalizing a database.
+1. From the operational perspective, how do we pull data from SQL database into a `de-normalized table`?
+
+
+## Database Implementation
+
+1. Describe a workflow which you follow to design and implement a  new relational database.
+1. The SQL syntax to define constraints in table creation
+1. The SQL syntax to create a new relational table with multiple (row) partitions
+1. How do you utilize SQL `trigger` to automate and accelerate certain database operations, e.g., update, insert and delete, in the database tier?
+1. Compare table and `view` in a relational database
+1. What are the advantages of using SQL `stored procedure` in the back-end instead of doing the same processing in a front-end client program?
+
+## Database Administration 
+
+1. In a relational DBMS, how do you create a new user with specific privileges, e.g, read-only, access a specific database only.
+1. Explain `race condition` in multiuser databases
+1. What is deadlock? How can it be avoided? How can it be resolved once it occurs?
+1. Define `rollback` and `rollforward` in a transaction.
+1. What is a `dirty read`?
+1. Explain SQL `injection attack`
+
+## NoSQL & Big Data 
+
+1. Name a few popular cloud NoSQL database services. (For instance, Amazon DynamoDB is the one.)
+1. In relational data, we have schema/database, table/relation, column/attribute, and row/record/tuple. What is the data hierarchy in MongoDB? 
+
+## Big Data Processing
+
+1. For `big data` analytics, name a few database engines or software products.
+1. What is Apache Spark? And its primary use? Can we execute SQL queries in the Spark?

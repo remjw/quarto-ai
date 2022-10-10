@@ -47,7 +47,7 @@ knitr::read_chunk('chunk_setup_db_module.py')
 ```
 
 ---
-title: "Preface"
+title: "Home"
 ---
 
 ## Lookup Tables & References {.unnumbered}
@@ -116,18 +116,7 @@ We know from *the first fundamental theorem of calculus* that for $x$ in $[a, b]
 
 $$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
 
-:::
 
-::: {#fig-elephants layout-ncol=2}
-
-![Surus](surus.png){#fig-surus}
-
-![Hanno](hanno.png){#fig-hanno}
-
-Famous Elephants
-:::
-
-See @fig-elephants for examples. In particular, @fig-hanno.
 
 
 ```{sql}

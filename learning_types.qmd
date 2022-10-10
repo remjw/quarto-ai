@@ -1,0 +1,25 @@
+---
+title: Types of Machine Learning
+---
+
+
+# Supervised Learning
+
+Supervised learning trains a model over a data sample and uses the model to forecast/predict/estimate a value for an unknown variable. Its application is everywhere-stock price forecasting, drug effect prediction, customer churn analysis, house price forecasting, credit & loan application analysis and to name a few.
+
+To visualize model fitting in a pipeline with two endpoints, one endpoint will be data source and the other one is the trained model. The pipes between the two ends are the ordered steps required for processing and modeling. The following process diagram shows a workflow of supervised learning.
+
+![The RapidMiner process of performing supervised learning for classification](imgs/wine_red_LR-rapidminer-flowchart.PNG)
+
+The same blog post [Building and Evaluating a Predictive Model w/ Linear Regression in RapidMiner Studio](https://www.jdatalab.com/data_science_and_data_mining/2017/02/20/predictive-model-case-rapidminer.html), gives an example of supervised learning which trains a model and deploy the model to predict the quality of wine.
+
+```{r echo=FALSE}
+knitr::include_url("https://www.jdatalab.com/data_science_and_data_mining/2017/02/20/predictive-model-case-rapidminer.html")
+```
+
+
+# Unsupervised Learning
+
+# Semi-Supervised Learning
+
+# Reinforcement Learning

@@ -1,0 +1,58 @@
+---
+title: Cloud Computing
+---
+
+### Cloud Data Analytics Platform
+
+The discussion is purposed to help you obtain a further understanding of
+
+1.  How machine learning and data science transforms and accelerates business operations, and
+2.  How a cloud data analytics platform is utilized in big data storage and delivery.
+3.  And you are asked to describe the features and functions in an AI-based student advising product.
+
+To start the discussion, you need to watch the following video:
+
+https://www.youtube.com/watch?v=lofs42UP2IY
+
+Video description: *"The video introduces how McDonald's has transformed their enterprise ML strategy and operations to accelerate value by leveraging the Databricks Lakehouse platform. By focusing on MLOps, they have enabled faster delivery of production-ready models that support use cases from menu personalization to customer lifetime value, to democratize data-driven insights in over 20 markets globally."*
+
+The relevant links include, but not limited to: (Please do additional search for more information.)
+
+-   https://databricks.com/
+-   https://databricks.com/solutions/data-pipelines
+-   https://databricks.com/solutions/industries/education
+-   https://databricks.com/solutions
+
+The discussion focuses on the following questions:
+
+1.  What is a QSR business?
+
+2.  What is the LakeHouse platform from the databricks?
+
+    -   https://databricks.com/product/data-lakehouse
+
+3.  What is SQL Analytics? How is SQL Analytics compared to other types of analytics using Python or the R language, in terms of data sources, real time performance, and programming languages?
+
+    -   https://databricks.com/product/databricks-sql
+    -   https://hevodata.com/learn/sql-data-analyst/
+
+4.  Talk about the three roles and their responsibility: (https://databricks.com/solutions#by-role)
+
+    -   data engineer
+    -   data scientist
+    -   machine learning engineer (not included in the given link. please do a search.)
+
+5.  Open the page https://databricks.com/solutions/industries. Read about the AI solutions for various industries. From your personal interest and/or past experience, pick one from the list and talk about it.
+
+6.  If you develop an AI product which is purposed to automate student advising service, keep track of individual student's progress, support real-time reporting, customize a course map per requirements, relieve the stress for both students and professors, and so on. The use of the product should not require extra operational cost and human resource. The ultimate goal of such a product is to help students customize individual course plan, complete the degree on time and fulfill their needs in career development.
+
+Please share your thoughts and opinions on such kind of products, regardless the polarity of your view being positive, negative or neutral.
+
+How would you justify incorporating AI being into the advising, instead of human being?
+
+Submission:
+
+1.  (20 points) One post
+    -   To qualify a full credit, the first post must be published no later than Wednesday
+2.  (10 points) At least one comment, solid and insightful.
+

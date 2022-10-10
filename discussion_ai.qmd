@@ -1,0 +1,150 @@
+---
+title: AI&ML
+---
+
+## AI/ML
+
+### Artificial General Intelligence (AGI)
+
+One of the most ambitious goals in the field of AI is to achieve **Artificial General Intelligence** (AGI)-the point at which machine intelligence would equal human intelligence. Research this intriguing topic. When is this forecast to happen? What are some key ethical issues this raises?
+
+Human intelligence seems to be stable over long periods. Powerful computers with Artificial General Intelligence could conceivably (and quickly) evolve intelligence far beyond that of humans.
+
+-   A trailer, `Do you trust your computer?`: http://doyoutrustthiscomputer.org/watch
+
+-   State-of-the-art and future of AI: https://www.bbntimes.com/technology/what-is-the-state-of-the-art-future-of-artificial-intelligence
+
+### Bias & Feature Selection
+
+Thank you to all for introducing yourself to the class! I have known quite a bit about your background and your prior experience. A few projects that you have mentioned are very interesting, such as customer churn analysis and tutorials reference system. Data integration/information fusion also was mentioned as one technique which is in high demand and used to combine/merge heterogeneous data from multiple sources in various storage systems.
+
+Regarding the SQL and database skills, The B565 class won't cover database. I would recommend another class CSCI-C442 which I teach in both Fall and Summer II (six-week long) semesters.
+
+In this discussion, let us do an early investigation on the bias issue in the AI/ML (artificial intelligence/machine learning) and data mining fields. And do a search and share your findings and thoughts with peers.
+
+Per the wikipedia,
+
+> Statistical bias is a systematic tendency which causes differences between results and facts.
+
+> The bias exists in numbers of the process of data analysis, including the source of the data, the estimator chosen, and the ways the data was analyzed.
+
+> Bias may have a serious impact on results, for example, to investigate people's buying habits. If the sample size is not large enough, the results may not be representative of the buying habits of all the people. That is, there may be discrepancies between the survey results and the actual results. Therefore, understanding the source of statistical bias can help to assess whether the observed results are close to the real results.
+
+Here we discuss the Bias from any perspective. Choose one or more angles you would like to look into the bias issue including statistical perspective, the aspect of subconsciousness, and even culture-related stereotypes.
+
+I would encourage you to use your previous projects as an example if the project can be subject to the bias issue.
+
+One of the relevant topics is **feature selection**. An estimator is trained over a particular feature set. Each feature set may play a negative or positive role and it may increase the bias or decrease it.
+
+> Could we reduce the level of bias during the feature selection phase?
+
+> Are there any existing methods available in this regard?
+
+In addition, from the ethical perspective, you can also discuss *Unconscious Bias* and criticize/offend the fairness and credibility of applying AI/ML techniques to decision-making.
+
+The following video is a non-technical talk about the bias in hiring process, but it could help you refine your resume.
+
+https://youtu.be/QCFb4BiDDcE
+
+### Bias-Variance Dilemma in Supervised Learning
+
+Thank you to all for your great participation on the previous forum!
+
+In this forum, we will extend the same topic line by looking into a dilemma between bias and variance in supervised learning, and discussing how to balance generality and specificity of the model and determine the best model fit.
+
+Study the following three items:
+
+#### Error types & Bias & Variance
+
+1.  Read the wikipedia page [Bias-variance tradeoff](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff). Know two error types, bias and variance, and four kinds of data distribution in terms of bias and variance.
+
+```{r echo=FALSE}
+knitr::include_url("https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff")
+```
+
+The following is the key points in this regard:
+
+> "The bias--variance tradeoff is a central problem in supervised learning. Ideally, one wants to choose a model that both accurately captures the regularities in its training data, but also generalizes well to unseen data.
+
+> Unfortunately, it is typically impossible to do both simultaneously. High-variance learning methods may be able to represent their training set well but are at risk of overfitting to noisy or unrepresentative training data. In contrast, algorithms with high bias typically produce simpler models that may fail to capture important regularities (i.e. underfit) in the data."
+
+#### Overfit & Underfit
+
+The bias-variance dilemma is closely related to another frequently-discussed **trade-off between model over-fitting and under-fitting**.
+
+[The plots](https://towardsdatascience.com/understanding-the-bias-variance-tradeoff-165e6942b229) show how the fitting level of a model varies with its bias and variance.
+
+#### Papers
+
+The following are two relevant research papers.
+
+-   Paper 1: [Conceptual complexity and the bias/variance tradeoff](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.297.6501&rep=rep1&type=pdf) [@briscoe_conceptual_2011]
+
+-   Paper 2: [Reconciling modern machine-learning practice and the classical bias--variance trade-off](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6689936/) [@belkin_reconciling_2019]
+
+> Submission:
+
+(30 points) Please share your thoughts and findings with peers in the following questions, but not limited to:
+
+1.  Does a high-variance model tend to overfit or underfit data? Simply justify your answer.
+
+2.  Which type of model, simple (low-variance, high bias) model or complex (high-variance, low bias) model, would you prefer to choose in model deployment? Or instead, would you rather adopt the model from ensemble learning? Simply justify your answer.
+
+3.  The Wikipedia page above mentioned the application of feature engineering in model simplification. Dimensionality reduction and feature selection can decrease model variance and avoid model overfitting. Please give a gentle description of dimensionality reduction and feature selection. And name a few most popular methods of feature selection.
+
+4.  Summarize the Conclusion section in the two papers listed in item 3.
+
+### Gradient Descent Algorithm
+
+### Stochastic Gradient Descent (SGD)
+
+-   scikit-learn [@noauthor_15_nodate]
+
+```{r echo=FALSE}
+knitr::include_url("https://scikit-learn.org/stable/modules/sgd.html")
+```
+
+### Music & Measuring Similarity of Songs
+
+-   How do you quantify the similarity/closeness of two songs?
+-   What are the most significant features/factors/variables/parameters which indicates how close two songs are?
+-   The geometry of musical rhythm [@noauthor_geometry_2021]
+
+A reddit post [@im_a_sam_what_2019]:
+
+I'm writing a program that clusters (classify/categorize) similar songs in a persons spotify library into a number of playlists. I do not know how many playlists I should create and to run the program, I must set the number to an integer, say 5 or 6, a random/arbitrary number (if there is no existing empirical rule of choosing such an integer.)
+
+I'm struggling to come up with the best measure to find out how similar two songs are. My program measures the distance (difference) between two songs by how far apart the values describing them are, similar to how you'd find the distance between two points on a graph. I have access to spotify's api, which gives me information like key, mode, time signature, and tempo, along with more abstract details like valence, acousticness, speechiness, energy, danceability, and instrumentalness. I'm not sure which of these details make the biggest impact on what a song is like. Anyone got any thoughts on which ones are more important than others? Ideally I'd use only a few of them, and only one's that are important.
+
+If you build a music-clustering AI (Artificial Intelligence) in a Python program, the program should develop an AI model. You need to design learning logic or select learning algorithms, feed the program with a collection of songs (dataset), and run the algorithm. The purpose of the training is to develop the learning capability of the AI. The resulting AI can be a model which is mathematically formatted/represented/written. Sometimes the model can be an equation, a function or a set of decision rules.
+
+For instance, if you propose a mathematical formula which computes the distance between two songs/music pieces in terms of several selected variables, then the learning model should calculate the distance of every pair in the collection. With the pair distances, clustering songs can be designed in a variety of ways. For instance, you can set up a threshold and use it as a cutoff to determine whether or not a song should be grouped into an existing cluster/group.
+
+Definitely, the problem has been oversimplified here; however, the key factor in all the clustering problems is the distance/dissimilarity or closeness/similarity.
+
+#### Questions
+
+In this discussion, please share your thoughts or interesting findings with your classmates.
+
+1.  Explicit factors
+
+-   "when you say similarities," does that mean separating ballads from rockers by the same artist? (In terms of Music genres and styles)
+-   Would an acoustic guitar-based song by a band be grouped differently from piano-based song by the same band? (In terms of Music Instruments)
+-   Or what about songs by different artists with similar chord progressions? (In terms of Music Composition)
+-   Mathematically or statistically, how would you determine the significance of multiple variables?
+
+2.  Implicit factors
+
+-   If you want to compare songs in terms of emotion expressed, can you do a search and find what people have done in extracting the dominating emotions underlying a song or music piece?
+
+3.  Lyrics?
+
+-   What about lyrics? Can you gain insights from analyzing/mining the lyrics? Do lyrics convey what the author wanted to express? As lyrics is textual data written in human language, it is one of the most challenging areas in Artificial Intelligence, a.k.a. NLP (Natural Language Processing).
+
+4.  State-of-the-art of AI Music
+
+-   Give a few examples of web sites and mobile apps, which incorporate the music clustering in recommending songs to users.
+-   Give one or more specific algorithms of learning from music data.
+-   Is any existing formula or quantitative measure which evaluates the similarity of two songs? If so, please share them in your post.
+
+5.  And any other interesting findings or thoughts, such as artificial music/painting generation, the geometry of musical rhythm.

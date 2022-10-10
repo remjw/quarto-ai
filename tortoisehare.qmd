@@ -1,0 +1,353 @@
+---
+title: The Tortoise and the Hare
+---
+
+# The Tortoise and the Hare {#turtlehare}
+
+The problem description is from [@deitel_intro_2019] (Simulation: The Tortoise and the Hare). The flowchart and the code are original.
+
+In this problem, you will re-create the classic race of the tortoise and the hare. You will use random-number generation to develop a simulation of this memorable event.
+
+## Sample Runs
+
+The game is a terminal/console-based program/application. The following are two sample runs.
+
+**Test run 1:**
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/x7liW2iFqi8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+**Test run 2:**
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/xCWSXLmsZRU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+## Simulate Race Course
+
+Our contenders begin the race at square 1 of 70 squares. Each square represents a position along the race course. The finish line is at square 70. The first contender to reach or pass square 70 is rewarded with a pail of fresh carrots and lettuce. *The course weaves its way up the side of a slippery mountain, so occasionally the contenders lose ground.*
+
+> The program runs in the black-and-white terminal. To simulate the race course of 70 squares, fill in the line with underscore `_`, display H where the hare is, and T for turtle.
+
+> We will print two course lines one above the other for turtle and hare, respectively.
+
+> In the beginning, place letters T and H in the first square of each course line.
+
+The following is a snippet which shows one way of simulating the race courses for the two animals. (*It is not the code in the final program, but having the same idea*.)
+
+```{python results='hold'}
+# simulate a race course
+# initial settings: race course
+distance = 70 
+square = "_"
+
+# initial settings: animals
+turtle = "T"
+hare = "H"
+turtle_course = ""
+hare_course = ""
+
+# get current position
+turtle_position = 1
+hare_position = 1
+
+# fill in points for both track lines
+for point in range(1, distance+1): 
+  # create turtle course
+  if point == turtle_position:
+    turtle_course += turtle
+  else:
+    turtle_course += square
+  # create hare course
+  if point == hare_position:
+    hare_course += hare
+  else:
+    hare_course += square
+
+  
+# print the two tracks
+print('Race Course')
+print(turtle_course)
+print(hare_course)
+
+```
+
+## Simulate Clock Ticks
+
+A clock ticks once per second.
+
+> To simulate the clock ticks per second, use `time.sleep(1)` function and delay the code execution for one second.
+
+> Adding a time delay before or after a print statement will display the race courses one after the other. This creates `an animation effect` in the terminal and it is fun for the user to watch how the game is making progress step-by-step.
+
+```{python eval=FALSE}
+# delay execution for one second
+import time
+
+print('Start!')
+#
+time.sleep(1)
+print(course_turtle)
+#
+time.sleep(1)
+print(course_hare)
+
+```
+
+## Moving Rules
+
+With each tick of the clock, your application should adjust the position of the animals according to the rules in the table below.
+
+![Moving rules](imgs/turtle_hare.jpg)
+
+Use variables to keep track of the positions of the animals (i.e., `position numbers are 1-70`). Start each animal at position 1 (the "starting gate"). The following snippet shows how to simulate this requirement by defining variables and constant.
+
+```{python results='hold'}
+# simulate a race course
+# initial settings: race course
+distance = 70 
+square = "_"
+
+# initial settings: animals
+turtle = "T"
+hare = "H"
+turtle_course = ""
+hare_course = ""
+
+# get current position
+turtle_position = 1
+hare_position = 1
+
+```
+
+In addition, **if an animal slips left before square 1, move it back to square 1**. The rule can be written as:
+
+```{python eval=FALSE}
+# slipping
+if turtle_position < 1:
+  turtle_position = 1
+
+if hare_position < 1:
+  hare_position = 1
+```
+
+Then you need to create two user-defined functions that generate the percentages in the table for the tortoise and the hare, respectively, by producing `a random integer i` in the range `1 ≤ i ≤ 10`.
+
+### `move_turtle` function
+
+To determine the next move for the tortoise, either the `random.choice(range(start,end))` or `random.randint(start,end)` function returns a random choice from the given sequence 1 through 10. By default, the probability/chance of each value to be selected is identical.
+
+In the function for the tortoise, perform a `fast plod` when `1 ≤ i ≤ 5` which gives the probability of 50 percent, a `slip` when `6 ≤ i ≤ 7` which gives the probability of 20 percent or a `slow plod` when `8 ≤ i ≤ 10` with the probability of 20 percent.
+
+The following shows the syntax of calling the two functions for a random integer from the sequence $[1, 10]$.
+
+```{python}
+#
+import random
+
+# return a random integer
+move_type = random.choice(range(1,11)) 
+move_type = random.randint(1,10)
+```
+
+The `move_turtle` function can be defined as:
+
+```{python eval=FALSE}
+# user-defined function 
+def move_turtle()->int:
+    '''This function calculates steps for the turtle
+    '''
+    steps = 0
+    # generate a random integer from [1,10]
+    move_type = random.randint(1, 10)
+    # determine steps by the moving rules
+    if move_type in [1,2,3,4,5]: # 1 <= move_type <= 5:
+        steps = 3
+    elif move_type in [6,7]: # 6 <= move_type <= 7:
+        steps = -6
+    else:
+        steps = 1
+    # return steps in an integer    
+    return steps
+  
+```
+
+### `move_hare` function
+
+Use a similar technique in the function for the hare.
+
+The `move_hare` function can be defined as: (You will do it yourself.)
+
+```{python eval=FALSE, echo=FALSE}
+# user-defined function 
+def move_hare()->int:
+    '''This function calculates steps for the hare
+    '''
+    steps = 0
+    # generate a random integer from [1,10]    
+    move_type = random.choice(range(1,11)) 
+    # determine steps by the moving rules    
+    if move_type in [1,2]:
+        steps = 0
+    elif move_type in [3,4]:
+        steps = 9
+    elif move_type == 5:
+        steps = -12
+    elif move_type in [6,7,8]:
+        steps = 1
+    else:
+        steps = -2
+    # return steps in an integer         
+    return steps
+  
+```
+
+## Game Logic
+
+### Start the Game
+
+Define a function `start_game(distance, square)` which performs game configuration and parameter settings which are required for a start. It should include:
+
+1.  Define the variables and set the values for `distance` and the character for representing a `square`/position.
+
+2.  Generate the race courses before the start (with both animals at position 1)
+
+-   one 70-position line showing the letter `T` at the first position, and
+-   one more 70-position line for the hare where the letter `H` is at the first position.
+
+3.  Display/print the two courses (insert a time delay between)
+
+4.  Begin the race by displaying
+
+<!-- -->
+
+    BANG !!!!!
+    AND THEY'RE OFF !!!!!
+
+### Run the game in `While` Loop
+
+Define the game logic in a function `run_game(distance, square)`. The game runs in an infinite loop `while True:`. The only condition that terminates the loop is one of the three win cases turns to true. Otherwise, the loop keeps generating new moves.
+
+```{r echo=FALSE}
+DiagrammeR::grViz("digraph {
+  graph [layout = dot, rankdir = TB]
+  
+  node [shape = 'rectangle']        
+  start [label = 'Start',shape='oval',color = 'orange',style='filled']
+  start -> initialize
+  initialize [label = 'initialize/start the game']
+  initialize -> s0
+  s0 [label='Set both position variables to 1\nSet move_count to 0']
+  s0 -> loop1
+  
+  loop1 [label='while True', shape='diamond', color = '#FF000064',style='filled']
+  loop1 -> counter 
+  counter [label='increment move_count']
+  counter -> sleep
+  sleep [label = 'time sleep one second']
+  sleep -> s1 
+  s1 [label='determine the new position of both animals']
+  s1 -> e1
+  e1 [label='test if any animal slips', shape='diamond',color='lightblue',style='filled']
+  e1 -> e11 [label='true']
+  e11 [label='place animal(s) back to position 1']
+  e1 -> e2 [label='false']
+  e11 -> e2
+  e2 [label='test the win case', shape='diamond', color = 'green',style='filled']
+  e2 -> break [label='true', color = '#FF000064']
+  break [label='break out of while-loop']
+  break -> summary [color='orange']
+  
+  e2 -> e3 [label='false']
+  e3 [label='test the hit case', shape='diamond', color = 'yellow',style='filled']
+  e3 -> v0 [label='true']
+  e3 -> v1 [label='false']
+  v0 [label='update course strings with OUCH']
+  v1 [label='update course strings']
+  v0 -> v2
+  v1 -> v2
+  v2 [label='print two course lines',shape='parallelogram']
+  v2 -> loop1 [label='continue to next iteration']
+
+  summary [label='Display the total moves',shape='parallelogram']
+  summary -> s2
+  s2 [label = 'It is a tie?', shape='diamond', color = '#FF000064',style='filled']
+  s21 [label='It is a tie.',shape='parallelogram']
+  s2 -> s21 [label='true']
+  s2 -> s3 [label='false']
+  s3 [label='The turtle wins?', shape='diamond', color = '#FF000064',style='filled']
+  s31 [label='The turtle wins',shape='parallelogram']
+  s3 -> s31 [label='true']
+  s3 -> s41 [label='false']
+  s41 [label='The hare wins',shape='parallelogram']
+  
+   s21-> end [color='orange']
+   s31-> end [color='orange']
+  s41-> end [color='orange']
+  end [label = 'End',shape='oval',color='orange',style='filled']
+  
+  }",
+  height = 900)
+```
+
+1.  For each tick of the clock (*i.e.*, each iteration of a loop), display
+
+-   one 70-position line showing the letter `T` in the position of the tortoise, and
+-   one more 70-position line for the letter `H` in the position of the hare.
+
+2.  Occasionally, the contenders will land on the same square. In this case, the tortoise bites the hare, and your application should display `OUCH!!!` at that position. (All positions other than the "T", the "H" or the `OUCH!!!` should be blank or a specified character you decide.)
+
+I suggest you place the case check in a user-defined function `check_hit()` given below:
+
+```{python}
+# 
+def check_hit(turtle_position, hare_position)->bool:
+  '''This function checks if the turtle or hare hits'''
+  #if  turtle_position == hare_position:
+  #     return True
+  #else:
+  #    return False
+  return True if turtle_position == hare_position else False
+```
+
+3.  After each line is displayed, **test** for whether either animal has reached or passed square 70.
+
+-   If so, display the winner and terminate the simulation. If the tortoise wins, display `TORTOISE WINS!!! YAY!!!`
+-   If the hare wins, display `Hare wins. Yuch.`
+-   If both animals win on the same tick of the clock, you may want to favor the tortoise (the `underdog`), or you may want to display `It's a tie`.
+-   If neither animal wins, perform the loop again to simulate the next tick of the clock.
+
+> Suggest:
+
+1.  Define each type of test in a user-defined function, `check_hit()` and `check_win()`.
+2.  place in a user-defined function `update_course()`, the statements of updating race courses.
+
+## Main Function
+
+Assume that you have separate the actions in the functions. The following is an example of the main function.
+
+```{python eval=FALSE}
+# main method
+if __name__ == "__main__":
+    #initial settings
+    distance = 70 
+    square = "_"
+    turtle = "T"
+    hare = "H"
+    hit = "OUCH!!!"
+
+    start_game(distance, square)
+    run_game(distance, square)
+#
+```
+
+
+## References
+
+::: {#refs}
+:::
