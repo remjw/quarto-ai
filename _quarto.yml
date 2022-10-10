@@ -25,7 +25,7 @@ metadata-files:
 
 format:
   html:
-    theme: cosmo
+    theme: litera # cosmo
     css: style_quarto.css
     cover-image: cover.png
     number-sections: true

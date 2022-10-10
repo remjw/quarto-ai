@@ -1,4 +1,5 @@
 <!--source .venv/bin/activate-->
+
 <!--source .venv/bin/activate-->
 
 ```{r, include=FALSE, cache=F}
@@ -8,14 +9,17 @@ knitr::read_chunk('chunk_setup.R')
 ```{r, setup, echo=FALSE,include=F}
 ```
 
+```{=html}
 <!--connect dvisvgm to Ghostscript for tikz
 find gs, run: tools:find_gs_cmd()
 -->
+```
 ```{r point-to-ghostscript, include=FALSE}
 Sys.setenv(LIBGS = "/usr/local/bin/gs")
 ```
 
 <!--Conditional tikz output types; use PDF if this is LaTeX, otherwise use SVG with embedded fonts -->
+
 ```{r tikzsetup, include=FALSE}
 if (knitr::is_latex_output()) {
   knitr::opts_template$set(
@@ -48,9 +52,42 @@ knitr::read_chunk('chunk_setup_db_module.py')
 
 ---
 title: "Home"
+execute:
+  warning: false
+  results: hold
 ---
 
-## Lookup Tables & References {.unnumbered}
+themes: https://bootswatch.com/
+
+```{r}
+#| warning: false
+#| code-line-numbers: "|7"
+#| output-location: fragment
+#| fig-cap:
+#|   - "Speed and Stopping Distances of Cars"
+#|   - "Engine displacement and fuel efficiency in Cars"
+#| layout: "[[40,-20,40]]"
+#| fig-height: 4
+#| fig-format: retina
+cars |> 
+  ggplot(aes(x = speed, y = dist)) +
+  geom_point()
+mtcars |> 
+  ggplot(aes(x = disp, y = mpg)) +
+  geom_point()
+```
+
+```{r}
+#| code-line-numbers: "|3"
+#| fig-cap: !expr glue::glue("The mean temperature was {mean(airquality$Temp) |> round()}")
+#| fig-alt: |
+#|   "A scatterplot with temperature by ozone levels along with a trend line
+#|   indicating the increase in temperature with increasing ozone levels."
+ggplot(airquality, aes(Ozone, Temp)) + 
+        geom_point() + 
+        geom_smooth(method = "loess", se = FALSE)
+```
+
 
 ```{mermaid}
 flowchart LR
@@ -62,22 +99,19 @@ flowchart LR
 
 {{< video https://www.youtube.com/embed/ >}}
 
-:::{.callout-note}
-Note that there are five types of callouts, including: 
-`note`, `tip`, `warning`, `caution`, and `important`.
+::: callout-note
+Note that there are five types of callouts, including: `note`, `tip`, `warning`, `caution`, and `important`.
 :::
-
 
 You can place content within the right margin of Quarto document. For example, here we use the .column-margin class to place an image in the margin:
 
-::: {.column-margin}
+::: column-margin
 ![A margin image](imgs/digits_dataset_plot_image.png)
 :::
 
 .column-margin
 
-Margin Figures
-Figures that you create using code cells can be placed in the margin by using the column: margin code cell option. If the code produces more than one figure, each of the figures will be placed in the margin.
+Margin Figures Figures that you create using code cells can be placed in the margin by using the column: margin code cell option. If the code produces more than one figure, each of the figures will be placed in the margin.
 
 ```{r}
 #| label: fig-mtcars
@@ -94,9 +128,7 @@ ggplot(mtcars2, aes(hp, mpg, color = am)) +
   theme(legend.position = 'bottom')
 ```
 
-
-Margin Tables
-You an also place tables in the margin of your document by specifying column: margin.
+Margin Tables You an also place tables in the margin of your document by specifying column: margin.
 
 ```{r}
 #| column: margin
@@ -107,17 +139,11 @@ knitr::kable(
 )
 ```
 
-Other Content
-You can also place content in the margin by targeting the margin column using a div with the .column-margin class. For example:
+Other Content You can also place content in the margin by targeting the margin column using a div with the .column-margin class. For example:
 
-::: {.column-margin}
-We know from *the first fundamental theorem of calculus* that for $x$ in $[a, b]$:
-
+::: {.column-margin} We know from *the first fundamental theorem of calculus* that for $x$ in $[a, b]$:
 
 $$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
-
-
-
 
 ```{sql}
 #| connection: flight

@@ -1,5 +1,5 @@
 ---
-title: 1:k-Nearest Neighbors
+title: k-Nearest Neighbors
 ---
 
 > The code snippets on the page are NOT stand-alone; they should be run consecutively one after another in the order.
@@ -42,7 +42,6 @@ The discussion is purposed to help you understand the following aspects of machi
 
 -   Refer to [the Estimator Diagram](https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html). List the estimator candidates which is suitable for classifying a labeled dataset over 100K and below 100K, respectively.
 
-
 ## Classification for Digit Recognition
 
 The following is a snippet of only 12 lines. Take a look (you do not need to run it) and see how **sklearn** makes the classification easy to implement.
@@ -60,7 +59,6 @@ Classification, supervised learning, k-nearest neighbors, labeled data, label/cl
 ## Steps
 
 > Question: List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
-
 
 ## The digits Dataset
 
@@ -137,12 +135,13 @@ plt.show()
 #plt.savefig('imgs/digits_dataset_plot_image.png')
 ```
 
+```{=html}
 <!--
 ::: {.column-margin}
 ![The image of the last digit sample](imgs/digits_dataset_plot_image.png)
 :::
 -->
-
+```
 ## Data Partition/Splitting
 
 Read text 15.2.4 for splitting the Data for training and testing. Note that the random_state argument is set to an integer for reproducibility. As long as passing the same int to the split function, the function always returns the the same four subsets.
@@ -264,7 +263,6 @@ we know that all the 0 cases, 45 in total, have been classified as 0. With the t
 
 > Question: Consider the 8th row in the confusion matrix. What is the prediction accuracy of the estimator for the digit 8?
 
-
 ### Classification Report
 
 The classification report lists several [classification metrics]() in a table. To get the report,
@@ -279,8 +277,6 @@ print(report)
 > Question:
 
 Define the metrics: precision, recall, f1-score, support
-
-
 
 ### Visualize the confusion matrix
 
@@ -313,12 +309,11 @@ plt.show()
 #plt.savefig('imgs/heatmap_confusion_matrix.png')
 ```
 
+```{=html}
 <!--
 ![The heatmap of confusion matrix for a classification estimator](imgs/heatmap_confusion_matrix.png)
 -->
-
-
-
+```
 ## K-Fold Cross-Validation
 
 Read 15.3.2.

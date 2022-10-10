@@ -1,5 +1,6 @@
 website:
   title: "ai/ml/dm/ds NOTES"
+  page-navigation: true
   page-footer:
     center:
       - text: "2022 Created By Jie Wang"
@@ -11,14 +12,25 @@ website:
     left:
       - text: "Home"
         file: index.qmd
-      - sidebar:lessons
       - sidebar:fundamentals
+      - sidebar:lessons
       - sidebar:discussions
       - sidebar:competition
       - sidebar:programming
       - sidebar:reference
 
   sidebar:
+    - id: fundamentals
+      title: "Fundamentals"
+      style: "docked"
+      background: light
+      contents:
+        - learning_types.qmd
+        - confusion_matrix.qmd
+        - kfold_validation.qmd
+        - model_select.qmd
+        # navigation items
+
     - id: lessons
       title: "Lessons"
       style: "docked"
@@ -26,14 +38,7 @@ website:
       contents:
         - sklearn-knn.qmd
 
-    - id: fundamentals
-      title: "Fundamentals"
-      contents:
-        - learning_types.qmd
-        - confusion_matrix.qmd
-        - kfold_validation.qmd
-        - model_select.qmd
-        # navigation items
+
 
     - id: discussions
       title: "Discussions"

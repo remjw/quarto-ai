@@ -2,7 +2,6 @@
 title: The Tortoise and the Hare
 ---
 
-# The Tortoise and the Hare {#turtlehare}
 
 The problem description is from [@deitel_intro_2019] (Simulation: The Tortoise and the Hare). The flowchart and the code are original.
 
@@ -345,7 +344,6 @@ if __name__ == "__main__":
     run_game(distance, square)
 #
 ```
-
 
 ## References
 
