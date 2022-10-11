@@ -12,33 +12,54 @@ website:
     left:
       - text: "Home"
         file: index.qmd
+      - sidebar:mathstats
+      - sidebar:programming
       - sidebar:fundamentals
       - sidebar:lessons
+      - sidebar:advancedtopics
       - sidebar:discussions
       - sidebar:competition
-      - sidebar:programming
-      - sidebar:reference
+
 
   sidebar:
-    - id: fundamentals
-      title: "Fundamentals"
+    - id: mathstats
       style: "docked"
       background: light
+      title: "Math/Stats"
+      contents:
+        - math_concepts.qmd
+
+    - id: programming
+      title: "Programming"
+      contents:
+        - python_help_command.qmd
+        - function_python.qmd
+        - function_python_2.qmd
+        - random_num_generate.qmd
+        - module_programming.qmd
+        - diegame_craps.qmd
+        - tortoisehare.qmd
+        # navigation items
+
+    - id: fundamentals
+      title: "Fundamentals"
       contents:
         - learning_types.qmd
         - confusion_matrix.qmd
-        - kfold_validation.qmd
-        - model_select.qmd
+        - classifier_performance.qmd
         # navigation items
 
     - id: lessons
       title: "Lessons"
-      style: "docked"
-      background: light
       contents:
+        - exploratory_data_analysis.qmd
         - sklearn-knn.qmd
 
-
+    - id: advancedtopics
+      title: "Advanced Topics"
+      contents:
+        - kfold_validation.qmd
+        - model_select.qmd
 
     - id: discussions
       title: "Discussions"
@@ -54,17 +75,13 @@ website:
         - competition.qmd
         # navigation items
 
-    - id: programming
-      title: "Programming"
-      contents:
-        - tortoisehare.qmd
-        # navigation items
 
-    - id: reference
-      title: "Reference"
-      contents:
-        - reference.qmd
-        # navigation items
+
+#    - id: reference
+#      title: "Reference"
+#      contents:
+#        - reference.qmd
+#        # navigation items
 
   # sidebar:
   #   style: "docked" #"floating"

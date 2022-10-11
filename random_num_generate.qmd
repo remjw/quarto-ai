@@ -1,0 +1,342 @@
+---
+title: Random Number Generation
+---
+
+## Random Number Generation & Game Playing {#sec-randgen}
+
+Simulation and game playing is a popular type of programming application. In Python, the **random module** provides random number generators. The _random module_ in Python implements **PRNG** (_pseudo-random number generators_) for various distributions. 
+
+According to the official site of the Python's random module [@noauthor_random_nodate-1], almost all module functions depend on **the basic function** `random()`, which generates a random float uniformly in the *semi-open range* $[0.0, 1.0)$, _i.e._, zero inclusive and one exclusive. See @sec-mathinterval
+
+Python uses the **Mersenne Twister** [@noauthor_mersenne_nodate] as the core generator. It produces 53-bit precision floats and has a period of $$2^{19937}-1$$. The underlying implementation is in the C language, fast and thread-safe.
+
+::: callout-caution
+
+Per the [Mersenne Twister Home page](http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/emt.html), Mersenne Twister is basically for Monte-Carlo simulations - it is not cryptographically secure "as is". 
+
+:::
+
+## Using the Random Module
+
+### Reading 
+
+::: callout-note
+
+Reading 
+
+- [@gaddis_starting_2020] Sections 5.7 Introduction to Value-Returning Functions
+- [@deitel_intro_2019] Section 4.4 Random-Number Generation, [Link to script files](https://github.com/pdeitel/IntroToPython/tree/master/examples/ch04/snippets_py)
+
+:::
+
+### Objectives & Questions
+
+The built-in **random module**
+
+::: panel-tabset
+
+#### Objectives
+
+-   Know the importance of the `random` module in simulation and game playing
+-   Know the `import` statement
+-   To refer to a function in a module, use **dot notation**.
+-   Know how to generate random numbers, integers and floating-point numbers, by calling the functions, `random.randint` and `random.randrange`, `random.uniform`
+-   Pay attention to the default setting for the interval exclusive and inclusive, in a specific function
+- Understand that the random number generator utilizes a **random seed** to simulate randomness and generate random outputs.
+-   Know the `random.seed function` and its use of reproducing the same result regardless of the executions, by applying the same seed to the initialization.
+-   [@gaddis_starting_2020]  scripts
+    -   *Program 5-19* _dice.py_
+    -   *Program 5-20* _coin-toss.py_
+
+
+#### Questions
+
+1.  What is a library function?
+
+2.  Why are library functions like "black boxes"?
+
+3.  What do the following statements return?
+
+    -   `random.randint(1, 20)`
+    -   `random.randrange(1, 20)`
+    -   `random.uniform(0.1, 0.5)`
+    -   `random.random()`
+
+4.  When the random module is imported, what does it use as a seed value for random number generation?
+
+5.  What happens if the same seed value is always used for generating random numbers?
+
+:::
+
+
+### Lecture
+
+The recording discusses:
+
+- Generate random integers and decimals by using several methods from the random module
+- Know the use of the *main function*
+- Write a *while-loop-based* program which interacts with users and allows them to repeat rolling two dice over and over until they decide to quit the program.
+
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/udx0yEnfSiI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+
+
+## Case 1 Rolling a Six-Sided Die
+
+The following gives a sample snippet for `rolling a six-sided die for ten (10) times`. The script simulates a process of simple random sampling by taking ten samples from a pool of six integers 1 through 6. In simple random sampling, each integer has an equal chance of being selected.
+
+::: callout-tip
+
+`random.randint(left, right)` runs in the interval [left, right], inclusive/close on both ends of the interval. 
+
+`random.randrange(left, right)` is based on the interval [left, right), left inclusive and right exclusive.
+
+:::
+
+::: panel-tabset
+
+### `random.randint`
+
+```{python}
+# simulate the rolling of a six-sided die
+import random
+# initialize the variables
+N = 10
+low = 1
+high = 6
+# repeat rolling for N times
+for roll in range(N):
+  print(random.randint(low, high), end = ' ')
+# end-for
+```
+
+Each time the number generator in `randint` is initialized by a `random seed` value and different values are produced therefore for simulating randomness in the game.
+
+### `random.randrange`
+
+```{python}
+# simulate the rolling of a six-sided die
+import random
+# initialize the variables
+N = 10
+low = 1
+high = 6
+# repeat rolling for N times
+for roll in range(N):
+  print(random.randrange(low, high), end = ' ')
+# end-for
+```
+
+:::
+
+## Case 2 Reproducing the Same Sample 
+
+When debugging a program using random number generation or allowing others to reproduce the same output, a **reproducible result** is required regardless of executions. Call the `random.seed` method and set the seed to a fixed integer. As long as the seed is set to the same value, the generator always returns the same sample set.
+
+Both of the following scripts set the seed to 10. 
+
+::: callout-warning
+
+The first one sets the seed value one time only before the sampling process begins. The second one sets the seed inside the loop for each sample. Run the scripts for multiple times. Observe the difference between the outputs.
+
+:::
+
+::: panel-tabset
+
+### Set Seed once Before Loop
+```{python}
+# roll a six-sided die
+import random
+
+N = 10
+low = 1
+high = 6
+
+# set seed for reproducible output
+random.seed(10)
+
+# rolling 
+for roll in range(N):
+  print(random.randint(low, high), end = ' ')
+# end-for
+```
+
+### Set Seed within Loop
+
+```{python}
+# roll a six-sided die
+import random
+N = 10
+low = 1
+high = 6
+# rolling 
+for roll in range(N):
+  # set seed for each number
+  random.seed(10)
+  print(random.randint(low, high), end = ' ')
+# end-for
+```
+
+:::
+
+
+## Case 3 Simulating the Likelihood
+
+A simple sampling function should return each possible value with an equal probability/chance/likelihood. To simulate the assumption, increase the rolling times N to `6,000,000` times. Each face/integer should occur approximately `1,000,000` times.
+
+```{python results='hold'}
+'''Roll six-sided die for 6 million times'''
+import random
+
+# define the range
+low, high = 1, 6
+# define six counters in a list and initialize each to zero
+frequency = [0] * 6
+# define the total roll times
+N = 6_000_000
+
+# simulate the rolling
+for roll in range(N):
+  face = random.randint(low, high)
+  frequency[face-1] += 1
+# end-for
+
+# format the output string for display
+display = f'Face{"Frequency":>13}'
+for i in range(low-1, high):
+  display += f'\n{i+1:>4}{frequency[i]:>13}'
+
+# print the formatted output
+print(display)
+  
+```
+
+
+::: callout-tip
+
+> Using List Comprehension & NumPy Library
+
+The **unique method** from the **NumPy module** returns unique values and frequency of each value in a given collection. The following code utilizes **List Comprehension**, the `random.randint` and `numpy.unique` methods to output each unique and its frequency.
+
+:::
+
+::: panel-tabset
+
+### Using Numpy.unique
+
+```{python}
+# import libraries
+import random
+import numpy as np
+# set initial values
+low, high = 1, 6
+N = 1000
+# use list comprehension to create a list of rolls of a six-sided dice
+rolls = [ random.randint(low, high) 
+          for _ in range(int(N)) ]
+# NumPy unique function returns unique faces and frequency of each face
+values, frequencies = np.unique(rolls, return_counts=True)
+print(f'unique values: {values}\nfrequencies: {frequencies}')
+```
+
+### Plotting
+
+```{python}
+# Continue with the code in the first tab
+# to plot the frequencies
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# set seaborn style
+sns.set_style('whitegrid')
+
+# load data
+values = range(low, high+1)
+df = pd.DataFrame({
+    'value': values, 
+    'frequency': frequencies})
+
+# visualize
+title = f'Rolling a die {N:,d} times'
+# create a bar plot
+axes = sns.barplot(
+    x = "value",
+    y = "frequency",
+    data = df)
+
+# set title     
+axes.set_title(title)
+# set x, y-axis label
+axes.set(xlabel='Die face', ylabel='Frequency')
+# set maxinum y-axis value
+axes.set_ylim(top=max(frequencies) * 1.1)
+
+# show text on each bar
+for bar, frequency in zip(axes.patches, frequencies):
+    text_x = bar.get_x() + bar.get_width() / 2.0
+    text_y = bar.get_height()
+    text = f'{frequency:,}\n{frequency / N:.3%}'
+    axes.text(text_x, text_y, text,
+              ha='center', va='bottom', fontsize=10)
+
+# show plot    
+plt.show()
+```
+:::
+
+
+## Exercises
+
+### Flipping a Coin
+
+Use `list comprehension`, `randint` and `numpy.unique` to simulate 100 coin flips, displaying `H` for heads and `T` for tails all on the same line, each separated by a space. In addition, display the frequency of each occurrence, `H` and `T`.
+
+The expected output is given below:
+
+```{python}
+#| echo: false
+#| results: hold
+'''Simulate 100 coin flips. 1 for Head and 2 for Tail'''
+import random
+import numpy as np
+
+# initialize
+N = 100
+num_types = 2
+frequency = [0] * num_types
+flips = ""
+
+# simulation
+flips = [
+  random.randint(1, num_types)
+  for i in range(N)
+]
+
+# frequency
+values, frequencies = np.unique(flips, return_counts=True)
+
+# print all the flips
+for flip in flips:
+    print('H', end=' ') if flip == 1 else print('T', end=' ')
+
+# print frequency
+display = f'\nFace {"Frequency":>9}'
+for value in values:
+  face = 'Head' if value == 1 else 'Tail'
+  display += f'\n{face:>4}{frequencies[value-1]:>9}'
+print(display)
+  
+```
+
+## References
+
+::: {#refs}
+:::

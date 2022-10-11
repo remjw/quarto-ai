@@ -1,0 +1,34 @@
+---
+title: help Command
+---
+
+## `help` command
+
+The `help(object_name)` command displays in the console, the documentation of modules, functions, classes and keywords. In the console, run `ipython`. It opens an interactive Python session.
+
+Run the following command and it displays the documentation of the **module random**.
+
+```{}
+help("random")
+```
+
+![The help command in the interactive mode](imgs/ipython_help_command.png)
+
+::: callout-tip
+To close the doc, type *q*.
+:::
+
+To find the use of a function, run `help` with the function name. The following command
+
+```{}
+help("random.random")
+```
+
+displays the header/signature and docstring of the function `random.random()`, as shown below:
+
+```{}
+Help on built-in function random in random:
+
+random.random = random() method of random.Random instance
+    random() -> x in the interval [0, 1).
+```

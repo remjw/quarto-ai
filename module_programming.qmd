@@ -1,0 +1,174 @@
+---
+title: Module Programming
+---
+
+- With the `function object`, we can extract a set of common operations into a special object.
+- With the `module file`, we can organize several function objects in the same Python file.
+- With the `import statement`, we can access the functions in an imported module by the dot notation.
+-   Supported by the objects and statements above, the `modular programming paradigm` can be applied for structuring an application/software project.
+
+**Modular programming** is *a software design paradigm that emphasizes separating the functionality of a program into independent, interchangeable modules.*
+
+::: callout-note
+
+> Revel Functions Programming Project 1 is used here as an example.
+
+The project is purposed to demonstrate the Pythonic way of modular programming. You will learn:
+
+-   creating a module
+-   adding functions to the module
+-   running a module as a standalone program
+-   importing the module into another program
+
+The *relevant structure* is discussed in *section 5.10*.
+
+:::
+
+## Relevant Concepts & Scripts
+
+ [@gaddis_starting_2020] (*5.10*) **Modular programming/modularization**
+
+-   Store functions in modules
+-   A module's file name should end in *.py*.
+-   Book scripts:
+    -   *Programs 5-27, 5-28, 5-29*
+-   Conditionally execute the **main function** in a module
+    -   Using the conditional statement: `if __name__ == '__main__':`
+    -   Book scripts:
+        -   *Program 5-30*
+    -   Revel Functions Programming Project: [Solution](#functionmodule)
+
+## Questions (5.10)
+
+1.  (*5.10*) **Modular programming/modularization**
+    -   Store functions in modules
+    -   A module's file name should end in *.py*.
+    -   Book scripts:
+        -   *Programs 5-27, 5-28, 5-29*
+    -   Conditionally execute the **main function** in a module
+        -   The use of the special block: `if __name__ == '__main__':`
+        -   Book scripts:
+            -   *Program 5-30*
+    -   Revel Functions Programming Project: [Solution](#functionmodule)
+
+
+## Recording
+
+The recording discusses modular programming in Python by coding a very small example.
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/J1pynbwWwDA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+## Submission
+
+Do the project in the following parts, watch the recordings, and replicate the same two scripts in your computer.
+
+1.  A module: `revel_programming_functions.py`
+2.  The main program: `__main__.py`
+
+The program set should support both of the following two execution scenarios:
+
+1.  **Running the module as a standalone program**: Call `calc_future_value` within the `conditional main function` in the module
+
+2.  **Importing the module into the main program**: Call `calc_future_value` in the main program
+
+**Submit the following:**
+
+-   Both scripts
+-   A recording showing you run each script in your computer
+
+### Problem
+
+Suppose you have a certain amount of money in a savings account that earns compound monthly interest, and you want to calculate the amount that you will have after a specific number of months. The formula is as follows: $$
+f = p * (1 + i)^t
+$$ where
+
+-   $f$ is the future value of the account after the specified time period.
+-   $p$ is the present value of the account (the account's current balance).
+-   $i$ is the monthly interest rate.
+-   $t$ is the number of months.
+
+Write a program that takes the account's present value (current balance), monthly interest rate, and the number of months that the money will be left in the account as three inputs from the user. The program should pass these values to a function that returns the future value of the account, after the specified number of months. The program should print the account's future value.
+
+### Creating a Module
+
+You first create a module, for example, named `revel_programming_functions.py`. Add the following function to the module. Note that the `standard docstring` below the function signature/header.
+
+![The screen capture: A function definition of cal_future_value](imgs/python/function_revel_project_screenshot_1.png)
+
+```{python echo=FALSE, eval=FALSE}
+def calc_future_value(present_value:float, monthly_interest_rate:float, months:int)->float:
+    """
+    Calculate the future value of a bank account.
+    parameters: 
+        present_value: the starting value of the investment
+        monthly_interest_rate: the monthly interest rate as a decimal
+        months: the number of months 
+    return:
+        the future value of the account
+    usage:
+        future_value = calc_future_value(present_value, monthly_interest_rate, months)
+    """
+    # calculate future value
+    future_value = present_value * (1 + monthly_interest_rate) ** months
+
+    return future_value
+```
+
+### Importing the module
+
+Previously, you always write one or more functions in one program, followed by function calls in the same program.
+
+In managing a large and complex system, we often break down the system into several subsystems. The functions for each subsystem can be grouped into the same module.
+
+The *supporting structure* is discussed in *section 5.10*.
+
+#### `__name__`
+
+When a source code file is loaded into the Python interpreter, a special variable called `__name__` is created.
+
+-   If the source code file has been imported as a module, the `__name__` variable will be set to the name of the module.
+
+-   If the source code file is being executed as the main program, the `__name__` variable will be set to the string literal `'__main__'` .
+
+Therefore,
+
+> When being imported into another program, to prevent the module from running its main operations or main function, add a conditional `main function` in the module.
+
+#### Add a conditional `main function` in the module
+
+To conditionally execute the **main function** in a module,
+
+-   At the end of the module file, add a decision statement: `if __name__ == '__main__':`. Add the main operations in the suite.
+
+Then the main function runs only if the module file is executed.
+
+![The optional main function in a script](imgs/python/function_main_function.png)
+
+### Creating the `__main__` script
+
+1.  In the same folder as the module file, creating the main script named `__main__.py`.
+
+2.  In `__main__.py`, import the module by the statement: `import revel_programming_functions as rpf`. After the import, the function becomes available in the main program.
+
+![The **main**.py script](imgs/python/main_script.png)
+
+
+
+## Practice Questions
+
+### Script Set
+
+>  [@gaddis_starting_2020] Programs 5-27, 5-28, 5-29
+
+### Programming Exercises
+
+[@gaddis_starting_2020]  Programming Exercises (P296-): 11, 12, 13, 14, 15, 16, 17, 18, 20, 21
+
+## References
+
+::: {#refs}
+:::

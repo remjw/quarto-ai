@@ -1,0 +1,325 @@
+---
+title: Craps A Game of Chance
+---
+
+Cast study: A game of chance involves rolling two dice and comparing the results.
+
+## Test Run {#sec-dicecraps}
+
+Watch the following test run of a command-line-based script in @sec-crapsv2.
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/qisgiDonDXI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+## Game logic
+
+Game starts with *two dice*. In each turn, the player rolls the two dice and adds the values. There are **eleven (11) possible outcomes** in terms of the sum of the dice:
+
+    2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12.
+
+**The player will do at least one roll and may continue for one or more rolls until the player wins or loses.**
+
+We define three game **states/flags**: `won`, `lost`, `continue`. The process of determining the game state is as follows:
+
+1.  Roll the two dice (This is called `the first roll`.)
+
+-   If the sum of the dice is `7 or 11 on the first roll`, the player **win**s.
+-   if the sum is `2, 3, or 12 on the first roll`, the player loses (**crap**s).
+-   if the sum is `4, 5, 6, 8, 9, or 10 on the first roll` (**natural**), the sum becomes the player's point and the game continues
+
+2.  Roll the two dice again. (This is called `the second roll`.)
+
+-   If `the sum of the dice is the player's point`, the player `win`s.
+-   if the sum is `7 or 11 on the second roll`, the player loses (`crap`).
+-   if the sum is `2, 3, or 12 on the second roll`, the player loses (`crap`).
+-   if the sum is `4, 5, 6, 8, 9, or 10 on the second roll` (natural), the sum becomes the player's point and the game continues.
+
+**Continue rolling until the player wins or loses.**
+
+Thus, the number of rolls is not a fixed number and it varies in each play. To associate this game feature with the Repetition structure in programming,
+
+> To simulate a game with varying rounds/reps in a computer program, the program should be constructed in the `flag/sentinel-controlled while loop`.
+
+> The game state `continue` is chosen as the flag for determining the continuation or temination of the game. Alternatively, the two other states `won` and `lost` can also be used as the flag, but the code has to be modified if changing the loop flag.
+
+Reference: *Section 4.5 Case Study* in [@deitel_intro_2019].
+
+
+## Flowchart
+
+- To be Available
+
+## Script Version 1 {#sec-crapsv1}
+
+Version 1 is a single script. Run the script and play the game. The version is not designed from the perspective of software development.
+
+```{python eval=FALSE}
+# fig04_02.py
+# url: https://github.com/pdeitel/IntroToPython/blob/master/examples/ch04/fig04_02.py 
+"""Simulating the dice game Craps."""
+import random
+
+def roll_dice():
+    """Roll two dice and return their face values as a tuple."""
+    die1 = random.randrange(1, 7)
+    die2 = random.randrange(1, 7)
+    return (die1, die2)  # pack die face values into a tuple
+
+def display_dice(dice):
+    """Display one roll of the two dice."""
+    die1, die2 = dice  # unpack the tuple into variables die1 and die2
+    print(f'Player rolled {die1} + {die2} = {sum(dice)}')
+
+die_values = roll_dice()  # first roll
+display_dice(die_values)
+
+# determine game status and point, based on first roll
+sum_of_dice = sum(die_values)
+
+if sum_of_dice in (7, 11):  # win
+    game_status = 'WON'
+elif sum_of_dice in (2, 3, 12):  # lose
+    game_status = 'LOST'
+else:  # remember point
+    game_status = 'CONTINUE'
+    my_point = sum_of_dice
+    print('Point is', my_point)
+
+# continue rolling until player wins or loses
+while game_status == 'CONTINUE':
+    die_values = roll_dice()
+    display_dice(die_values)
+    sum_of_dice = sum(die_values)
+
+    if sum_of_dice == my_point:  # win by making point
+        game_status = 'WON'
+    elif sum_of_dice in (7, 11):  # lose by rolling 7 or 11
+        game_status = 'LOST'
+
+# display "wins" or "loses" message
+if game_status == 'WON':
+    print('Player wins')
+else:
+    print('Player loses')
+
+```
+
+## Script Version 2 {#sec-crapsv2}
+
+Version 2 is the one in the test run. 
+
+From the *perspective of software development*, the version applies **module programming**, which is a software design technique that emphasizes separating the functionality of a program into independent, interchangeable modules. Easy maintenance with less changes to code is one major benefit from separating the process in a number of functions.
+
+The version breaks down the entire app in *three scripts*, which should be located in the same folder.
+
+1.  `config.py`: A configuration file which defines invariants such as constants and global variables regardless the executions.
+
+2.  `craps.py`: A user-defined module which groups the user-defined functions
+
+3.  `__main__.py`: The main script is a `command-line interface` of the app. It provides the top-level entry point of the interface.
+
+To play the game, run `__main__.py`.
+
+### Configuration file
+
+```{python eval=FALSE}
+# config.py
+''' Cast study: a game of chance involves rolling two dice and comparing the results.
+
+Game starts with two dice. In each turn, the player rolls the dice and adds the values.
+There are eleven (11) possible outcomes in terms of the sum of the dice:
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+
+We define three game states/flags: won, lost, continue
+The process of determining the game state is as follows:
+1. Roll the two dice (This is called the first roll.)
+- If the sum of the dice is 7 or 11 on the first roll, the player wins. 
+- if the sum is 2, 3, or 12 on the first roll, the player loses (called craps).
+- if the sum is 4, 5, 6, 8, 9, or 10 on the first roll, (called natural), the sum becomes the player's point and the game continues
+
+2. Roll the two dice again. (This is called the second roll.)
+- If the sum of the dice is the player's point, the player wins.
+- if the sum is 7 or 11 on the second roll, the player loses.
+- if the sum is 2, 3, or 12 on the second roll, the player loses.
+- if the sum is 4, 5, 6, 8, 9, or 10 on the second roll, the sum becomes the player's point and the game continues.
+
+Continue until the player wins or loses.
+'''
+
+# global variables and constants
+game_name = 'Craps'
+my_point = 0
+rules_text = '''1. Roll two dice.
+2. If the sum of the dice is 7 or 11 on the first roll, the player wins.
+3. If the sum is 2, 3, or 12 on the first roll, the player loses (called craps).
+4. If the sum is 4, 5, 6, 8, 9, or 10 on the first roll, (called natural), the sum becomes the player\'s point and the game continues.
+5. Roll the two dice again.
+6. If the sum of the dice is the player\'s point, the player wins.
+7. If the sum is 7 or 11 on the second roll, the player loses (craps).
+8. If the sum is 2, 3, or 12 on the second roll, the player loses craps).
+9. If the sum is 4, 5, 6, 8, 9, or 10 on the second roll. (called natural), the sum becomes the player\'s point and the game continues.
+10. Continue until the player wins or loses.
+'''
+
+```
+
+### User-defined module `craps`
+
+A custom module `craps` is defined in the script `craps.py`. Two functions are incomplete. You need to complete the `update_game` and `play_game` functions.
+
+```{python eval=FALSE}
+# craps.py
+# import
+import config
+import random
+
+def start_game():
+    """Start a game of craps. Display the rules."""
+    print(f'Welcome to {cs.game_name}!')
+    print('The rules are simple.')
+    rules = input('Enter y to display the rules or n to start the game: ')
+    if rules == 'y':
+        print(config.rules_text)
+    return 
+
+
+def roll_dice()->tuple:
+    """Roll two dice and return their face values in a tuple."""
+    die1 = random.randint(1, 6)
+    die2 = random.randint(1, 6)
+    return (die1, die2)  # pack die face values into a tuple
+
+
+def display_dice(dice)->None:
+    """Display one roll of the two dice."""
+    die1, die2 = dice  # unpack the tuple into variables die1 and die2
+    time.sleep(1)
+    print(f'\nPlayer rolled {die1} + {die2} = {sum(dice)}')
+
+
+def update_game(dice, first)->str:
+    """Determine the state & point of the game. 
+    Return the state of the game.
+    parameters: dice tuple(int,int), first_roll bool"""
+    # get sum of dice
+    sum_of_dice = sum(dice)
+    # apply rules
+    # ======================
+    # if-elif-elif-...-else 
+    # incomplete
+    # =====================
+    return game_state
+
+
+def make_endingmark(game_state)->str:
+    """Make closing remark"""
+    return 'You won' if game_state == 'WON' else 'You lost'
+
+
+def first_roll()->str:
+    """Perform the first roll. Return the state of the game."""
+    dice = roll_dice()
+    display_dice(dice)
+    # update the game state
+    game_state = update_game(dice, True)
+    return game_state
+
+
+def play_game()->None:
+    """rolling"""
+    print('\nThe game is starting!')
+    roll = input('Enter y to roll the dice or n to quit: ')
+
+    # start rolling the dice
+    if roll == 'y':
+        first = True
+        game_state = [] #record the game states in a list
+
+        # do first roll
+        game_state.append(first_roll())
+        print(f'roll {len(game_state)}: state = {game_state[-1]} point = {cs.my_point}')
+
+        # while game is not won or lost, loop
+        while game_state[-1] == 'CONTINUE':
+        # =================
+        # suite incomplete
+        # ================
+        # end-while
+
+        # end of game    
+        time.sleep(1)
+        print(f'\n{make_endingmark(game_state[-1])} after {len(game_state)} roll(s).')
+        print('\nThanks for playing!')
+    return
+
+```
+
+```{python include=FALSE, eval=FALSE}
+def update_game(dice, first)->str:
+    """Determine the state & point of the game. 
+    Return the state of the game.
+    parameters: dice tuple(int,int), first_roll bool"""
+    # get sum of dice
+    sum_of_dice = sum(dice)
+    # apply rules
+    if sum_of_dice in (7, 11) and first is True:  # win
+        game_state = 'WON'
+    elif sum_of_dice in (7, 11) and first is False:  # win
+        game_state = 'LOST'
+    elif sum_of_dice == cs.my_point:  # win
+        game_state = 'WON'
+    elif sum_of_dice in (2, 3, 12):  # lose
+        game_state = 'LOST'
+    else:  # remember point
+        game_state = 'CONTINUE'
+        config.my_point = sum_of_dice
+    return game_state
+
+
+def play_game()->None:
+    """rolling"""
+    print('\nThe game is starting!')
+    roll = input('Enter y to roll the dice or n to quit: ')
+
+    # start rolling the dice
+    if roll == 'y':
+        first = True
+        game_state = [] #record the game states
+
+        # do first roll
+        game_state.append(first_roll())
+        print(f'roll {len(game_state)}: state = {game_state[-1]} point = {config.my_point}')
+
+        # while game is not won or lost, loop
+        while game_state[-1] == 'CONTINUE':
+            first = False
+            dice = roll_dice()
+            display_dice(dice)
+            game_state.append(update_game(dice, first))
+            print(f'roll {len(game_state)}: state = {game_state[-1]} point = {config.my_point}')
+        # end-while
+
+        # end of game   
+        time.sleep(1)
+        print(f'\n{make_endingmark(game_state[-1])} after {len(game_state)} roll(s).')
+        print('\nThanks for playing!')
+    return
+
+```
+
+### Top-level entry
+
+The entry of the CLI is defined in `__main__.py`. The script provides the top-level entry point of the CLI.
+
+```{python eval=FALSE}
+# __main__.py
+import craps
+
+craps.start_game()
+craps.play_game()
+```
+
+

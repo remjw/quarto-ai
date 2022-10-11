@@ -59,6 +59,21 @@ execute:
 
 themes: https://bootswatch.com/
 
+
+```{r}
+#| label: tbl-tables
+#| tbl-cap: "Tables"
+#| tbl-subcap:
+#|   - "Cars"
+#|   - "Pressure"
+#| layout-ncol: 2
+#| echo: fenced
+
+library(knitr)
+kable(head(cars))
+kable(head(pressure))
+```
+
 ```{r}
 #| warning: false
 #| code-line-numbers: "|7"
@@ -145,7 +160,7 @@ Other Content You can also place content in the margin by targeting the margin c
 
 $$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
 
-```{sql}
+```{#lst-flights .sql, lst-cap="Flights Query"}
 #| connection: flight
 #| label: tbl-flight.flights
 #| tbl-cap: listing flights table
@@ -155,3 +170,5 @@ select *
 from flights
 ;
 ```
+
+Then we query the flights table (@lst-flights).

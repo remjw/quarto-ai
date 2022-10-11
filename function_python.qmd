@@ -1,0 +1,389 @@
+---
+title: Functions/Methods 1
+---
+
+> Functions are the most important programming language feature in Python.
+
+::: callout-important
+Of the four types of objects that represent all aspects of Python programs (i.e., **modules**, **values**, **functions**, and **classes**), all relate to functions. [@rich_pattis_reading_nodate]
+:::
+
+Module and class objects define functions in their namespaces. The function objects in the module and class objects are often referred to as **methods**.
+
+## Reading
+
+::: callout-note
+-   [@gaddis_starting_2020] Sections 5.1-5.7
+-   [@deitel_intro_2019] Chapter 4 Functions
+-   [@rich_pattis_reading_nodate] Reading Headers and Calling Functions
+:::
+
+## Concepts & Questions
+
+::: panel-tabset
+### Set-1
+
+1.  (*5.1*) The meaning of the phrase `divide and conquer` in computer science
+    -   *Divide a large and complex task/problem into several smaller, manageable problems*
+2.  (*5.1*) The `benefits/reasons` for separating the code into smaller, manageable, and reusable pieces
+    -   Write once Use anytime anywhere: `code reuse`, `fast development`, `easy maintenance`
+    -   *Group each aspect/task of the functionality into a module*: modular programming
+3.  (*5.1*) What is the function in computer programming?
+    -   *A function is a group of statements that exist within a program for the purpose of performing a specific task.*
+
+
+### Set-2
+
+1.  (*5.2*) `Defining a function` vs. `Calling a function`.
+    -   The use of a function consists of two parts: *function definition* and *function call*.
+    -   **A function must be defined prior to its use/execution.** (In a single script, the physical position of the two parts matters!)
+    -   To call a function, the function must be accessible within the current scope/area.
+    -   The programmer/developer creates/implements a function per request.
+    -   The function user views the function like a black box with the terminals for input/parameters and output/return.
+    -   A function call must be written in the right way (syntactically correct).
+    -   In a function call, the function name must be followed by a pair of parentheses.
+    -   A function call triggers a new execution of the function. All the statements in the function body are executed unless the call did not correctly pass the arguments to the required parameters.
+    -   A function call may return data in one or more values.
+2.  (*5.2*) The `naming convention of function names`
+    -   **A verb phrase** expressing what the function does
+    -   Combine words by **either Camel case or underscore**
+    -   `get_average`, `calc_area_circle`, `get_employees_count`
+    -   `getAverage`, `calcAreaCircle`, `getEmployeesCount`
+    -   Other rules of using symbols are the same as naming a variable.
+3.  (*5.2*) Terms: `function definition`, `function header/signature`, `function body/block/suite`
+    -   A function definition is composed of two parts.
+    -   function `header/signature`: *An identifier in the first statement which specifies the name, parameters and return type as well*.
+    -   function `block`: A set of indented statements which perform the designed purpose
+4.  Distinguish the `types of function` in terms of author and return:
+    -   `library/built-in function` vs. `user-defined function`
+        -   `A library/module function` is a built-in function from a module. The function has been built into the module (defined in the module). As long as the module has been imported, the programmer can call the function directly.
+        -   `User-defined function` is a custom function for a user requirement which is particular to the application under the development.
+    -   `void function` vs. `value-returning function`
+        -   *void function* does not return any value. `return None` or `return` can be the last statement of a void function.
+        -   *value-returning function* returns one or more values.
+    -   Give a code example for each of the types above
+
+### Set-3
+
+1.  (*5.3*) The `standard shape of the function` in a flowchart
+    -   A rectangle with both left and right sides double lined
+    -   The detailed flow of logic in a function is separated from the main flowchart, into an individual flowchart.
+2.  (*5.3*) The `hierarchy chart` vs. the flowchart
+    -   A hierarchy/structure chart gives a graph of the relationships between functions.
+    -   A flowchart depicts the logic flow in a single function.
+
+### Set-4
+
+1.  (*5.5*) Terms: `parameter` vs. `argument`
+
+    -   The user writes a function call (statement) which contains zero or more arguments. The function call will **pass the argument values to their corresponding parameters** as defined in the function definition, using either **passing by position** or **passing by name**.
+
+2.  (*5.5*) `Keyword argument` vs. `non-keyword argument`
+
+3.  (*5.5*) `A parameter can have a default value`, and this can be done by embedding a value assignment in the parameter list of the function signature.
+
+    -   Give a code example.
+
+4.  (*5.5*) Know the use of the following statements:
+
+    -   `def compare_numbers(number1, number2):`
+    -   With the new Python: `def compare_numbers(number1, number2)->int:`
+    -   `pass`
+    -   `return`
+
+### Set-5
+
+1.  (*5.4*) Know the statement which **pauses execution until the user presses Enter**:
+    -   `input("Press Enter to continue: ")`
+2.  (*5.4, 5.6*) Terms: `Scope`, `local variable`, `global variable`
+    -   `Scope`: The active/current area
+    -   What is *a local variable's scope*?
+    -   What is *a global variable's scope*?
+:::
+
+## The Keyword None
+
+The keyword `None` in Python is used to define a *null value*, or no value at all.
+
+::: callout-tip
+When a new variable must be defined without any known value available, it is recommended to assign None to the variable.
+:::
+
+`None` by itself is neither False nor True. To test whether a variable is null or not, use the variable name or the `is operator` in the `if` statement:
+
+::: panel-tabset
+### is None/is not None
+
+Use `is None` and `is not None` to test if the variable is None.
+
+```{python}
+my_var = None
+
+if my_var is None:
+  print("test 1: is NULL")
+
+if my_var is not None:
+  print("test 1: Not Null, has a value ")
+
+my_var = 1
+
+if my_var is None:
+  print("test 2: is NULL")
+
+if my_var is not None:
+  print("test 2: Not Null, has a value ")
+```
+
+### Use the Variable Name
+
+`None` by itself is neither False nor True. To test whether a variable is null or not, use the variable in the `if` statement:
+
+```{python results='hold'}
+# define a null variable
+grade = None
+#
+if grade:
+  print("grade is available now, and has a value.")
+else:
+  print("grade is unavailable.")
+
+# assign a value to grade
+grade = 90
+#
+if grade:
+  print("grade is available now, and has a value.")
+else:
+  print("grade is unavailable.")
+```
+:::
+
+## Discussion
+
+Upon understanding the `function object` which allows us to extract a set of common operations into a callable object, we would like to explore more about choosing good function definitions in terms of several pertinent factors including flexibility, user-friendly, maintainability and scalability.
+
+The programming is not different from anything else, and the same output can be created in a variety of ways. When we need to define a function for a specific requirement, such as calculating aggregate values, generating an object, getting certain data, creating an interface, creating a graph and so on, the function always varies with programmers and applications.
+
+Thus, **what makes a good function and how to determine parameters and their default values** are worthwhile topics for further discussions.
+
+First, open [the page of a plot function page from Pandas](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html). *Pandas* is known as one popular Python library for machine learning & artificial intelligence. The `pandas.DataFrame.plot function` offers an interface of drawing a plot for a given data set.
+
+Take a look at the header and parameter list of `pandas.DataFrame.plot function`. Count the number of parameters in the plot function. With these parameters, the plot function enables customization of the plot's aesthetic aspects. Next, find whether the plot function prints any message, intermediate or final results.
+
+In a formal/official function object, eliminate printing the final result within the function if not necessary; let the caller decide to print the return data or not. There are the exceptions when the function must print the intermediate data in the console for showing the caller the real-time progress of the execution flow, or the function is created solely for the printing purpose.
+
+Google advanced search page provides another example. On the [Google advanced search page](https://www.google.com/advanced_search), there are many fields available for users to specify a particular search by entering a value or selecting an option. The fields on the search form are the user interface elements for passing values to their bundled function parameters.
+
+Obviously, it might be harder to call a function with over 5 parameters. Therefore, a considerate writer would assign the default value to some of the parameters if possible. The default value of a parameter has to be carefully chosen and it should represent the most common/frequent case/value.
+
+The Function Definitions part in @sec-discussfundef lists seven (7) function definitions for the same need. **Can you discuss their pros and cons in terms of the following questions?**
+
+1.  With respect to easy-to-use/call, input and output flexibility, maintainability and scalability, discuss how the following function's characteristics improve or
+
+    -   The number of parameters: no parameter vs. one or more parameters
+    -   The return of a function: void function vs. value-returning function
+    -   The mandatory parameters without default vs. the optional ones with default
+
+2.  How do we determine the default value for an optional parameter in terms of generality?
+
+3.  Syntactically, does Python require the function header/signature list mandatory parameters before optional ones?
+
+4.  As you can see in @sec-discussfundef, the first four definitions, *print_five_hash_tags, print_line(length), print_line(length=5,symbol="\#")*, print the pattern before returning to the main execution. The last three ones only return the pattern in a string, and the caller decides whether or not to print the pattern and when to print it as well.
+
+If you are supposed to write a function as a service interface, what would you consider when deciding whether the function should display any type of information or result to the caller?
+
+5.  What type of error and error message will be raised from the function call in line 6 of the following cell?
+
+```{python}
+#| eval: false
+# define
+def generate_line(length, symbol="#"):
+  line = symbol * length
+  return line
+# passing both by name 
+line = generate_line()
+```
+
+6.  At the end of your post, assume neither specific information given about the use of the function nor any particular restrictions, choose one from the seven functions according to your own programming style and preference.
+
+### Function Definitions {#sec-discussfundef}
+
+::: panel-tabset
+### 1. `print_hash_tags()`
+
+Write a definition of the function `print_five_hash_tags`, which has no parameters. The function should print a single line of output consisting of 5 hash tags (`#`). At the end of the snippet, make a function call to execute `print_hash_tags`.
+
+```{python}
+# define
+def print_five_hash_tags():
+  line = f'#####'
+  print(line)
+  
+# call without passing value
+print_five_hash_tags()
+```
+
+### 2. `print_line(length)`
+
+Write a definition of the function `print_line`, which takes/expects one integer parameter `length`. The function should print a single line of hash tags (`#`) and the number of hash tags equals `length`. At the end of the snippet, make a function call to execute `print_line`, passing the value 5 by name to `length`.
+
+```{python results='hold'}
+# define
+def print_line(length):
+  line = "#" * length
+  print(line)
+  
+# call 1  passing length by name
+print_line(length=5)
+# call 2  passing length by name
+print_line(length=10)
+```
+
+### 3. `print_line(length, symbol)`
+
+```{python results='hold'}
+# define
+def print_line(length, symbol):
+  line = symbol * length
+  print(line)
+  
+# call 1
+print_line(length=5, symbol="#")
+# call 2
+print_line(length=9, symbol=".")
+```
+
+### 4. `print_line(length=5, symbol="#")`
+
+```{python results='hold'}
+# define
+def print_line(length=5, symbol="#"):
+  line = symbol * length
+  print(line)
+  
+# call 1 without argument
+print_line()
+# call 2 passing length by name
+print_line(length=10)
+# call 3 passing symbol by name
+print_line(symbol=".")
+# call 3 passing values for both length and symbol
+print_line(length=10, symbol=".")
+```
+
+### 5. `generate_line(length, symbol="#")`
+
+The function only returns the line in a string. The main program performs the print.
+
+```{python results='hold'}
+# define
+def generate_line(length, symbol="#"):
+  line = symbol * length
+  return line
+  
+# call 1 passing both by name 
+line1 = generate_line(length=5)
+# call 2 passing both by name 
+line2 = generate_line(length=9, symbol=".")
+
+# print both one time
+print(f'{line1}\n{line2}')
+```
+
+### 6. `generate_line(length, symbol)`
+
+```{python results='hold'}
+# define
+def generate_line(length, symbol):
+  line = symbol * length
+  return line
+  
+# call 1 passing both by name 
+line1 = generate_line(length=5, symbol="#")
+# call 2 passing both by name 
+line2 = generate_line(length=9, symbol=".")
+
+# print both one time
+print(f'{line1}\n{line2}')
+```
+
+### 7. `generate_line(length=5, symbol="#")`
+
+```{python results='hold'}
+# define
+def generate_line(length=5, symbol="#"):
+  line = symbol * length
+  return line
+
+# call 1 without argument
+line1 = generate_line()
+# call 2 with passing length by name
+line2 = generate_line(length=10)
+# call 3 with passing symbol by name
+line3 = generate_line(symbol=".")
+# call 4 passing both by name
+line4 = generate_line(length=5, symbol="#")
+# call 5 passing both by name 
+line5 = generate_line(length=9, symbol=".")
+
+# print both one time
+print(f'{line1}\n{line2}\n{line3}\n{line4}\n{line5}')
+```
+:::
+
+```{=html}
+<!--
+## Conclusion
+
+Technically, go for the second option. You probably will not see the rule in any formal text book; it is more like an unspoken convention. In a formal/official function object, eliminate printing the final result within the function if not necessary; let the caller decide to print the return data or not in the main function. There are exceptions when the function must print the intermediate data in the console for showing the caller the real-time progress of the execution flow. Or the function is created for the printing purpose.
+-->
+```
+## Exercises
+
+Write a function definition and a function call for each of the following:
+
+1.  A function named `double_number` that receives an integer argument and returns an integer that is twice the value of the parameter
+
+2.  A function named `get_max` that has three integer parameters and returns the largest of the three parameters
+
+```{python}
+#| echo: false
+#| eval: false
+def get_max(a, b, c):
+  # return the largest of a, b and c
+  largest = a
+  if b > largest:
+    largest = b
+  if c > largest:
+    largest = c
+  return largest
+
+# call
+print(get_max(10, 0, 15))
+```
+
+3.  A function named `increment_by_one` which receives an integer argument and returns an integer that one more than the value of the argument
+
+4.  A function named `getAbsoluteValue` that receives an integer argument and returns the absolute value of that argument
+
+```{python}
+#| echo: false
+#| eval: false
+def getAbsoluteValue(number):
+  # return the absolute value of number
+  if number < 0:
+    return -number
+  else:
+    return number
+
+# call
+print(getAbsoluteValue(-10))
+```
+
+5.  A function named `get_sign` that receives an integer argument and returns the value 1 if the argument is positive, 0 if the argument is 0, and -1 if the argument is negative
+
+6.  Write a function `isMultiple` that takes two integer arguments, x and y, and returns the value 1 if x is a multiple of y, -1 if y is a multiple of x, and 0 for all other cases.
+
+## References
+
+::: {#refs}
+:::

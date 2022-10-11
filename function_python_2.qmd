@@ -1,0 +1,266 @@
+---
+title: Functions/Methods 2
+---  
+
+## Reading
+
+::: callout-note
+
+Reading Assignment
+
+- [@gaddis_starting_2020] Sections 5.8-5.9
+- [@deitel_intro_2019] Chapter 4 Functions
+:::
+
+## Questions
+
+::: panel-tabset
+
+### Set 1 (5.8)
+
+1.  (*5.8*) What is `a Boolean function`?
+2.  (*5.8*) The syntax of `returning more than one value from a function`, and receiving all the return values from calling such a function
+    -   Give an example of such a return statement
+
+
+### Set 2 (5.9)
+
+1.  (*5.9*) The built-in `math module`
+    -   Two constants: `math.pi` and `math.e`
+    -   `ceil()`, `floor()`
+    -   `sqrt()`, `log()`, `log10()`, `exp()`
+    -   `hypot()`
+    -   `radians()`, `degrees()`
+        -   Convert an angle from degrees to radians: `math.radians(180)`
+        -   Convert an angle from radians to degrees: `math.degrees(1)`
+    -   `sin()`, `cos()`, `tan()`:
+        -   Take an angle in radians [@noauthor_radian_2022]: `math.sin(math.pi/2)`
+    -   `asin()`, `acos()`, `atan()`
+        -   To convert the output to degrees, multiply it by `180 / math.pi`; or call `math.degrees`
+        -   Example: `math.asin(1) * 180 / math.pi` or `math.degrees(math.asin(1))`
+
+
+:::
+
+
+## Writing Functions
+
+(*5.8*) `Write user-defined functions` 
+
+1. *Program 5-23* Split commission rate calculator in five smaller scripts
+2.  Write a function definition for each of the following:
+    - a function named `double_number` that receives an integer argument and returns an integer that is twice the value of the parameter
+    - a function named `get_max` that has three integer parameters and returns the largest of the three parameters
+    - a function named `increment_by_one` which receives an integer argument and returns an integer that one more than the value of the argument
+    - a function named `get_absoluteValue` that receives an integer argument and returns the absolute value of that argument
+    - a function named `get_sign` that receives an integer argument and returns the value 1 if the argument is positive, 0 if the argument is 0, and -1 if the argument is negative
+
+
+
+## The Main Function
+
+### Reading a Script
+
+What does the following snippet do?
+
+```{python eval=F}
+import random
+
+low, high = 1, 6 
+
+def main(): # the main function
+  again = 'y' 
+  while again == 'y' or again == 'Y'
+    print('Rolling the two dice...')
+    die1 = random.randint(low, high)
+    die2 = random.randint(low, high)
+    print(f'Their values are: {die1}, {die2}')
+    # ask if they want to roll again
+    again = input('Roll them again? Enter y for yes or any other key to quit: ')
+
+main()
+```
+
+
+### Dice-Rolling
+
+The process is equivalent to taking a number of samples from a pool of six integers 1 through 6.
+
+-   The process is defined in a value-returning function `rolling_dice`.
+-   `rolling_dice` has three parameters in the order: `N`, `low`, `high`.
+-   `low` and `high` has a default value.
+-   The function returns the sample in a string.
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/7o3Py2jQsew" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+```{python results='hold'}
+# roll a six-sided die
+import random
+# define the rolling times
+N = 100
+
+def rolling_die(N, low=1, high=6):
+  '''rolling a die for N times
+    Parameters:
+        low: the minimum value of the die
+        high: the maximum value of the die
+    Returns: 
+        the rolling results in a string
+    Example: 
+        rolling_die(N)
+  '''
+  # initialize an empty sample
+  sample = ''
+  for _ in range(N):
+    sample += f'{random.randint(low, high)} '
+  # end-for
+  return sample
+
+def main():
+  '''define a main function'''
+  sample = rolling_die(N)
+  print(f'A random sample of rolling a die {N} times: {sample}')
+
+# call the main function
+main()
+  
+```
+
+
+### Add `seed` Parameter
+
+For a **reproducible result**, set the seed to a fixed value by calling `random.seed`. As long as the seed is set to the same value, `randint` always returns the same value set.
+
+In the following snippet, add a parameter `seed` in the `rolling_die` function. Set the default to 10. As the same seed always returns the same number, every roll in the `for-loop` returns the same number 5.
+
+```{python results='hold'}
+'''roll a six-sided die'''
+import random
+# define the rolling times
+N = 100
+seed = 10
+
+def rolling_die(N, low=1, high=6, seed=10):
+  '''rolling a die for N times'''
+  # initialize an empty sample
+  sample = ''
+  # rolling
+  for _ in range(N):
+    random.seed(seed)
+    sample += f'{random.randint(low, high)} '
+  # end-for
+  return sample
+
+def main():
+  '''define a main function'''
+  sample = rolling_die(N)
+  print(f'A sample of rolling a die {N} times with the seed {seed}:\n{sample}')
+
+# call the main function
+main()
+```
+
+
+
+## Exercise:Flipping a Coin
+
+> Submit both script and recording.
+
+Use `randint` to simulate 100 coin flips, displaying `H` for heads and `T` for tails, all on the same line, each separated by a space.
+
+**You must meet the following requirements, and structure your script in the same way as the die-rolling example.**
+
+1.  Define the simulation in a value-returning function named `flipping_coin(N, low=1, high=2)`.
+
+2.  The function allows the caller to
+
+    -   Customize the sample size, by passing the values to `N`.
+    -   If not taking the default value of low and high, pass a new value.
+
+3.  The function returns the simulation result in a string.
+
+4.  In the same script, add a `main function` which calls `flipping_coin` with an argument value 100 passed to `N`. In the main function, print all the values in the simulation result.
+
+5.  At the end of the script, call the `main` function.
+
+Refer to the following program structure and a test run as well.
+
+The recording walks you through the entire programming progress. The recording also shows you **mapping two integers 1 and 2 to two corresponding letters H and T** by using `if-else` statement:
+
+```{python eval=F}
+# Mapping 1 and 2 to H and T
+if random.randint(low, high) == 1:
+  flip = 'H'
+else: # if randint returns 2
+  flip = 'T'
+```
+
+### Walkthrough
+
+```{r, eval=knitr::is_html_output(excludes = "epub"), results = 'asis', echo = F}
+cat(
+'<iframe width="560" height="315" src="https://www.youtube.com/embed/4fzBmILHoe4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+)
+```
+
+### The structure
+
+```{python eval=F}
+import random
+low, high = 1, 2
+
+def flipping_coin(N, low=1, high=2):
+    '''flipping a coin for N times'''
+    pass
+
+def main():
+    pass
+
+# call main
+main()
+```
+
+### Test run
+
+The expected output is:
+
+```{python echo=FALSE, results='hold'}
+'''Simulate coin flips. H for Heads and T for Tails'''
+import random
+
+# initialize
+N = 100
+num_types = 2
+
+def flipping_coin(N, low=1, high=2):
+  '''flip a coin for N times'''
+  # initialize an empty sample
+  sample = ''
+  # tossing
+  for _ in range(N):
+    if random.randint(1, num_types) == 1:
+      sample += 'H '
+    else:
+      sample += 'T '
+  # end-for
+  return sample
+
+def main():
+  '''define a main function'''
+  sample = flipping_coin(N)
+  print(f'A random sample of tossing a coin {N} times:\n{sample}')
+
+# call the main function
+main()
+```
+
+
+
+## References
+
+::: {#refs}
+:::

@@ -2,14 +2,25 @@
 title: The Tortoise and the Hare
 ---
 
+## Problem Description
 
-The problem description is from [@deitel_intro_2019] (Simulation: The Tortoise and the Hare). The flowchart and the code are original.
+::: callout-note
+The problem description is from Exercise 4.12 in Chapter 4 of  [@deitel_intro_2019] (Simulation: The Tortoise and the Hare). 
+:::
 
-In this problem, you will re-create the classic race of the tortoise and the hare. You will use random-number generation to develop a simulation of this memorable event.
+::: callout-note
+The sample runs, flowchart and the code given on this page are original and not from the book. 
+:::
+
+In this problem, you will re-create the classic race of the tortoise and the hare. You will use **random-number generation** to develop a simulation of _this memorable event_.
 
 ## Sample Runs
 
-The game is a terminal/console-based program/application. The following are two sample runs.
+The game is _CLI (Command Line Interface)-based_ as a terminal/console-based program/application. Watch the following two sample runs. 
+
+::: callout-important
+To be qualified for the full credit, the program must implement [the same game logic] as described in the [Game Logic](#turtleharegamelogic), and behave the same way as the sample runs.
+:::
 
 **Test run 1:**
 
@@ -206,7 +217,7 @@ def move_hare()->int:
   
 ```
 
-## Game Logic
+## Game Logic {#turtleharegamelogic}
 
 ### Start the Game
 

@@ -1,0 +1,364 @@
+---
+title: Performance Metrics
+---
+
+## Classifier Metrics
+
+
+### R Caret Library
+
+```{r}
+#| results: hold
+#| warning: false
+library(kableExtra)
+library(tidyverse)
+library(caret)
+truth <- c(1,0,1,1,1,0,0,1,1,1)
+prediction <- c(1,1,1,0,0,1,0,1,1,0)
+confusionMatrix(
+  factor(prediction, levels = c(1,0)), 
+  factor(truth, levels = c(1,0)),
+  positive = "1",
+  mode="everything"
+  )
+```
+
+### Accuracy
+
+We define **overall success rate** (or accuracy) as a metric defining what we got right.
+
+-   **The ratio** between the sum of the diagonal values (i.e., TP and TN) vs. the sum of the matrix.
+
+$$
+accuracy = \frac{TP+TN}{TP+TN+FP+FN} = \frac{4+1}{10}= 0.5
+$$
+
+In other words, the confusion matrix of a good model has large numbers diagonally and small (ideally zero) numbers off-diagonally.
+
+
+### Precision, Recall, Sensitivity, Specificity
+
+Precision and Recall are **accuracy metrics** used by the information retrieval community; they are often used to characterize classifiers as well.
+
+::: panel-tabset
+
+#### Precision
+
+**Precision** is the percent of cases we marked `positive` really are positive. This tells us how reliable it is when a classifier has marked a case as positive.
+
+$$
+precision = \frac{TP}{TP+FP} = \frac{4}{4+2} \approx 0.667
+$$
+
+#### Recall & Sensitivity
+
+**Recall** is the percent of `positive` cases a classifier did correctly identify and select. Recall is also called **Sensitivity** and **True Positive Rate**, the portion of true positive cases that a classifier is able to discover. 
+$$
+recall = \frac{TP}{TP+FN} = \frac{4}{4+3}\approx 0.571
+$$
+
+#### Specificity
+
+**Specificity**, also called **True Negative Rate**, is a metric to evaluate how good a classifier `identifies (selects) negative class`, calculated as the portion of the negative cases which has identified by a classifier.
+
+$$
+specificity = \frac{TN}{TN+FP} = \frac{1}{1+2} \approx 0.333
+$$
+
+The **false positive rate**, FPR, is 
+$$
+FPR = \frac{FP}{TN+FP} = 1-specificity
+$$
+
+:::
+
+
+### Balanced Accuracy
+
+Accuracy is used to evaluate how good a binary classifier is. When the two classes are imbalanced, i.e., one class appears more frequently than the other, the balanced accuracy should be taken as the average of the sensitivity and specificity scores. 
+$$
+\text{balanced accuracy} = \frac{sensitivity+specificity}{2} \approx 0.452
+$$
+
+
+
+### F1-score
+
+In a binary classification, F-score or F-measure is calculated from the **precision** and **recall** of the test. The traditional F-score, $F_1$-score, is the average of precision and recall. The highest possible value of an $F_1$-score is 1 and the lowest is 0.
+
+$$
+F_1\text{} = \frac{precision+recall}{2} \approx 0.615
+$$
+
+
+### $F_\beta$-score
+
+A more general F-score, $F_\beta$, uses a positive factor $\beta$ by which the score will weigh recall $\beta$ times as important as precision. Recall measures how sensitive a model is to the positive class. Precision is about how many cases predicted as positive are really positive. If discovering all the positive cases is more important than filtering false positive cases, then $\beta$ should be greater than $1$.
+
+Two commonly used values for $\beta$ are $2$, which weighs recall higher than precision, and $0.5$, which weighs recall lower than precision.
+
+$$
+F_\beta\text{} = (1+\beta^2)\times\frac{precision\times recall}{\beta^2\times precision + recall} 
+$$
+
+A loss or cost function is a technique which is used to represent the loss or cost of an event, such as mistakenly classifying a negative case as positive or vice verse.
+
+
+
+
+
+
+## Python Equivalent
+
+The following is the layout of confusion matrix used in the `confusion_matrix` function from the **sklearn.metrics** module. Each row corresponds to one class in the truth.
+
+|              |          |                      |                      |
+|--------------|----------|----------------------|----------------------|
+|              |          | ***y_pred***         |                      |
+|              |          | *positive*           | *negative*           |
+| **y\_ true** | positive | ( true *positive )*  | ( false *negative )* |
+|              | negative | ( false *positive )* | ( true n*e*gative )  |
+
+
+
+### Official Example
+
+In the following embedded frame, study the official document of the confusion_matrix function.
+
+```{r echo=FALSE}
+knitr::include_url("https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html")
+```
+
+
+### Custom Example
+
+
+::: panel-tabset
+
+#### confusion_matrix
+
+```{python echo=TRUE,eval=TRUE}
+import numpy as np
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+# define sample labels, truth and prediction
+truth =      [1,0,1,1,1,0,0,1,1,1]
+prediction = [1,1,1,0,0,1,0,1,1,0]
+# confusion matrix
+cmat = confusion_matrix(y_true=truth, y_pred=prediction, labels=[1,0])
+print(cmat)
+```
+
+-   **labels**: by default, 0 is positive class and 1 is negative.
+-   Set **labels** to **\[1,0\]** to **specify 1 (the first value) as positive and 0 as negative in the matrix**.
+-   If the class labels are yes and no, set labels to \['yes', 'no'\] to specify 'yes' as positive and 'no' as negative in the matrix.
+-   The option may be used to reorder or select a subset of class labels.
+-   If None is given, those that appear at least once in `y_true` or `y_pred` are used in ascending order.
+
+
+
+
+#### Read TP, FP, TN, FN
+
+For a binary classifier, extract the four counts as follows:
+
+```{python echo=TRUE,eval=TRUE}
+tp,fn,fp,tn = cmat.ravel()
+print(tp,fn,fp,tn)
+```
+
+#### Scoring
+
+precision_score, recall_score, f1_score
+
+```{python echo=TRUE,eval=TRUE}
+import numpy as np
+from sklearn.metrics import precision_score, recall_score, f1_score
+# Define sample labels, truth and prediction
+truth = [1,0,1,1,1,0,0,1,1,1]
+prediction = [1,1,1,0,0,1,0,1,1,0]
+# scores
+print(f"precision={precision_score(y_true=truth, y_pred=prediction)}")
+print(f"recall={recall_score(truth, prediction)}")
+print(f"f1-score={f1_score(y_true=truth, y_pred=prediction)}")
+```
+
+:::
+
+
+### Classification Report
+
+**sklearn.metrics.classification_report** generates a classification performance report. The following embedded is the official examples of using the function.
+
+```{r echo=FALSE}
+knitr::include_url("https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html")
+```
+
+
+However, the metrics in the classification report from `sklearn` are not exactly the same as the standard definitions of the metrics.
+
+```{python echo=TRUE,eval=TRUE}
+print(classification_report(
+    y_true=truth, 
+    y_pred=prediction, 
+    labels=[1,0]))
+```
+
+-   **support**: The number of true cases for each label. The example data has **7 positive cases** and **3 negative cases**.
+
+-   **macro avg**: Calculate metrics for each label, and find their un-weighted mean. This does not take label imbalance into account. For example, the precision of positive class is 0.67 and negative class is 0.25; **macro avg** is $(0.67+0.25)/2=0.46$.
+
+-   **weighted avg**: Calculate metrics for each label, and find their average weighted by support. For example, the **weighted avg of the precision** is calculated as
+
+$$
+0.67\times \frac{7}{10} + 0.25 \times \frac{3}{10} = 0.544
+$$
+
+This alters 'macro' to **account for label imbalance**; it can result in an **F-score** that is not between precision and recall.
+
+
+
+## Multi-Class Classifier
+
+To perform the same performance evaluation for more than two classes, the following script, separated in two tabs, deals with a classification problem of five classes labeled as `0,1,2,3,4`:
+
+::: panel-tabset
+
+### Confusion Matrix
+
+```{python echo=T, eval=T, results='hold'}
+#| cap-location: margin
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# make two lists for expected/true and predicted/estimate target/label values
+expected = [2, 0, 0, 2, 4, 4, 1, 0, 3, 3, 3]
+predicted = [2, 1, 0, 2, 4, 3, 1, 0, 1, 3, 3]
+
+# Create confusion matrix
+cmat = confusion_matrix(expected, predicted)
+print(cmat)
+```
+
+
+### Classification Report
+
+The classification report lists several [classification metrics]() in a table. To get the report, run
+
+```{python}
+from sklearn.metrics import classification_report
+# Classification report
+class_names = ['Class-0', 'Class-1', 'Class-2', 'Class-3', 'Class-4']
+report = classification_report(expected, predicted, target_names=class_names)
+print(report)
+```
+
+:::
+
+
+## Visualize Confusion Matrix
+
+
+```{python echo=T, eval=T, results='hold'}
+#| cap-location: margin
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# make two lists for expected/true and predicted/estimate target/label values
+expected = [2, 0, 0, 2, 4, 4, 1, 0, 3, 3, 3]
+predicted = [2, 1, 0, 2, 4, 3, 1, 0, 1, 3, 3]
+
+# Create confusion matrix
+cmat = confusion_matrix(expected, predicted)
+
+# Visualize confusion matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+ax.set_title('Confusion matrix')
+#plt.title('Confusion matrix')
+fig.colorbar(img)
+ticks = np.arange(5)
+ax.set_xticks(ticks)
+ax.set_yticks(ticks)
+ax.set_ylabel('True/expected labels')
+ax.set_xlabel('Predicted labels')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+```
+
+
+## Handling String Labels
+
+```{python}
+import numpy as np
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+truth = ["yes","yes", "yes" ,"no" , "no" , "no" , "no" , "no" , "no" , "yes"]
+prediction = ["no",  "yes", "no" , "yes", "yes", "no" , "no" , "yes", "yes" ,"no"]
+# Create confusion matrix
+confusion_mat = confusion_matrix(y_true=truth, y_pred=prediction, labels=["yes","no"])
+print(confusion_mat)
+```
+
+
+
+
+
+## Exercises
+
+### Concepts
+
+Define precision, recall, f1-score, support
+
+### Scripting
+
+The following cells generates two lists `y_true` and `y_pred` to simulate the truth and prediction, respectively.
+
+```{python eval=TRUE, echo=TRUE}
+# truth
+import numpy as np
+np.random.seed(99)
+labels = [2, 3]  
+y_true = np.random.choice(labels, size=20, replace=True)
+print(y_true)
+```
+
+```{python eval=TRUE, echo=TRUE}
+# prediction
+np.random.seed(1234)
+y_pred = np.random.choice(labels, size=20, replace=True)
+print(y_pred)
+```
+
+-   Write a Python script which generates a confusion matrix and a performance report for the given `y_true` and `y_pred`.
+
+```{python echo=FALSE,eval=FALSE}
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+# confusion matrix
+confusion_mat = confusion_matrix(y_true=y_true, y_pred=y_pred, labels=[2,3])
+print(confusion_mat)
+print(classification_report(y_true=y_true, y_pred=y_pred, labels=[2,3]))
+```
+
+- Visualize the confusion matrix
+
+- According to the classification report, if the classifier is for detecting videos that are safe for kids, label 2 is safe and 3 is not safe, would you prefer the model with the performance report above? Why?
+
+<!-- a model which has high precision for label 2 and lower recall for 
+label 2? -->
+
+
