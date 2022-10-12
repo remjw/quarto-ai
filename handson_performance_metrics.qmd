@@ -287,7 +287,7 @@ y_pred = np.random.choice(labels, size=100, replace=True)
 print(f'prediction: {y_pred}')
 ```
 
-Do the following in a Python script or a Jupyter Notebook:
+Do the following in a Python script or a Jupyter Notebook. To work with Jupyter Notebook, I highly recommend you to sign in to Google Colab with your Google account, and work with Jupyter notebooks on the Colab platform.
 
 1. First copy the two code cells above to generate y_true and y_pred for the truth and prediction.
 
