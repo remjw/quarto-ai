@@ -2,7 +2,6 @@
 title: Mathematical Concepts
 ---
 
-
 ## Interval {#sec-mathinterval}
 
 1.  **Interval/range**: The set of all real numbers between two given numbers. The two numbers on the ends are the **endpoint**s. The endpoints might or might not be included in the interval depending whether the interval is `open` or `closed`.
@@ -30,6 +29,7 @@ Distance:
 
 In statistics, **outlier**s are values out of the ordinary and possible way out of the ordinary. Sometimes, outliers are simply bad data. In the data science case studies, we'll see that outliers can distort results. Which of the three measures of central tendency we discussed---**mean**, **median** and **mode**---is most affected by outliers? Why? Which of these measures are not affected or least affected? Why?
 
+<!--
 ```{bash eval=FALSE,echo=FALSE}
  Outliers affect mean the most. Mean is the sum of a collection of values divided by the count of values in the data. So if the value of the outlier is high it increases the mean, and if the value of outlier is low it decreases the mean. Eg: Suppose you hade the values 2,2,3,4,23 . The 23 (an outlier) being so different to the others it will drag the mean much higher than it would otherwise have been. It may even be a false reading or something like that. It is things such as this that makes Statistics more of a challenge sometimes. It is imperative that thought be given to the context of the numbers you are investigating.
 
@@ -37,6 +37,7 @@ Outliers have a little effect on Median because is the average amount in a set o
 
 Mode remain the same, as these are all resistant to outliers. Mode is the number that occurs most often, so an outlier would not really have any impact because there is no equation involve.
 ```
+-->
 
 ## Measure of Dispersion
 
@@ -47,4 +48,3 @@ Mode remain the same, as these are all resistant to outliers. Mode is the number
 ## Probability/Likelihood
 
 ## Bayes Theorem
-

@@ -6,9 +6,11 @@ title: k-Nearest Neighbors
 ::: callout-important
 #### text section & script
 
-[@deitel_intro_2019] Section 15.1, 15.2, 15.3
+[@deitel_intro_2019] Section 15.1, 15.2, 15.3 | [Link to the book Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb)
 
-[Link to Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb)
+Use the book script as a reference. Follow the guidance on this page.
+
+Answer the embedded questions in all the QUESTION boxes.
 :::
 
 
@@ -62,13 +64,22 @@ knitr::include_url("https://scikit-learn.org/stable/auto_examples/exercises/plot
 
 ## Terms
 
-> Question: Define the following terms
+::: callout-important
+### QUESTION: Define the Terms
 
-Classification, supervised learning, k-nearest neighbors, labeled data, label/class/target, attributes/features, training set, test set, Scikit-learn, estimator, Pandas,
+Classification, supervised learning, k-nearest neighbors, labeled data, label/class/target, attributes/features, training set, test set, NumPy, Scikit-Learn, estimator, Pandas, Matplotlib, Seaborn
+:::
+
 
 ## Steps
 
-> Question: List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
+::: callout-important
+### QUESTION: The steps in a typical machine-learning project
+
+List the steps in a typical machine-learning project. Give each a brief description on the purpose of the step.
+:::
+
+
 
 ## The digits Dataset
 
@@ -182,11 +193,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ## Model Creating and Training
 
-Read 15.2.5 and 15.2.6. Answer the following questions:
+::: callout-important
+### QUESTION: Lazy estimator & Odd Intergers for K value in kNN
 
-> What is a Lazy Estimator?
+Read 15.2.5 and 15.2.6. 
 
-> Why is an odd integer a better choice for number of neighbors in kNN estimators?
+- What is a Lazy Estimator?
+- Why is an odd integer a better choice for number of neighbors in kNN estimators?
+:::
+
+
 
 Calling the `KNeighborsClassifier` constructor without any argument will return an kNN estimator with the default setting. The number of neighbors $k$ in the `n_neighbors` parameter, defaults to **5**.
 
@@ -233,9 +249,11 @@ Get the accuracy percentage:
 ( len(expected) - len(wrong) ) / len(expected)
 ```
 
+
 ## Evaluating the Estimator
 
 Read 15.3.1 for the two evaluation methods: The **method `score`** and **confusion matrix**. ([The official documentation for model evaluation](https://scikit-learn.org/stable/modules/model_evaluation.html))
+
 
 ### Estimator method `score`
 
@@ -248,7 +266,7 @@ print(f'The knn score with 5 neighbors = {knn.score(X_test, y_test):.5f}')
 
 ### Confusion matrix
 
-The following creates the confusion matrix for the knn estimator with two sets of labels: expected and predicted:
+The following creates the confusion matrix for the knn estimator with two sets of labels: expected and predicted.
 
 ```{python}
 from sklearn.metrics import confusion_matrix
@@ -256,7 +274,7 @@ confusion = confusion_matrix(y_true=expected, y_pred=predicted)
 print(f'Confusion matrix with the test data:\n{confusion}')
 ```
 
-A confusion matrix is a 2-dimensional matrix/table. Each row represents one distinct class/label. The digits data has ten distinct classes, the digits 0 through 9, and there are 10 rows in the matrix.
+A confusion matrix is a 2-dimensional, square matrix. Each row represents one distinct class/label. The digits data has ten distinct classes, the digits 0 through 9, and there are 10 rows in the matrix.
 
 The *primary/principal diagonal* from top left to bottom right shows the correct predictions for each distinct class/label. The values on other positions are wrong predictions.
 
@@ -271,9 +289,16 @@ confusion[0]
 
 we know that all the 0 cases, 45 in total, have been classified as 0. With the test data, the estimator is capable of recognize all the 0 digits with the prediction accuracy being 100$%$.
 
-> Question: Consider the 8th row in the confusion matrix. What is the prediction accuracy of the estimator for the digit 8?
+
+
 
 ### Classification Report
+
+::: callout-important
+### QUESTION: Define performance metrics
+
+Define the metrics: precision, recall, f1-score, support
+:::
 
 The classification report lists several [classification metrics]() in a table. To get the report,
 
@@ -284,15 +309,20 @@ report = classification_report(expected, predicted, target_names=names)
 print(report)
 ```
 
-> Question:
 
-Define the metrics: precision, recall, f1-score, support
+
+
 
 ### Visualize the confusion matrix
 
-> Question: What kind of data should you visualize in a heat map?
+::: callout-important
+### QUESTION: Heatmap visualization
 
-To visualize a 2D data in a heat map, it requires two more libraries: **Pandas** and **Seaborn**.
+A heatmap is a data visualization type where the individual values contained in a matrix through variations in coloring. What kind of data should you visualize in a heatmap?
+
+:::
+
+To visualize a 2D data in a heatmap, it requires two more libraries: **Pandas** and **Seaborn**.
 
 > If the code in the text gives you multiple colormap bars, try the following code.
 
@@ -324,11 +354,16 @@ plt.show()
 ![The heatmap of confusion matrix for a classification estimator](imgs/heatmap_confusion_matrix.png)
 -->
 ```
+
+
 ## K-Fold Cross-Validation
+
+::: callout-note
 
 Read 15.3.2.
 
-K-fold cross-validation is a model evaluation method for overcoming model overfitting issue from a small-sized sample dataset. The method is used in selecting one learning model among several candidates. The method makes well use of every sample in a small data set. Say you have a set of one hundred or no more than one thousand samples. Apply K-fold cross-validation to model evaluation. Split the data into k equally-sized **folds/subsets**. Repeat modeling for k times and rotate the test set over every subset. Take as the overall score, the average performance of k resulting estimators.
+**K-fold cross-validation** is a model evaluation method for overcoming model overfitting issue from a small-sized sample dataset. The method is used in selecting one learning model among several candidates. The method makes well use of every sample in a small data set. Say you have a set of one hundred or no more than one thousand samples. Apply K-fold cross-validation to model evaluation. Split the data into k equally-sized **folds/subsets**. Repeat modeling for k times and rotate the test set over every subset. Take as the overall score, the average performance of k resulting estimators.
+:::
 
 **sklearn.model_selection** module provides the `KFold` class and `cross_val_score function`.
 
@@ -354,7 +389,10 @@ Get the overall score by taking the mean of 10 scores:
 print(f'Mean accuracy of 5-nn estimators is {scores.mean():.3%}.')
 ```
 
+
 ## Model Selection
+
+::: callout-note
 
 Read 15.3.3.
 
@@ -365,8 +403,14 @@ To compare three types of classification models: (all models are trained with de
 1.  KNeighborsClassifier
 2.  SVC (Support vector machine)
 3.  GaussianNB (Naive Bayes)
+:::
 
-Due to a larger number of modeling repetitions (=3\*10), expect a much longer execution time than all the preceding ones.
+
+::: callout-tip
+
+Due to a larger number of modeling repetitions, you would **expect a much longer execution time** than all the preceding ones. 
+
+:::
 
 ```{python results='hold'}
 '''Run multiple models. Select the best one.'''
@@ -391,6 +435,7 @@ The values in your output may be slightly different from the ones in the text. T
 
 > Both kNN and SVC can be computationally expensive and may not be the best fit for large data sets. Find the right model choices using the estimator diagram in the next part.
 
+
 ### Estimator diagram
 
 A useful diagram for choosing the right type of estimator based on the three conditions: data type, data size and learning type.
@@ -399,11 +444,20 @@ A useful diagram for choosing the right type of estimator based on the three con
 knitr::include_url("https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html")
 ```
 
+
 ## Hyperparameter Tuning
 
-> What are the hyperparameters of an estimator?
 
-> Will the prediction cost (in terms of execution time) increase as the k value increases in kNN estimator?
+:::callout-important
+### QUESTION: Hyperparamter
+
+- What are the hyperparameters of an estimator?
+
+- Will the prediction cost (in terms of execution time) increase as the k value increases in kNN estimator?
+
+:::
+
+
 
 Read 15.3.4.
 
@@ -424,16 +478,19 @@ for k in range(1, 20, 2):
            f'standard deviation={scores.std():.2%}')
 ```
 
+
 ## Submission
 
-Repeat the same learning process with either data set in the following.
+Choose one dataset from the following three sets. Repeat the same classification process with the chosen data.
 
 -   [The wine data](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html#sklearn.datasets.load_wine)
 
 -   [The breast cancer wisconsin dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html#sklearn.datasets.load_breast_cancer)
 
-Required for submission:
+- [The iris data](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris)
 
--   Anwser the questions embeded on the page
+Submit the following:
+
+-   Answer the questions embedded on this page
 -   The ipynb file or an URL to your online ipynb.
 -   A recording of a test run

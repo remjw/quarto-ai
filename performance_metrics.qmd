@@ -55,6 +55,8 @@ This tells us how **reliable** it is when a classifier has marked a case as posi
 $$
 precision = \frac{TP}{TP+FP} = \frac{4}{4+2} \approx 0.667
 $$
+In a classification report, the precision specifies the total number of correct predictions for a class divided by the total number of that class in the predictions.
+
 
 #### Recall & Sensitivity
 
@@ -63,6 +65,8 @@ $$
 $$
 recall = TPR = \frac{TP}{TP+FN} = \frac{4}{4+3}\approx 0.571
 $$
+In a classification report, the recall specifies the total number of correct predictions for a class divided by *the total number of that class in the truth*.
+
 
 #### Specificity
 
@@ -77,6 +81,28 @@ The **false positive rate**, FPR, is
 $$
 FPR = \frac{FP}{TN+FP} = 1-specificity
 $$
+:::
+
+
+::: callout-important
+### QUESTION: Reading Confusion Matrix
+
+Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
+
+```
+[[45  0  0  0  0  0  0  0  0  0]
+ [ 0 45  0  0  0  0  0  0  0  0]
+ [ 0  0 54  0  0  0  0  0  0  0]
+ [ 0  0  0 42  0  1  0  1  0  0]
+ [ 0  0  0  0 49  0  0  1  0  0]
+ [ 0  0  0  0  0 38  0  0  0  0]
+ [ 0  0  0  0  0  0 42  0  0  0]
+ [ 0  0  0  0  0  0  0 45  0  0]
+ [ 0  1  1  2  0  0  0  0 39  1]
+ [ 0  0  0  0  1  0  0  0  1 41]]
+``` 
+
+Explain row 9 of the confusion matrix. And what is the precision and recall of the classifier for the 9th class?
 
 :::
 

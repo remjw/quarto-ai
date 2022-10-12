@@ -56,6 +56,7 @@ With the truth available, send the ten pictures to the classifier. The classifie
     id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
     prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
 
+
 ::: column-margin
 ::: {.callout-note appearance="minimal"}
 #### What is the prediction from a classifier?
@@ -186,6 +187,8 @@ As the diagonal elements have _the same value for both truth and prediction_, th
 
 ::: callout-tip
 
+The *primary/principal diagonal* from top left to bottom right shows the correct predictions for each distinct class. The values on other positions are wrong predictions.
+
 In other words, a good classifier should have a confusion matrix with large numbers diagonally and small (ideally zero) numbers off-diagonally.
 
 :::
@@ -199,7 +202,7 @@ $$
 
 ### Visualization
 
-A confusion matrix is often visualized in a color map by mapping each element to a specific color corresponding to its value.
+A confusion matrix is often visualized in a heatmap by mapping each element to a specific color corresponding to its value. A heatmap is a data visualization type where the individual values contained in a matrix through variations in coloring.
 
 ```{python}
 #| echo: false
@@ -234,7 +237,7 @@ plt.show()
 
 
 
-
+## Exercises
 
 
 
