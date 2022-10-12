@@ -2,54 +2,250 @@
 title: Confusion Matrix
 ---
 
+A confusion matrix is used to evaluate the goodness of a classifier model in performance evaluation. This name is used because the matrix makes it easy to visualize if a classifier model has confused or mislabeled two or more classes. The matrix records the number of occurrences of each possible combination of true and predicted labels.
 
-A confusion matrix is a contingency table which counts each combinations of true labels and predicted labels. This name is used because the matrix makes it easy to visualize if the model confused or mislabeled two or more classes.
+::: column-margin
+::: callout-important
+#### text section & script
 
-Confusion matrix is also referred to as **cross table** in statistics.
+[@deitel_intro_2019] Section 15.3.1 Metrics for Model Accuracy
 
-Assume a binary classifier has been trained to assign an integer label 0 or 1 for each case/data point.
-
-In the example case, we **assume label 1 is positive class and label 0 is negative class**.
-
-::: callout-note
-Be aware that the class labels for positive and negative classes are user defined. Even though the labels can be arbitrary, their names are expected to indicate the meaning of two distinct classes.
-
-For instance, if a classifier is purposed to identify cats, the positive class is cat and everything else should be in the negative class. The two labels can be the string values `cat` and `non-cat`.
-
-Some of machine learning libraries requires integer labels. `cat` and `non-cat` must be converted to integer 1 and 0. Most modern libraries offer the user option to specify the positive and negative class.
+Study both [the text's Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
+:::
 :::
 
-The `truth` variable stores the true labels of ten data points. The predictions from the classifier are stored in the `prediction` variable.
+The same matrix is also referred to as contingency table or cross table in statistics. 
 
-```{r}
+We first built a confusion matrix by hand and discuss some relevant terms. Then we take a look at the *confusion_matrix and classification_report classes* from *Python's* **sklearn.metrics** module.
+
+
+
+## Confusion Matrix by Hand
+
+Assume a binary classifier has been trained to assign an integer label $1$ if the new picture contains one *cat* or more, and $0$ otherwise. If we are only interested in cat, the classifier is used as a cat detector. Thus, the label $1$ for the cat class is **positive class** and label 0 is **negative class**.
+
+::: {.callout-note appearance="simple"}
+#### Determine positive and negative class
+
+Be aware that the class labels for positive and negative classes are user defined. For instance, if a classifier is purposed to identify cats, the positive class is cat and everything else should be in the negative class. The two labels can be the string values `cat` and `non-cat`.
+
+Even though the label names can be arbitrary, the names are normally expected to indicate the meaning of two distinct classes.
+
+Some of machine learning libraries requires integer labels. `cat` and `non-cat` must be converted to integer 1 and 0.
+
+Most modern libraries offer the user option to specify the positive and negative class.
+:::
+
+### Truth
+
+To evaluate the goodness of the classifier, we find ten pictures containing both cat and not-cat ones. Firstly, assign an id number to each picture and manually tag each with 1 for cat and 0 for everything else. These tags become the benchmark, termed as **truth** in the performance evaluation.
+
+Assume the following `truth` with integer labels,
+
+    id      : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    truth   : 1, 0, 1, 1, 1, 0, 0, 1, 1, 1
+
+which is equivalent to the truth with string labels:
+
+    truth: 'cat', 'non-cat', 'cat', 'cat', 'cat', 'non-cat', 'non-cat', 'cat', 'cat', 'cat'
+
+### Prediction
+
+With the truth available, send the ten pictures to the classifier. The classifier will output/predict a class label, either 1 or 0, for each picture. Assume the following ten `predictions`:
+
+    id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
+
+::: column-margin
+::: {.callout-note appearance="minimal"}
+#### What is the prediction from a classifier?
+
+A classifier recommends a most-likely class/group/category for a given data point/case , and outputs the class recommendation. The output class is the prediction which has made by the classifier.
+:::
+:::
+
+### Structure
+
+After collecting the prediction for each picture, place them with the truth together.
+
+    id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
+    truth       : 1, 0, 1, 1, 1, 0, 0, 1, 1, 1
+
+Construct a matrix by aligning all true labels in one dimension and all predicted labels in another one. It results in a $2\times2$, `square matrix`.
+
+By placing the `true labels by column`, we have the following layout:
+
+|                               | truth /reference /expected |                      |
+|-----------------------:|:--------------------------:|:------------------:|
+|                **prediction** |      truth: *0 / non-cat*      | truth: 1 / *non-cat* |
+|       **prediction**: 0 / non-cat | (prediction, truth):(0, 0) |        (0, 1)        |
+| **prediction***:* 1 / cat |           (1, 0)           |        (1, 1)        |
+
+: The structure of confusion matrix with truth by rows
+
+Each element cell represents one distinct value of the `(prediction, truth)` pair.
+
+Alternatively, the true labels by row gives the transposed matrix. And each element cell represents one distinct value of the `(truth, prediction)` pair.
+
+|                         | [**prediction**]{.smallcaps} |             |
+|------------------------:|:----------------------------:|:-----------:|
+| [**truth**]{.smallcaps} |           0 / non-cat            | 1 / cat |
+|               *0 / non-cat* |  (truth, prediction):(0, 0)  |   (0, 1)    |
+|           *1 / cat* |            (1, 0)            |   (1, 1)    |
+
+: The structure of confusion matrix with truth by columns
+
+::: {.callout-note appearance="simple"}
+#### The dimensions of confusion matrix
+
+A confusion matrix is a 2-dimensional, square matrix, having both dimensions being the number of classes.
+:::
+
+### Frequency
+
+Choosing the matrix layout with the truth by row, we fill in each element cell with the number of occurrences for its associated *(prediction, truth)* value. According the example set,
+
+    id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
+    truth       : 1, 0, 1, 1, 1, 0, 0, 1, 1, 1
+
+The first row is $(4, 2)$ as $(1,1)$ occurs four times and $(1,0)$ twice. By completing other rows in the same way, the resulting matrix is
+
+|             | prediction |               |
+|------------:|:----------:|:-------------:|
+|       truth | *0 / non-cat*  | *1 / cat* |
+|     0 / non-cat |     1      |       2       |
+| 1 / cat |     3      |       4       |
+
+: An example of confusion matrix
+
+
+### Acronyms
+
+The four counts in a binary confusion matrix are termed as True Positive (TP), False Positive (FP), True Negative (TN), and False Negative (FN).
+
+Assume **label 1 is positive** class and **label 0 is negative** class.
+
+::: panel-tabset
+#### TP (True Positive)
+
+TP is the number of cases whose prediction = 1 and truth = 1.
+
+When the classifier says the case is positive, the truth is positive too.
+
+#### FP (False Positive)
+
+FP is the number of cases whose prediction = 1 but truth = 0.
+
+The classifier says the case is positive; however, the truth is negative.
+
+#### TN (True Negative)
+
+TN is the number of cases whose prediction = 0 and truth = 0.
+
+When the classifier says the case is negative, the truth is negative too.
+
+#### FN (False Negative)
+
+FN is the number of cases whose prediction = 0 but truth = 1.
+
+The classifier says the case is negative; however, the truth is positive
+:::
+
+Put the name of each count into the previous matrix and we have
+
+|              |   prediction   |               |
+|-------------:|:--------------:|:-------------:|
+|        truth | *0 / negative* | *1 /positive* |
+| 0 / negative |     TN = 1     |    FP = 2     |
+| 1 / positive |     FN = 3     |    TP = 4     |
+
+: An example of confusion matrix
+
+
+
+### Accuracy
+
+Regardless of the matrix layout, the same observations can be derived from the matrix. 
+
+-   Of the 10 pictures, the classifier says that there were 6 positive (1) and 4 negative (0) cases;
+
+-   Of the 7 actual positive (1) cases, the classifier says 4 correctly as positive and 3 falsely as negative.
+
+-   Similarly, of the 3 actual negative (0) cases, 2 were falsely predicted as positive (1).
+
+-   **All correct predictions are located in the diagonal of the matrix, so it is easy to visually inspect the matrix for errors, as they will be represented by any non-zero values outside the diagonal.**
+
+
+::: column-margin
+
+As the diagonal elements have _the same value for both truth and prediction_, they represent all the correct predictions.
+
+:::
+
+::: callout-tip
+
+In other words, a good classifier should have a confusion matrix with large numbers diagonally and small (ideally zero) numbers off-diagonally.
+
+:::
+
+Taking as the overall accuracy, the ratio between the sum of the diagonal elements and the sum of the matrix, we have
+
+$$
+accuracy = \frac{1+4}{10}= 0.5
+$$
+
+
+### Visualization
+
+A confusion matrix is often visualized in a color map by mapping each element to a specific color corresponding to its value.
+
+```{python}
 #| echo: false
-#| results: hold
-truth <- c(1,0,1,1,1,0,0,1,1,1)
-prediction <- c(1,1,1,0,0,1,0,1,1,0)
-cat('truth: ', truth)
-cat("\n")
-cat('prediction: ', prediction)
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+# make two lists for expected/true and predicted/estimate target/label values
+expected = [1,0,1,1,1,0,0,1,1,1]
+predicted = [1,1,1,0,0,1,0,1,1,0]
+# Create confusion matrix
+cmat = confusion_matrix(expected, predicted)
+# Visualize confusion matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+ax.set_title('Confusion matrix')
+#plt.title('Confusion matrix')
+fig.colorbar(img)
+ticks = np.arange(2)
+ax.set_xticks(ticks)
+ax.set_yticks(ticks)
+ax.set_ylabel('True/Expected labels')
+ax.set_xlabel('Predicted labels')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
 ```
 
-With each column corresponding to one class in the truth, the confusion matrix is expected to be:
-
-```{r}
-#| echo: false
-#| warning: false
-library(caret)
-cm <- confusionMatrix(
-    factor(prediction, levels = c(1,0)),
-  factor(truth, levels = c(1,0))
-  )
-cm$table
-```
-
-We first learn how a confusion matrix is built from scratch in the R language without using any external library. Then discuss the relevant performance metrics for evaluating a classifier.
-
-Then we will take a look at the confusion_matrix and classification_report classes from *Python's* **sklearn.metrics** module.
 
 
-## Build Confusion Matrix in R
+
+
+
+
+
+
+
+
+
+
+
+## Confusion Matrix in R
 
 ### Load libraries
 
@@ -73,21 +269,20 @@ pair
 ```
 
 ```{r include=FALSE,eval=FALSE}
-pair %>% kable(caption = "The truth and prediction data") %>% kable_classic(full_width = F)
+pair  kable(caption = "The truth and prediction data") %>% kable_classic(full_width = F)
 ```
 
 ### Calculate TP,FP,TN,FN
 
 ::: panel-tabset
-**Assume label 1 is positive class and label 0 is negative class**. Calculate four counts: TP, FP, TN and FN.
 
 #### TP (True Positive)
 
 The case count whose truth = 1 and prediction = 1
 
 ```{r eval=TRUE}
-pair %>% 
-  filter(truth==1 & prediction==1) %>%
+pair |>
+  filter(truth==1 & prediction==1) |>
   summarise(TP=n()) 
 ```
 
@@ -96,8 +291,8 @@ pair %>%
 The number of cases whose truth = 0 and prediction = 1
 
 ```{r eval=TRUE}
-pair %>% 
-  filter(truth==0 & prediction==1) %>%
+pair |>
+  filter(truth==0 & prediction==1) |>
   summarise(FP=n()) 
 ```
 
@@ -106,8 +301,8 @@ pair %>%
 The number of cases whose truth = 0 and prediction = 0
 
 ```{r eval=TRUE}
-pair %>% 
-  filter(truth==0 & prediction==0) %>%
+pair |>
+  filter(truth==0 & prediction==0) |>
   summarise(TN=n()) 
 ```
 
@@ -116,25 +311,26 @@ pair %>%
 The number of cases whose truth = 1 and prediction = 0
 
 ```{r eval=TRUE}
-pair %>% 
-  filter(truth==1 & prediction==0) %>%
+pair |> 
+  filter(truth==1 & prediction==0) |>
   summarise(FN=n())
 ```
 :::
 
 
-## Build confusion matrix
+
+### table
 
 Call R's built-in function `table`. There are two control options in the table function:
 
-- place the truth by rows
-- place the truth by columns
+-   place the truth by rows
+-   place the truth by columns
 
 ```{r eval=TRUE}
 # truth by rows
 cmat <- table(
-  factor(truth, levels = c(1,0)),
-  factor(prediction, levels = c(1,0)), 
+  factor(truth, levels = c(0,1)),
+  factor(prediction, levels = c(0,1)), 
   # dimension names
   dnn = c("truth","prediction"))
 print(cmat)
@@ -143,20 +339,38 @@ print(cmat)
 ```{r eval=TRUE}
 # truth by columns
 cmat <- table(
-  factor(prediction, levels = c(1,0)), 
-  factor(truth, levels = c(1,0)),
+  factor(prediction, levels = c(0,1)), 
+  factor(truth, levels = c(0,1)),
   # dimension names
   dnn = c("prediction","truth"))
 print(cmat)
 ```
 
-Regardless of the layout, the same observations are derived from both. Of 10 case samples,
 
--   The classifier model predicted that there were 6 positive (1) and 4 negative (0) cases;
 
--   And of the 7 true positive (1) cases, the model predicted 4 as 1 and 3 as 0.
 
--   Similarly, of the 3 actual negative (0) cases, 2 were predicted as 1.
+## R Caret Library
 
--   **All correct guesses are located in the diagonal of the matrix, so it's easy to visually inspect the matrix for errors, as they will be represented by any non-zero values outside the diagonal.**
+```{r}
+#| results: hold
+#| warning: false
+library(kableExtra)
+library(tidyverse)
+library(caret)
+truth <- c(1,0,1,1,1,0,0,1,1,1)
+prediction <- c(1,1,1,0,0,1,0,1,1,0)
+confusionMatrix(
+  factor(prediction, levels = c(0,1)), 
+  factor(truth, levels = c(0,1)),
+  positive = "1",
+  mode="everything"
+  )
+```
 
+::: column-margin
+::: {.callout-note appearance="minimal"}
+#### The reference parameter in caret.confusionMatrix
+
+In the *confusionMatrix* function from the *caret* library, the parameter's name for the True labels is *reference*.
+:::
+:::

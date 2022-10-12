@@ -2,6 +2,16 @@
 title: k-Nearest Neighbors
 ---
 
+
+::: callout-important
+#### text section & script
+
+[@deitel_intro_2019] Section 15.1, 15.2, 15.3
+
+[Link to Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb)
+:::
+
+
 > The code snippets on the page are NOT stand-alone; they should be run consecutively one after another in the order.
 
 > If running all the code snippets in one py script, unless you dynamically uncomment the print statements already tested, the output from all the prints might cause confusion (like the test data confuses a classification estimator). The best code format for AI/ML modeling and testing is a Jupyter Notebook (ipynb) file. In a notebook, organize the code by cells and run the cells one by one from top to bottom.

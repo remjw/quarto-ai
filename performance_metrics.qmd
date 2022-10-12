@@ -1,0 +1,132 @@
+---
+title: Performance Metrics
+---
+
+
+::: callout-important
+#### text section & script
+
+[@deitel_intro_2019] Section 15.3.1 Metrics for Model Accuracy
+
+Study both [the text's Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
+:::
+
+
+
+## Metrics for Model Scoring
+
+We use the following confusion matrix to learn a few performance metrics.
+
+
+|              |   prediction   |               |
+|-------------:|:--------------:|:-------------:|
+|        truth | *0 / negative* | *1 /positive* |
+| 0 / negative |     TN = 1     |    FP = 2     |
+| 1 / positive |     FN = 3     |    TP = 4     |
+
+: An example of confusion matrix
+
+
+### Accuracy
+
+We define **overall success rate** (or accuracy) as a metric defining what the classifier has correctly done.
+
+-   **The ratio** between the sum of the diagonal values (i.e., TP and TN) vs. the sum of the matrix.
+
+$$
+accuracy = \frac{TP+TN}{TP+TN+FP+FN} = \frac{4+1}{10}= 0.5
+$$
+
+In other words, the confusion matrix of a good model has large numbers diagonally and small (ideally zero) numbers off-diagonally.
+
+
+### Precision, Recall, Sensitivity, Specificity
+
+`Precision` and `Recall` are the two *accuracy metrics* used in the **information retrieval** community; they are often used to characterize classifiers as well.
+
+::: panel-tabset
+
+#### Precision
+
+**Precision** is the percent of cases we (the model) marked `positive` really are positive. 
+
+This tells us how **reliable** it is when a classifier has marked a case as positive.
+
+$$
+precision = \frac{TP}{TP+FP} = \frac{4}{4+2} \approx 0.667
+$$
+
+#### Recall & Sensitivity
+
+**Recall** is the percent of `positive` cases we were able to correctly identify and select. Recall is also called **Sensitivity** and **True Positive Rate**, the portion of *true positive cases* that a classifier is able to discover. 
+
+$$
+recall = TPR = \frac{TP}{TP+FN} = \frac{4}{4+3}\approx 0.571
+$$
+
+#### Specificity
+
+**Specificity**, also called **True Negative Rate**, is a metric to evaluate how good a classifier `identifies negative class`, calculated as the portion of the negative cases which has identified by a classifier.
+
+$$
+specificity = TNR = \frac{TN}{TN+FP} = \frac{1}{1+2} \approx 0.333
+$$
+
+
+The **false positive rate**, FPR, is 
+$$
+FPR = \frac{FP}{TN+FP} = 1-specificity
+$$
+
+:::
+
+
+### Balanced Accuracy
+
+Accuracy is used to evaluate how good a binary classifier is. When the two classes are **imbalanced**, i.e., one class appears more frequently than the other, the balanced accuracy should be taken as the average of the `sensitivity score for positive` class and the `specificity score for negative class`. 
+$$
+\text{balanced accuracy} = \frac{sensitivity+specificity}{2} \approx 0.452
+$$
+
+
+
+### $F_1$-score
+
+In a binary classification, `F-score` or `F-measure` is calculated from the **precision** and **recall** of the test. The traditional F-score, $F_1-score$, is the average of precision and recall. 
+
+The highest possible value of an $F_1$-score is 1 and the lowest is 0.
+
+$$
+F_1\text{} = \frac{precision+recall}{2} \approx 0.615
+$$
+
+
+### $F_\beta$-score
+
+A more general F-score, $F_\beta$, uses a positive factor $\beta$ by which the score will weigh recall $\beta$ times as important as precision. 
+
+Recall measures how sensitive a model is to the positive class. Precision is about how many cases predicted as positive are really positive. 
+
+::: callout-tip
+#### Choosing the $\beta$ value for $F_\beta$-score
+
+If discovering all the positive cases is more important than filtering false positive cases, then $\beta$ should be greater than $1$.
+
+:::
+
+Two commonly used values for $\beta$ are $2$, which weighs recall higher than precision, and $0.5$, which weighs recall lower than precision.
+
+$$
+F_\beta\text{} = (1+\beta^2)\times\frac{precision\times recall}{\beta^2\times precision + recall} 
+$$
+
+::: column-margin
+A loss or cost function is a technique which is used to represent the loss or cost of an event, such as mistakenly classifying a negative case as positive or vice verse.
+:::
+
+
+
+## Exercises
+
+TBA
+

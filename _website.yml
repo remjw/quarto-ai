@@ -46,7 +46,8 @@ website:
       contents:
         - learning_types.qmd
         - confusion_matrix.qmd
-        - classifier_performance.qmd
+        - performance_metrics.qmd
+        - handson_performance_metrics.qmd
         # navigation items
 
     - id: lessons
