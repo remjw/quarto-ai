@@ -221,7 +221,20 @@ ax.grid(linestyle = '--', which='minor')
 plt.show()
 ```
 
+
 ## Exercises
+
+Assume a binary classifier with the two labels `yes` and `no`. Given the following truth and prediction data. 
+
+    truth: "yes" "yes" "yes" "no"  "no"  "no"  "no"  "no"  "no"  "yes"
+    prediction: "no"  "yes" "no"  "yes" "yes" "no"  "no"  "yes" "yes" "no"
+
+Do the following: 
+
+1. Construct a confusion matrix by hand. 
+2. Calculate TP, FP, TN and FN.
+3. Calculate accuracy.
+
 
 ## Confusion Matrix in R
 
@@ -247,7 +260,9 @@ pair
 ```
 
 ```{r include=FALSE,eval=FALSE}
-pair  kable(caption = "The truth and prediction data") %>% kable_classic(full_width = F)
+pair |>
+  kable(caption = "The truth and prediction data") |> 
+  kable_classic(full_width = F)
 ```
 
 ### Calculate TP,FP,TN,FN
