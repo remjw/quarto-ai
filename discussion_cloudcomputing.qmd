@@ -4,9 +4,9 @@ title: Cloud Computing
 
 ### Cloud Data Analytics Platform
 
-The discussion is purposed to help you obtain a further understanding of
+The discussion is purposed to help you obtain a further understanding of the following:
 
-1.  How machine learning and data science transforms and accelerates business operations, and
+1.  How machine learning and data science transforms and accelerates business operations
 2.  How a cloud data analytics platform is utilized in big data storage and delivery.
 3.  And you are asked to describe the features and functions in an AI-based student advising product.
 
@@ -19,6 +19,7 @@ Video description: *"The video introduces how McDonald's has transformed their e
 The relevant links include, but not limited to: (Please do additional search for more information.)
 
 -   https://databricks.com/
+-   
 -   https://databricks.com/solutions/data-pipelines
 -   https://databricks.com/solutions/industries/education
 -   https://databricks.com/solutions
@@ -26,7 +27,6 @@ The relevant links include, but not limited to: (Please do additional search for
 The discussion focuses on the following questions:
 
 1.  What is a QSR business?
-
 2.  What is the LakeHouse platform from the databricks?
 
     -   https://databricks.com/product/data-lakehouse
@@ -42,17 +42,56 @@ The discussion focuses on the following questions:
     -   data scientist
     -   machine learning engineer (not included in the given link. please do a search.)
 
-5.  Open the page https://databricks.com/solutions/industries. Read about the AI solutions for various industries. From your personal interest and/or past experience, pick one from the list and talk about it.
+5.  Open the page https://databricks.com/solutions/industries. Read about the AI solutions for various industries. From your personal interests and/or past experiences, pick one from the list and talk about it.
 
-6.  If you develop an AI product which is purposed to automate student advising service, keep track of individual student's progress, support real-time reporting, customize a course map per requirements, relieve the stress for both students and professors, and so on. The use of the product should not require extra operational cost and human resource. The ultimate goal of such a product is to help students customize individual course plan, complete the degree on time and fulfill their needs in career development.
+<!--
+One very interesting use of Lakehouse from Databricks that I was previously unaware of was its utilization in the NASDAQ data link. The US stock market is a massive entity in the global economy and as such they have to deal with massive amounts of data that have very powerful implications if misunderstood. The NASDAQ does so far as to pass on some of their analytic findings to the open market to help maintain a healthy trading space which I think is very fascinating.
+-->
+
+6.  If you develop an AI product which is purposed to automate student advising service, keep track of individual students' progress, support real-time reporting, customize a course map per program requirements, relieve the stress of both students and advisors, and so on. The use of such a product should not require extra operational cost and human resource. The ultimate goal of such a product is to help students customize individual course plan, complete the degree on time and fulfill their needs in career development.
 
 Please share your thoughts and opinions on such kind of products, regardless the polarity of your view being positive, negative or neutral.
 
 How would you justify incorporating AI being into the advising, instead of human being?
 
+<!--
+I feel like the use of AI in this case is not only a benefit but also inevitably on some level. I see most AI applications in the future working in concert with humans to cut down on our workloads while also resulting in higher productivity. I feel like this hypothetical advising system could try to generate schedules and make student recommendations and that human advisors could check the final AI derived recommendations before sending them out. That way human advisors are doing less work and the AI can potentially generate schedules that better match student experiences and expectations.
+-->
+
 Submission:
 
-1.  (20 points) One post
-    -   To qualify a full credit, the first post must be published no later than Wednesday
-2.  (10 points) At least one comment, solid and insightful.
+1.  (20 points) One post: To qualify a full credit, the first post must be published no later than Wednesday
+2.  (10 points) At least one comment, solid and insightful
 
+<!--
+Thank you for contributing to the ongoing forum! I am glad to read from your posts that most of us believes that AI is unavoidable and we must learn to embrace it regardless. However, from the other perspective, many of non-technical issues significantly impact the actual uses of software products. A poorly-designed system or intelligent product could possibly be a disaster rather than a booster helping us reduce the logistics burden, regardless of its speed and capacity. Especially, it often happens when systems analysts and designers lack firsthand field-relevant experience of what an easy-to-use system is like, how to eliminate unnecessary data transfer and communication for lesser logistics and streamline workflows, and what data should be properly collected and integrated without loss of integrity, and how to ensure data consistency. Technology is powerful while it is not a panacea.
+-->
+
+```{=html}
+<!--
+Data engineer: someone who handles raw unprocessd data, develops, constructs, tests and maintains architectures, such as databases and large-scale processing systems. 
+machine learning engineer: who focuses on researching, building and designing self-running artificial intelligence (AI) systems to automate predictive models
+
+Perhaps the most popular use for SQL today is as a base infrastructure to build its easy-to-use dashboards along with reporting tools, or what is called SQL for data analytics. Because it is so easy to communicate complex instructions to databases and manipulate data in seconds, SQL makes intuitive dashboards that can display data in a variety of ways. Moreover, SQL is an excellent tool to build data warehouses due to its easy accessibility, clear organization, and ability to interact effectively. 
+
+SQL Analytics refers to the ability for a database to interact with multiple databases at once, as well as its use of relational databases to gather analytic data. Products such as Hevo allow for this analysis to take place in a single cloud platform by integrating popular languages, interfaces, libraries and connectors. The benefits of this approach is that it can be baked into the database itself and be fully automated. Additionally, products like Hevo allow for real time data collection and analysis and therefore cut down on the amount of time needed to do analysis as compared to having to export to Python or R.
+-->
+```
+
+<!--
+Databrick is web-based platform for cloud data analytics, created by Apache Spark. Simply it provides an online environment where external data can be imported, transformed, queried and analyzed and run machine learning functions. It supports all the major languages for analysis and machine learning, IPython notebook, Scala, R, Java, and SQL. (Apache Spark is an open-source distributed data analytics engine for large-scale read-only data processing. It was developed in 2012 and written in Scala language.) `lakehouse` is a compound word implying data warehouse and data lake. A data lake is a term for a place where everything is raw, unprocessed and unrefined. The data in a warehouse can be transformed and partially processed. To put it simple, databrick allows us to in a web browser, connect to our own cloud data storage, pull data to a GUI-based workplace, query data sets directly with standard SQL or use product connectors to integrate directly with business intelligence tools like Tableau, and use the language of our choice to analyze data and do many other things.
+
+A little note regarding the responsibility of three roles, data engineer, data scientist and machine learning engineer. Theoretically, three roles are located somewhere in a data pipeline with two ends, back and front.
+
+Data engineer works in a lower level than the two other roles, for raw data handling, data migration, data reshaping, data integration, ETL or ELT and so on. Data scientist is somehow between data engineer and machine learning engineer. The role is application-based; the job expectation cover all the job responsibilities from various traditional analysis-related roles-data analyst, business analyst, business intelligence analyst, data mining worker or analyst to name a few. Data scientist needs communication skills to be an intermediate role in a project, with data engineer, machine learning engineer and Product Manager (a person identifying new requirements and products by `studying` customers to boost business growth.).  Machine learning engineer is sitting in the other end for development and supposed to be more research-flavored.  ML engineer designs, tunes, optimizes and develops a machine learning algorithm. So it mostly requires a graduate-level degree.
+
+But the boundary between data scientist and machine learning engineer is always blurry.
+
+(We tend to create too many terms and each discipline coins their own terms. It can cause a great level of overlapping and partial redundancy on defining things. `Aha! You mean the same thing.`)
+
+Data engineer has privileges of accessing raw data, and is responsible for data creation, data integration and fusion. `Data/information fusion is the process of integrating multiple data sources to produce more consistent, accurate, and useful information than that provided by any individual data source.` Data fusion/integration shares the same idea underlying a machine learning technique, ensemble learning. An ensembler consolidates power of individuals, either heterogeneous or homogeneous, into a stronger one.  For instance, the random forest algorithm merges/integrates individual predictions from a collection of decision trees. In short, data engineer is more like an electrical engineer than computer scientist. 
+
+Who would be responsible for put everything into production, perform testing and deployment? In a small company, a person may have to take the responsibilities of all the `theoretical` roles. The more, the better. And nowadays, we must be a lifelong learner, and take the time.
+
+Please continue to share your thoughts and offer peer support on the forum. 
+-->

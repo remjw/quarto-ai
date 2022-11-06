@@ -8,9 +8,6 @@ K-fold cross-validation is a model evaluation method for overcoming model overfi
 
 **sklearn.model_selection** module provides the `KFold` class and `cross_val_score function`.
 
-
-
-
 # Stratified 10-fold Cross Validation
 
 ```{python eval=FALSE, echo=TRUE}
@@ -37,7 +34,6 @@ num_folds = 3 # To have a quick test, we do 3 folds instead of 10 folds
 skf = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state=42)
 ```
 
-
 ```{python echo=TRUE,eval=FALSE}
 accuracy_scores = cross_val_score(model, X_train, y_train, cv=skf, scoring='accuracy')
 print("Accuracy: " + str(round(100*accuracy_scores.mean(), 2)) + "%")
@@ -51,8 +47,6 @@ print("Recall: " + str(round(100*recall_scores.mean(), 2)) + "%")
 f1_scores = cross_val_score(model, X_train, y_train, scoring='f1_weighted', cv=skf)
 print("F1: " + str(round(100*f1_scores.mean(), 2)) + "%")
 ```
-
-
 
 Shuffle the digits data (if data is ordered or grouped) and split the whole set into 10 equal-size folds. Run 10-fold cross-validation
 

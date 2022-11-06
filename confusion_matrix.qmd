@@ -10,15 +10,13 @@ A confusion matrix is used to evaluate the goodness of a classifier model in per
 
 [@deitel_intro_2019] Section 15.3.1 Metrics for Model Accuracy
 
-Study both [the text's Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
+Study both [the text's Jupyter Notebook](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
 :::
 :::
 
-The same matrix is also referred to as contingency table or cross table in statistics. 
+The same matrix is also referred to as contingency table or cross table in statistics.
 
 We first built a confusion matrix by hand and discuss some relevant terms. Then we take a look at the *confusion_matrix and classification_report classes* from *Python's* **sklearn.metrics** module.
-
-
 
 ## Confusion Matrix by Hand
 
@@ -38,7 +36,7 @@ Most modern libraries offer the user option to specify the positive and negative
 
 ### Truth
 
-To evaluate the goodness of the classifier, we find ten pictures containing both cat and not-cat ones. Firstly, assign an id number to each picture and manually tag each with 1 for cat and 0 for everything else. These tags become the benchmark, termed as **truth** in the performance evaluation.
+To evaluate the goodness of the classifier, we find ten pictures containing both cat and not-cat ones. Firstly, assign an id number to each picture and manually tag each with 1 for cat and 0 for everything else. These tags become the benchmark, termed as ground **truth** in the performance evaluation.
 
 Assume the following `truth` with integer labels,
 
@@ -56,7 +54,6 @@ With the truth available, send the ten pictures to the classifier. The classifie
     id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
     prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
 
-
 ::: column-margin
 ::: {.callout-note appearance="minimal"}
 #### What is the prediction from a classifier?
@@ -73,60 +70,57 @@ After collecting the prediction for each picture, place them with the truth toge
     prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
     truth       : 1, 0, 1, 1, 1, 0, 0, 1, 1, 1
 
-Construct a matrix by aligning all true labels in one dimension and all predicted labels in another one. It results in a $2\times2$, `square matrix`.
+Construct a matrix by aligning all distinct labels in the truth in one dimension and all distinct predicted labels in another one. It results in a $2\times2$, `square matrix`.
 
-By placing the `true labels by column`, we have the following layout:
+By placing the distinct `truth labels by column`, we have the following layout where each element cell represents one distinct value of the `(prediction, truth)` pair.
 
-|                               | truth /reference /expected |                      |
+|                             | truth /reference /expected |                      |
 |-----------------------:|:--------------------------:|:------------------:|
-|                **prediction** |      truth: *0 / non-cat*      | truth: 1 / *non-cat* |
-|       **prediction**: 0 / non-cat | (prediction, truth):(0, 0) |        (0, 1)        |
-| **prediction***:* 1 / cat |           (1, 0)           |        (1, 1)        |
+|              **prediction** |    truth: *0 / non-cat*    | truth: 1 / *non-cat* |
+| **prediction**: 0 / non-cat | (prediction, truth):(0, 0) |        (0, 1)        |
+|   **prediction***:* 1 / cat |           (1, 0)           |        (1, 1)        |
 
 : The structure of confusion matrix with truth by rows
 
-Each element cell represents one distinct value of the `(prediction, truth)` pair.
+Alternatively, placing the distinct truth labels by row gives the transposed matrix. And each cell represents one distinct value of the `(truth, prediction)` pair.
 
-Alternatively, the true labels by row gives the transposed matrix. And each element cell represents one distinct value of the `(truth, prediction)` pair.
-
-|                         | [**prediction**]{.smallcaps} |             |
-|------------------------:|:----------------------------:|:-----------:|
-| [**truth**]{.smallcaps} |           0 / non-cat            | 1 / cat |
-|               *0 / non-cat* |  (truth, prediction):(0, 0)  |   (0, 1)    |
-|           *1 / cat* |            (1, 0)            |   (1, 1)    |
+|                         | [**prediction**]{.smallcaps} |         |
+|------------------------:|:----------------------------:|:-------:|
+| [**truth**]{.smallcaps} |         0 / non-cat          | 1 / cat |
+|           *0 / non-cat* |  (truth, prediction):(0, 0)  | (0, 1)  |
+|               *1 / cat* |            (1, 0)            | (1, 1)  |
 
 : The structure of confusion matrix with truth by columns
 
 ::: {.callout-note appearance="simple"}
 #### The dimensions of confusion matrix
 
-A confusion matrix is a 2-dimensional, square matrix, having both dimensions being the number of classes.
+A confusion matrix is a 2-dimensional, square matrix, having both dimensions being the number of dinstinct classes.
 :::
 
 ### Frequency
 
-Choosing the matrix layout with the truth by row, we fill in each element cell with the number of occurrences for its associated *(prediction, truth)* value. According the example set,
+Choosing the *truth-by-row* layout, we fill in each element with the number of occurrences for its associated value of *(prediction, truth)*. According the example set,
 
     id          : 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
     prediction  : 1, 1, 1, 0, 0, 1, 0, 1, 1, 0
     truth       : 1, 0, 1, 1, 1, 0, 0, 1, 1, 1
 
-The first row is $(4, 2)$ as $(1,1)$ occurs four times and $(1,0)$ twice. By completing other rows in the same way, the resulting matrix is
+The first row is $[1, 2]$ as $(0,0)$ occurs one time and $(0,1)$ twice. By completing other rows in the same way, the resulting matrix is
 
-|             | prediction |               |
-|------------:|:----------:|:-------------:|
-|       truth | *0 / non-cat*  | *1 / cat* |
-|     0 / non-cat |     1      |       2       |
-| 1 / cat |     3      |       4       |
+|             |  prediction   |           |
+|------------:|:-------------:|:---------:|
+|       truth | *0 / non-cat* | *1 / cat* |
+| 0 / non-cat |       1       |     2     |
+|     1 / cat |       3       |     4     |
 
 : An example of confusion matrix
-
 
 ### Acronyms
 
 The four counts in a binary confusion matrix are termed as True Positive (TP), False Positive (FP), True Negative (TN), and False Negative (FN).
 
-Assume **label 1 is positive** class and **label 0 is negative** class.
+Assume **label 1 for cat is positive** class and **label 0 is negative** class.
 
 ::: panel-tabset
 #### TP (True Positive)
@@ -164,33 +158,26 @@ Put the name of each count into the previous matrix and we have
 
 : An example of confusion matrix
 
-
-
 ### Accuracy
 
-Regardless of the matrix layout, the same observations can be derived from the matrix. 
+Regardless of the matrix layout, the same observations can be derived from the matrix.
 
--   Of the 10 pictures, the classifier says that there were 6 positive (1) and 4 negative (0) cases;
+-   Of the 10 pictures, the classifier says that there were 6 positive (1/cat) and 4 negative (0/non-cat) cases;
 
--   Of the 7 actual positive (1) cases, the classifier says 4 correctly as positive and 3 falsely as negative.
+-   Of the 7 actual positive cases, the classifier says 4 correctly as positive and 3 falsely as negative.
 
--   Similarly, of the 3 actual negative (0) cases, 2 were falsely predicted as positive (1).
+-   Similarly, of the 3 actual negative cases, 2 were falsely predicted as positive.
 
 -   **All correct predictions are located in the diagonal of the matrix, so it is easy to visually inspect the matrix for errors, as they will be represented by any non-zero values outside the diagonal.**
 
-
 ::: column-margin
-
-As the diagonal elements have _the same value for both truth and prediction_, they represent all the correct predictions.
-
+As the diagonal elements have *the same value for both truth and prediction*, they represent all the correct predictions.
 :::
 
 ::: callout-tip
-
-The *primary/principal diagonal* from top left to bottom right shows the correct predictions for each distinct class. The values on other positions are wrong predictions.
+The *primary/principal diagonal* of a confusion matrix from top left to bottom right shows the correct predictions for each distinct class. The values on other positions are wrong predictions.
 
 In other words, a good classifier should have a confusion matrix with large numbers diagonally and small (ideally zero) numbers off-diagonally.
-
 :::
 
 Taking as the overall accuracy, the ratio between the sum of the diagonal elements and the sum of the matrix, we have
@@ -198,7 +185,6 @@ Taking as the overall accuracy, the ratio between the sum of the diagonal elemen
 $$
 accuracy = \frac{1+4}{10}= 0.5
 $$
-
 
 ### Visualization
 
@@ -235,18 +221,7 @@ ax.grid(linestyle = '--', which='minor')
 plt.show()
 ```
 
-
-
 ## Exercises
-
-
-
-
-
-
-
-
-
 
 ## Confusion Matrix in R
 
@@ -278,7 +253,6 @@ pair  kable(caption = "The truth and prediction data") %>% kable_classic(full_wi
 ### Calculate TP,FP,TN,FN
 
 ::: panel-tabset
-
 #### TP (True Positive)
 
 The case count whose truth = 1 and prediction = 1
@@ -320,8 +294,6 @@ pair |>
 ```
 :::
 
-
-
 ### table
 
 Call R's built-in function `table`. There are two control options in the table function:
@@ -348,9 +320,6 @@ cmat <- table(
   dnn = c("prediction","truth"))
 print(cmat)
 ```
-
-
-
 
 ## R Caret Library
 

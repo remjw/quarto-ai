@@ -2,21 +2,17 @@
 title: Performance Metrics
 ---
 
-
 ::: callout-important
 #### text section & script
 
 [@deitel_intro_2019] Section 15.3.1 Metrics for Model Accuracy
 
-Study both [the text's Jupyter Notebook ](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
+Study both [the text's Jupyter Notebook](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
 :::
-
-
 
 ## Metrics for Model Scoring
 
 We use the following confusion matrix to learn a few performance metrics.
-
 
 |              |   prediction   |               |
 |-------------:|:--------------:|:-------------:|
@@ -26,6 +22,11 @@ We use the following confusion matrix to learn a few performance metrics.
 
 : An example of confusion matrix
 
+::: callout-important
+### QUESTION: Defining evaluation metrics for classifier evaluation
+
+Define the following metrics for performance evaluation of classifiers: Accuracy, Precision, Recall, Sensitivity, Specificity, $F_1-score$, $F_\beta-score$
+:::
 
 ### Accuracy
 
@@ -39,34 +40,28 @@ $$
 
 In other words, the confusion matrix of a good model has large numbers diagonally and small (ideally zero) numbers off-diagonally.
 
-
 ### Precision, Recall, Sensitivity, Specificity
 
 `Precision` and `Recall` are the two *accuracy metrics* used in the **information retrieval** community; they are often used to characterize classifiers as well.
 
 ::: panel-tabset
-
 #### Precision
 
-**Precision** is the percent of cases we (the model) marked `positive` really are positive. 
+**Precision** is the percent of cases we (the model) marked `positive` really are positive.
 
 This tells us how **reliable** it is when a classifier has marked a case as positive.
 
 $$
 precision = \frac{TP}{TP+FP} = \frac{4}{4+2} \approx 0.667
-$$
-In a classification report, the precision specifies the total number of correct predictions for a class divided by the total number of that class in the predictions.
-
+$$ In a classification report, the precision specifies the total number of correct predictions for a class divided by the total number of that class in the predictions.
 
 #### Recall & Sensitivity
 
-**Recall** is the percent of `positive` cases we were able to correctly identify and select. Recall is also called **Sensitivity** and **True Positive Rate**, the portion of *true positive cases* that a classifier is able to discover. 
+**Recall** is the percent of `positive` cases we were able to correctly identify and select. Recall is also called **Sensitivity** and **True Positive Rate**, the portion of *true positive cases* that a classifier is able to discover.
 
 $$
 recall = TPR = \frac{TP}{TP+FN} = \frac{4}{4+3}\approx 0.571
-$$
-In a classification report, the recall specifies the total number of correct predictions for a class divided by *the total number of that class in the truth*.
-
+$$ In a classification report, the recall specifies the total number of correct predictions for a class divided by *the total number of that class in the truth*.
 
 #### Specificity
 
@@ -76,49 +71,39 @@ $$
 specificity = TNR = \frac{TN}{TN+FP} = \frac{1}{1+2} \approx 0.333
 $$
 
-
-The **false positive rate**, FPR, is 
-$$
+The **false positive rate**, FPR, is $$
 FPR = \frac{FP}{TN+FP} = 1-specificity
 $$
 :::
 
-
 ::: callout-important
-### QUESTION: Reading Confusion Matrix
+## QUESTION: Reading Confusion Matrix
 
-Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
+Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 10-class classifier.
 
-```
-[[45  0  0  0  0  0  0  0  0  0]
- [ 0 45  0  0  0  0  0  0  0  0]
- [ 0  0 54  0  0  0  0  0  0  0]
- [ 0  0  0 42  0  1  0  1  0  0]
- [ 0  0  0  0 49  0  0  1  0  0]
- [ 0  0  0  0  0 38  0  0  0  0]
- [ 0  0  0  0  0  0 42  0  0  0]
- [ 0  0  0  0  0  0  0 45  0  0]
- [ 0  1  1  2  0  0  0  0 39  1]
- [ 0  0  0  0  1  0  0  0  1 41]]
-``` 
+    [[45  0  0  0  0  0  0  0  0  0]
+     [ 0 45  0  0  0  0  0  0  0  0]
+     [ 0  0 54  0  0  0  0  0  0  0]
+     [ 0  0  0 42  0  1  0  1  0  0]
+     [ 0  0  0  0 49  0  0  1  0  0]
+     [ 0  0  0  0  0 38  0  0  0  0]
+     [ 0  0  0  0  0  0 42  0  0  0]
+     [ 0  0  0  0  0  0  0 45  0  0]
+     [ 0  1  1  2  0  0  0  0 39  1]
+     [ 0  0  0  0  1  0  0  0  1 41]]
 
 Explain row 9 of the confusion matrix. And what is the precision and recall of the classifier for the 9th class?
-
 :::
-
 
 ### Balanced Accuracy
 
-Accuracy is used to evaluate how good a binary classifier is. When the two classes are **imbalanced**, i.e., one class appears more frequently than the other, the balanced accuracy should be taken as the average of the `sensitivity score for positive` class and the `specificity score for negative class`. 
-$$
+Accuracy is used to evaluate how good a binary classifier is. When the two classes are **imbalanced**, i.e., one class appears more frequently than the other, the balanced accuracy should be taken as the average of the `sensitivity score for positive` class and the `specificity score for negative class`. $$
 \text{balanced accuracy} = \frac{sensitivity+specificity}{2} \approx 0.452
 $$
 
-
-
 ### $F_1$-score
 
-In a binary classification, `F-score` or `F-measure` is calculated from the **precision** and **recall** of the test. The traditional F-score, $F_1-score$, is the average of precision and recall. 
+In a binary classification, `F-score` or `F-measure` is calculated from the **precision** and **recall** of the test. The traditional F-score, $F_1-score$, is the average of precision and recall.
 
 The highest possible value of an $F_1$-score is 1 and the lowest is 0.
 
@@ -126,18 +111,16 @@ $$
 F_1\text{} = \frac{precision+recall}{2} \approx 0.615
 $$
 
-
 ### $F_\beta$-score
 
-A more general F-score, $F_\beta$, uses a positive factor $\beta$ by which the score will weigh recall $\beta$ times as important as precision. 
+A more general F-score, $F_\beta$, uses a positive factor $\beta$ by which the score will weigh recall $\beta$ times as important as precision.
 
-Recall measures how sensitive a model is to the positive class. Precision is about how many cases predicted as positive are really positive. 
+Recall measures how sensitive a model is to the positive class. Precision is about how many cases predicted as positive are really positive.
 
 ::: callout-tip
 #### Choosing the $\beta$ value for $F_\beta$-score
 
 If discovering all the positive cases is more important than filtering false positive cases, then $\beta$ should be greater than $1$.
-
 :::
 
 Two commonly used values for $\beta$ are $2$, which weighs recall higher than precision, and $0.5$, which weighs recall lower than precision.
@@ -150,9 +133,46 @@ $$
 A loss or cost function is a technique which is used to represent the loss or cost of an event, such as mistakenly classifying a negative case as positive or vice verse.
 :::
 
+::: callout-important
+## QUESTION: Evaluating a two-class classifier
 
+Assume a binary classifier using `yes` as positive class and `no` as negative class. Given the following truth and prediction data.
+
+    truth: "yes" "yes" "yes" "no"  "no"  "no"  "no"  "no"  "no"  "yes"
+    prediction: "no"  "yes" "no"  "yes" "yes" "no"  "no"  "yes" "yes" "no"
+
+1.  Calculate precision, recall/sensitivity, specificity, balanced accuracy.
+2.  Discuss in general how to choose the $\beta$ value for $F_\beta$-score.
+:::
 
 ## Exercises
 
-TBA
+1.  Define the following metrics for performance evaluation of classifiers: Accuracy, Precision, Recall, Sensitivity, Specificity, $F_1-score$, $F_\beta-score$
 
+2.  Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
+
+```
+
+    [[45  0  0  0  0  0  0  0  0  0]
+     [ 0 45  0  0  0  0  0  0  0  0]
+     [ 0  0 54  0  0  0  0  0  0  0]
+     [ 0  0  0 42  0  1  0  1  0  0]
+     [ 0  0  0  0 49  0  0  1  0  0]
+     [ 0  0  0  0  0 38  0  0  0  0]
+     [ 0  0  0  0  0  0 42  0  0  0]
+     [ 0  0  0  0  0  0  0 45  0  0]
+     [ 0  1  1  2  0  0  0  0 39  1]
+     [ 0  0  0  0  1  0  0  0  1 41]]
+```
+
+Explain row 9 of the confusion matrix. And what is the precision and recall of the classifier for the 9th class?
+
+3.  Assume a binary classifier using `yes` as positive class and `no` as negative class. Given the following truth and prediction data.
+
+```
+    truth: "yes" "yes" "yes" "no" "no" "no" "no" "no" "no" "yes" 
+    prediction: "no" "yes" "no" "yes" "yes" "no" "no" "yes" "yes" "no"
+```
+
+-   Calculate precision, recall/sensitivity, specificity, balanced accuracy.
+-   Discuss in general how to choose the $\beta$ value for $F_\beta$-score.
