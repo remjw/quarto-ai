@@ -1,0 +1,18 @@
+---
+title: "ROC & AUC"
+---
+
+
+
+
+## Other Metrics
+
+Depending on the problem at hand, you may have to optimize the classifier to improve selected metrics. For instance, in a medical diagnosis problem, it is very important to reduce FNR (false negative rate) and FPR (false positive rate).
+
+### ROC & AUC
+
+A **receiver operating characteristic** curve, or **ROC curve**, is a graph that plots the diagnostic ability of a binary classifier as its discrimination threshold is varied. The method was originally developed for operators of military radar receivers, which is why it is so named.
+
+The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings. The `true-positive rate` is also known as `sensitivity`, `recall`. The `false-positive rate` is $$
+FPR = \frac{FP}{TN+FP} = 1-specificity
+$$

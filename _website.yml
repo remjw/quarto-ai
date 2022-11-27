@@ -61,6 +61,7 @@ website:
       contents:
         - kfold_validation.qmd
         - model_select.qmd
+        - roc_auc.qmd
 
     - id: discussions
       title: "Discussions"

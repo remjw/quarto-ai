@@ -1,27 +1,481 @@
 ---
-title: Choosing Model
+title: The _"Best"_ Model
 ---
 
-## Choosing Metrics
+Most machine learning problems can be solved in various ways. For instance, a *supervised learning* algorithm assigns a label to a new object. To name a few,
 
-Depending on the problem at hand, you may have to optimize the classifier to
-improve selected metrics. For instance, in a medical diagnosis problem, it is
-very important to reduce FNR (false negative rate) and FPR (false positive
-rate).
+-   Logistic Regression
+-   *Stochastic Gradient Descent (SGD)*
+-   K-nearest Neighbors
+-   Naïve Bayes
+-   *Support Vector Machine (SVC)*
+-   Decision Tree
+
+Training a machine learning model may require one or more parameters be presumed beforehand, referred to as `hyperparameters`. Finding the best model in a specific use case has led to research and development of model selection, tuning and optimization, and aggregation techniques.
+
+There are at least two problems to be solved.
+
+::: {.callout-important appearance="simple"}
+
+### The Two Problems
+
+1. Firstly, for a given dataset, which algorithm(s) would perform best for a specific use case in terms of chosen metrics? 
+
+2. Each algorithm has its peculiar hyperparameters. After determining the best algorithm candidates, how do we search for the best set of hyperparameters?  
+
+:::
+
+For instance,
+
+::: panel-tabset
+
+### K-nearest Neighbors
+
+The number of neighbors $K$
 
 
 
-## ROC & AUC
+### Linear Model
 
-A **receiver operating characteristic** curve, or **ROC curve**, is a graph that
-plots the diagnostic ability of a binary classifier as its discrimination
-threshold is varied. The method was originally developed for operators of
-military radar receivers, which is why it is so named.
+The number of independent features $n$ in a linear model
 
-The ROC curve is created by plotting the true positive rate (TPR) against the
-false positive rate (FPR) at various threshold settings. The
-`true-positive rate` is also known as `sensitivity`, `recall`. The
-`false-positive rate` is 
 $$
-FPR = \frac{FP}{TN+FP} = 1-specificity
+y = b + a_1x_1 + \dots + a_nx_n
 $$
+
+
+### Decision Tree
+
+-   The maximum depth, i.e., height of tree
+-   The minimum number of samples required in a leaf node
+
+
+```{r}
+#| echo: false
+#| column: screen-inset-shaded
+#| layout-nrow: 1
+library(ISLR)
+library(rpart)
+library(rpart.plot)
+#build the initial decision tree
+tree <- rpart(Salary ~ Years + HmRun, data=Hitters, control=rpart.control(cp=.0001))
+
+rpart.plot(tree)
+
+#identify best cp value to use
+best <- tree$cptable[which.min(tree$cptable[,"xerror"]),"CP"]
+
+#produce a pruned tree based on the best cp value
+pruned_tree <- prune(tree, cp=best)
+#plot the pruned tree
+prp(pruned_tree)
+```
+
+### Random Forest
+
+-   The number of trees in a random forest
+
+
+
+### Gradient Descent
+
+-   The learning rate $\alpha \in [0.0, 1.0]$ to control the speed of learning
+
+$$
+\alpha \times \nabla
+$$
+
+### Neural Network
+
+- The number of layers 
+- The number of neurons per layer 
+
+:::
+
+
+This lesson discusses the techniques relevant to model section and tuning in a single-model scenario. A model selection technique trains multiple models and compares their performance for a given dataset. A model optimization technique determines the best configuration for a specific model.
+
+Besides replying on a single algorithm, it is common practice to run two or more algorithms and consolidate the results in the final output, referred to as **ensemble modeling**.
+
+
+## ExampleSet
+
+We randomly generate a numerical dataset of $N$ samples and train a binary classifier from the samples. The example data contains two independent features $x1$ and $x2$, and one class label $y$. We use the same example set for the model selection and tuning parts in this lesson.
+
+::: callout-tip
+
+A one-third hold-out ratio is used to separate data into the training and test sets. The subsequent process for model selection is performed on the training set, `X_train` and `y_train` only.
+
+:::
+
+```{python}
+#| results: hold
+#| eval: true
+
+# 1. Data Generation 
+import numpy as np
+# configuration
+np.random.seed(99) 
+labels = [0, 1]
+multiplier = 20
+N = 5 * multiplier
+N_folds = 5 # CV
+holdout = 1/3 # ratio 
+# A dataset of 2 features x1, x2 & 1 label y
+y = np.random.choice(labels, size=N, replace=True)
+x1 = np.array([0.1, 0.2, 0.3, 0.4, 0.5] * multiplier)
+x2 = np.random.sample(N)
+X = np.stack((x1, x2), axis=-1)
+
+# 2. Holdout 70% for training, 30% for test
+from sklearn.model_selection import StratifiedKFold, train_test_split, cross_validate
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=holdout, shuffle=True, random_state=0)
+
+# class distribution
+print(f'''
+Head:
+{X[0:5]}
+CLASS DISTRIBUTION after Stratified Split
+y:
+Percentage of label 0: {round(sum(y==0)/len(y),5)}
+Percentage of label 1: {round(sum(y==1)/len(y),5)}
+y_train:
+Percentage of label 0: {round(sum(y_train==0)/len(y_train),5)}
+Percentage of label 1: {round(sum(y_train==1)/len(y_train),5)}  
+y_test:
+Percentage of label 0: {round(sum(y_test==0)/len(y_test),5)}
+Percentage of label 1: {round(sum(y_test==1)/len(y_test),5)}  
+''')
+```
+
+
+
+
+## Model Selection
+
+Without model comparison, it is hard to anticipate the best performed model type for a given dataset. Empirical experience can firstly be used to initially filter the candidates. The selection process can subsequently be executed to compare the candidates.
+
+
+### Determine Candidates
+
+
+::: panel-tabset
+
+#### Use the Estimator Diagram
+
+The following is a useful diagram for choosing the right type of estimator based on the three conditions: `data type`, `data size` and `learning type`.
+
+```{r echo=F}
+knitr::include_url("https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html")
+```
+
+#### To Determine Model Candidates
+
+1.  KNeighbors Classifier
+2. Logistic Regression
+3.  SGD Classifier (_Stochastic Gradient Descent_)
+4.  SVC (_Support vector machine_)
+
+
+:::
+
+### Compare Candidates
+
+
+::: panel-tabset
+#### Problem Case
+
+Use Scikit-Learn to compare the classification algorithms determined from the last step (*All models are trained with default parameters*.):
+
+1.  `KNeighborsClassifier`
+2. `LogisticRegressioin`
+2. `SGDClassifier`
+3.  `SVC` (Support vector machine)
+
+
+#### Code: Scikit-Learn APIs
+
+```{python}
+#| results: hold
+#| eval: true
+
+# continue
+# 3. Determine Model Candidates
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+
+# 4. group estimator names and objects in a dictionary
+estimators = {
+  'KNeighborsClassifier': KNeighborsClassifier(algorithm='auto',n_neighbors=5), 
+  'LogisticRegression': LogisticRegression(random_state=0),
+  'SGDClassifier': SGDClassifier(alpha=0.00001, max_iter=1000, early_stopping=False, tol=0.001),
+  'SVC': SVC(gamma='scale')
+  }
+
+for estimator_name, estimator_object in estimators.items():
+  # kfold = KFold(n_splits=2, random_state=11, shuffle=True)
+  scores = cross_validate(estimator_object, X_train, y_train, cv=N_folds, return_train_score=True, return_estimator=True)
+  print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores["test_score"].mean():.2%}; ' +
+           f'standard deviation={scores["test_score"].std():.2%}')
+```
+
+:::
+
+
+### Question
+
+How would you modify the code given above so that it would also test a Naive Bayes classifier model, `'GaussianNB': GaussianNB()`?
+
+
+## Model Tuning
+
+Once we have identified a shortlist of models in terms of specific metrics, we should fine-run them to find hyperparameter values that produce the best possible results.
+
+::: callout-tip
+Model tuning runs K-fold cross validation over the training data.
+:::
+
+### Grid Search
+
+The Grid search technique is a brute-force method which explores every combination globally in one-/multi-dimensional parameter space, do model evaluation and search for the best parameter values.
+
+### 1D Grid
+
+::: panel-tabset
+
+#### Search for best K for K-nearest Classifier
+
+Get the samples
+
+Define search grid and its granularity by K_min, K_max, and step_size
+
+For each value $ \in [K_min, K_max, step_size]$ 
+  
+  Do K-fold cross validation
+  
+  record k and its metric
+
+Find the k value having the best metric
+
+
+#### Grid Search from Scratch
+
+Not required
+
+`numpy.arange`
+
+`numpy.meshgrid`
+
+
+#### Scikit-Learn model_selection.GridSearch API
+
+```{python}
+#| results: hold
+#| 
+# Grid search w/ CV
+import numpy as np
+from time import time
+import scipy.stats as stats
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
+
+# Utility function to report best scores
+def report(results, n_top=3):
+  for i in range(1, n_top + 1):
+    candidates = np.flatnonzero(results["rank_test_score"] == i)
+    for candidate in candidates:
+      print(f'''
+      Model with rank = {i}
+      Mean validation score: {results["mean_test_score"][candidate]:.3f} 
+      std: {results["std_test_score"][candidate]:.3f}
+      Parameters: {results["params"][candidate]}
+      ''')
+
+knn = KNeighborsClassifier()
+# Define grid
+param_grid = {
+    "n_neighbors": np.arange(1,21)
+}
+N_folds = 5
+# run grid search
+grid_search = GridSearchCV(knn, param_grid=param_grid, cv=StratifiedKFold(n_splits=N_folds, shuffle=False))
+start = time()
+grid_search.fit(X_train, y_train)
+#
+print(f'''
+GridSearch with {N_folds}-Fold CV took {time()-start:.2f} seconds for {len(grid_search.cv_results_["params"])} candidate parameter settings.
+Best_estimator: {grid_search.best_estimator_}
+''')
+
+report(grid_search.cv_results_)
+
+```
+
+#### Plot `K` vs. `mean_test_score`
+
+```{python}
+#| results: hold
+import matplotlib.pyplot as plt
+import numpy as np
+np.random.seed(99)
+
+ks = grid_search.cv_results_["param_n_neighbors"]
+scores = grid_search.cv_results_["mean_test_score"]
+print(ks, scores)
+colors = np.random.rand(len(ks))
+area = scores * 20
+plt.scatter(ks, scores, s=area, c=colors, alpha=0.5)
+#plt.plot(np.append(scores[0],scores), linestyle="dotted")
+plt.title('The change of mean_test_score with $K$ values')
+plt.ylabel('mean_test_score')
+plt.show()
+```
+
+
+#### Object names in `cv_results_`
+
+```{python}
+for obj in grid_search.cv_results_:
+  print(obj)
+
+```
+
+
+
+
+:::
+
+
+### 2D-Grid Search
+
+Tuning two parameters simultaneously requires a 2-dimensional grid. 
+
+::: panel-tabset
+
+#### Tuning learning_rate and stopping condition for SGD Classifier
+
+To tune a SGD classifier, define a 2-dimensional grid for the learning rate $alpha$ and stopping condition $tol$.
+
+
+```{python}
+#| eval: false
+n_alpha, n_tol = 10, 5
+param_grid = {
+    "alpha": np.linspace(0.6, 1, n_alpha),
+    "tol": np.linspace(0.001, 0.01, n_tol)
+}
+print(param_grid)
+```
+
+#### Scikit-Learn Code
+
+```{python}
+#| results: hold
+#| 
+# Grid search w/ CV
+import numpy as np
+from time import time
+import scipy.stats as stats
+
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import GridSearchCV
+
+# default: alpha=0.00001, max_iter=1000, early_stopping=False, tol=0.001
+sgd = SGDClassifier()
+# Define grid
+n_alpha, n_tol = 20, 10
+param_grid = {
+    "alpha": np.linspace(0.6, 1, n_alpha),
+    "tol": np.linspace(0.01, 0.1, n_tol)
+}
+N_folds = 5
+# run grid search
+grid_search = GridSearchCV(sgd, param_grid=param_grid, cv=StratifiedKFold(n_splits=N_folds, shuffle=False))
+
+start = time()
+grid_search.fit(X_train, y_train)
+
+```
+
+#### Get Best Estimator
+
+```{python}
+#| results: hold
+
+
+# Utility function to report best scores
+def report(results, n_top=3):
+  for i in range(1, n_top + 1):
+    candidates = np.flatnonzero(results["rank_test_score"] == i)
+    for candidate in candidates:
+      print(f'''
+      Model with rank = {i}
+      Mean validation score: {results["mean_test_score"][candidate]:.3f} 
+      std: {results["std_test_score"][candidate]:.3f}
+      Parameters: {results["params"][candidate]}
+      ''')
+      
+print(f'''
+GridSearch with {N_folds}-Fold CV took {time()-start:.2f} seconds for {len(grid_search.cv_results_["params"])} candidate parameter settings.
+Best_estimator: {grid_search.best_estimator_}
+''')
+
+report(grid_search.cv_results_, n_top=1)
+```
+
+
+#### Object Names in `cv_results_`
+
+```{python}
+for obj in grid_search.cv_results_:
+  print(obj)
+
+```
+
+#### Contour Plot `(alpha,tol)` vs. `mean_test_score`
+
+```{python}
+#| eval: true
+#| results: hold
+
+# Display 2d data in a 2d plot
+# Display 2d data in a 2d plot
+import matplotlib.pyplot as plt
+import numpy as np
+np.random.seed(99)
+
+alpha = np.linspace(0.6, 1, n_alpha)
+tol = np.linspace(0.1, 0.01, n_tol)
+scores = grid_search.cv_results_["mean_test_score"]
+print(scores[0:5])
+
+A, T = np.meshgrid(alpha, tol)
+print(A.shape, T.shape)
+# 
+Z = np.reshape(np.flip(scores), (n_tol, n_alpha))
+plt.clf()
+plt.contourf(A, T, Z, 20, cmap='RdGy') #RdGy
+plt.colorbar()
+plt.title('How does mean_test_score vary with $(alpha, tol)$?')
+plt.show()
+
+```
+
+:::
+
+
+
+
+### Question
+
+How would you modify the code given above so that it would fine-tune the following two hyperparameters for SGD classifier?
+
+- alpha \in [0.5, 1] 
+- max_iter \in []
+- 
+
+
