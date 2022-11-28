@@ -1,54 +1,96 @@
 ---
 title: The _"Best"_ Model
+format: 
+  html: 
+    code-fold: true 
+    code-tools: true
+    code-link: true
+#execute:
+#  echo: false 
+#  cache: true
 ---
 
-Most machine learning problems can be solved in various ways. For instance, a *supervised learning* algorithm assigns a label to a new object. To name a few,
+
+::: callout-tip
+### No Free Lunch Theorem
+
+> Yet-Another Philosophical Question: Should we search for the BEST model?
+
+**"A model is a simplified version of the given observations. The simplifications are intended to discard the superfluous details that are unlikely to be generalized to new instances. To decide what data to discard and what data to keep, you must make assumptions."**[@aurelien_geron_hands-machine_2022]
+
+[In a famous 1996 paper](https://homl.info/8), David Wolpert demonstrated that if you make absolutely no assumption about the data, then there is no reason to prefer one model over any other, referred to as **No Free Lunch (NFL)** theorem. 
+
+There is no model that is a priori guaranteed to work better. The only way to know the best model is to evaluate them ALL. Apparently this is impossible, in practice you make some reasonable assumptions about the data and evaluate only a few reasonable models. 
+
+:::
+
+
+Assume the best model exists under certain assumptions. Most of us have already been talking generally about machine learning and AI applications as they have invaded every aspect of our lives in good way. To take serious advantage of the relevant technologies, there are a lot of questions to be taken into consideration beyond algorithms, complexity and accuracy.
+
+> To Adopt or Abandon?: Give concrete and convincing reasons and examples to persuade a business or an organization or an institute to either adopt or abandon machine learning technology. 
+
+> Technical Question: What techniques are currently available to distinguish the good models from the bad ones and determine the best one from a short-list?
+
+> Fixed or Time-Variant Model? : Should a model never be changed once it has been deployed and being used in a production environment? How often should an existing machine learning model be regularly re-evaluated? What would you do if an obvious performance degrading has recently been detected from a running model?
+
+> Offline vs. online/real-time model re-training. Training cost. Data quality & credibility. Data privacy.
+
+::: {.callout-tip .column}
+#### The lesson is an extended discussion of
+
+-   [@deitel_intro_2019] Sections 15.3.3, 15.3.4
+:::
+
+A majority of machine learning problems can be solved in various ways. The family of *supervised machine learning* algorithms is purposed to search for a discriminative model to maximize disparities between classes/categories. This type of algorithm requires a specific collection of *labeled/categorized/example data* prior to its launch, and fits a classifier model to the given data. The data dependency results in over-fitting as well as possible performance degrading arising from data drift or concept drift.
+
+::: {.callout-note .column-margin}
+## Concept Drift & Data Drift
+
+*Wikipedia definition*: In predictive analytics and machine learning, *concept drift* means that the statistical properties of the target variable, which the model is trying to predict, change over time in unforeseen ways. This causes problems because the predictions become less accurate as time passes.
+:::
+
+The algorithm outputs a classifier which is an executable object. The classifier is intended to assign/predict a label to each new, formerly unseen object with satisfactory performance. To name a few,
 
 -   Logistic Regression
 -   *Stochastic Gradient Descent (SGD)*
 -   K-nearest Neighbors
--   Naïve Bayes
+-   Naïve Bayes [@noauthor_naive_nodate]
 -   *Support Vector Machine (SVC)*
 -   Decision Tree
+-   Random Forest
 
-Training a machine learning model may require one or more parameters be presumed beforehand, referred to as `hyperparameters`. Finding the best model in a specific use case has led to research and development of model selection, tuning and optimization, and aggregation techniques.
+Training a machine learning model may require one or more parameters be presumed beforehand, referred to as `hyperparameters`. As hyperparameters can have a direct impact on the model training process. It is important to understand how to optimize them. This has led to research and development of various strategies and algorithms. 
 
-There are at least two problems to be solved.
+::: {.callout-note .column-margin}
+## Hyperparameters & Model Parameters
 
-::: {.callout-important appearance="simple"}
+In machine learning, a **hyperparameter** is a parameter whose value must be manually specified before model fitting begins. Hyperparameters are used to control the learning process and they directly impact the training process. 
 
-### The Two Problems
-
-1. Firstly, for a given dataset, which algorithm(s) would perform best for a specific use case in terms of chosen metrics? 
-
-2. Each algorithm has its peculiar hyperparameters. After determining the best algorithm candidates, how do we search for the best set of hyperparameters?  
+By contrast, **model parameters** are the values of other parameters (typically node weights) which are derived via training and directly related to training data. 
 
 :::
 
-For instance,
+For instance, the following lists the hyperparameters in some popular algorithms.
 
 ::: panel-tabset
-
 ### K-nearest Neighbors
 
-The number of neighbors $K$
-
-
+Find an optimal number of neighbors $K$ which maximizes model performance.
 
 ### Linear Model
 
-The number of independent features $n$ in a linear model
+Hyperparameter: Find an optimal integer for number of independent features $n$ in a linear model.
+
+- $b, a_1-a_n$ are model parameters which are calculated by an algorithm.
 
 $$
 y = b + a_1x_1 + \dots + a_nx_n
 $$
 
-
 ### Decision Tree
 
 -   The maximum depth, i.e., height of tree
 -   The minimum number of samples required in a leaf node
-
 
 ```{r}
 #| echo: false
@@ -75,42 +117,48 @@ prp(pruned_tree)
 
 -   The number of trees in a random forest
 
-
-
 ### Gradient Descent
 
--   The learning rate $\alpha \in [0.0, 1.0]$ to control the speed of learning
-
-$$
-\alpha \times \nabla
-$$
+-   The learning rate $\alpha \in [0.0, 1.0]$ used as a multiplier in the term $\alpha \times \nabla$. It controls the speed of learning and dynamically determines the step size for next iteration.
+-   The stopping condition to terminate the loop.
 
 ### Neural Network
 
-- The number of layers 
-- The number of neurons per layer 
-
+-   The number of layers
+-   The number of neurons per layer
 :::
+
+
+
+In a machine learning project, after completing data collection and preparation, there are at least two problems to be solved.
+
+::: {.callout-important appearance="simple"}
+### Two Problems
+
+1.  Firstly, for a given dataset, which algorithm(s) would perform best for a specific use case in terms of chosen metrics?
+
+2.  Secondly, each algorithm has one or more peculiar hyperparameters. After determining a short-list of the algorithm candidates, how do we determine the best value of each hyperparameter?
+:::
+
 
 
 This lesson discusses the techniques relevant to model section and tuning in a single-model scenario. A model selection technique trains multiple models and compares their performance for a given dataset. A model optimization technique determines the best configuration for a specific model.
 
-Besides replying on a single algorithm, it is common practice to run two or more algorithms and consolidate the results in the final output, referred to as **ensemble modeling**.
-
+Besides replying on a single algorithm, it is common practice to run two or more algorithms and consolidate the results in the final output, referred to as **ensemble modeling**. Random forest ensembles individual trees in a single model.
 
 ## ExampleSet
 
-We randomly generate a numerical dataset of $N$ samples and train a binary classifier from the samples. The example data contains two independent features $x1$ and $x2$, and one class label $y$. We use the same example set for the model selection and tuning parts in this lesson.
+We randomly generate a numerical dataset of $N$ samples and train a binary classifier from the samples. The example data contains two independent features $x1$ and $x2$, and one class label $y$. The code cells in the lesson use the example set unless a different dataset is specified.
 
 ::: callout-tip
-
 A one-third hold-out ratio is used to separate data into the training and test sets. The subsequent process for model selection is performed on the training set, `X_train` and `y_train` only.
-
 :::
 
 ```{python}
+#| label: Generate a Random ExampleSet
 #| results: hold
 #| eval: true
+#| layout-ncol: 2
 
 # 1. Data Generation 
 import numpy as np
@@ -131,10 +179,15 @@ X = np.stack((x1, x2), axis=-1)
 from sklearn.model_selection import StratifiedKFold, train_test_split, cross_validate
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=holdout, shuffle=True, random_state=0)
 
+# inspect head
+print(f'''
+Head of X:
+{X[0:5]}
+Head of y:
+{y[0:5]}
+''')
 # class distribution
 print(f'''
-Head:
-{X[0:5]}
 CLASS DISTRIBUTION after Stratified Split
 y:
 Percentage of label 0: {round(sum(y==0)/len(y),5)}
@@ -150,17 +203,13 @@ Percentage of label 1: {round(sum(y_test==1)/len(y_test),5)}
 
 
 
-
 ## Model Selection
 
 Without model comparison, it is hard to anticipate the best performed model type for a given dataset. Empirical experience can firstly be used to initially filter the candidates. The selection process can subsequently be executed to compare the candidates.
 
-
 ### Determine Candidates
 
-
 ::: panel-tabset
-
 #### Use the Estimator Diagram
 
 The following is a useful diagram for choosing the right type of estimator based on the three conditions: `data type`, `data size` and `learning type`.
@@ -169,31 +218,27 @@ The following is a useful diagram for choosing the right type of estimator based
 knitr::include_url("https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html")
 ```
 
-#### To Determine Model Candidates
+#### To Determine Candidates
 
 1.  KNeighbors Classifier
-2. Logistic Regression
-3.  SGD Classifier (_Stochastic Gradient Descent_)
-4.  SVC (_Support vector machine_)
-
-
+2.  Logistic Regression
+3.  SGD Classifier (*Stochastic Gradient Descent*)
+4.  SVC (*Support vector machine*)
 :::
 
 ### Compare Candidates
 
-
 ::: panel-tabset
-#### Problem Case
+#### Problem
 
 Use Scikit-Learn to compare the classification algorithms determined from the last step (*All models are trained with default parameters*.):
 
 1.  `KNeighborsClassifier`
-2. `LogisticRegressioin`
-2. `SGDClassifier`
-3.  `SVC` (Support vector machine)
+2.  `LogisticRegressioin`
+3.  `SGDClassifier`
+4.  `SVC` (Support vector machine)
 
-
-#### Code: Scikit-Learn APIs
+#### How: Scikit-Learn APIs
 
 ```{python}
 #| results: hold
@@ -221,14 +266,15 @@ for estimator_name, estimator_object in estimators.items():
            f'mean accuracy={scores["test_score"].mean():.2%}; ' +
            f'standard deviation={scores["test_score"].std():.2%}')
 ```
-
 :::
 
+### Exercise
 
-### Question
+::: callout-tip
+#### Question: Determining Model Candidates
 
 How would you modify the code given above so that it would also test a Naive Bayes classifier model, `'GaussianNB': GaussianNB()`?
-
+:::
 
 ## Model Tuning
 
@@ -242,39 +288,45 @@ Model tuning runs K-fold cross validation over the training data.
 
 The Grid search technique is a brute-force method which explores every combination globally in one-/multi-dimensional parameter space, do model evaluation and search for the best parameter values.
 
-### 1D Grid
+::: callout-note
+### Grid Search from Scratch
+
+Not required `numpy.arange` `numpy.meshgrid`
+:::
+
+### 1D Grid Search
 
 ::: panel-tabset
 
-#### Search for best K for K-nearest Classifier
+#### Search Optimal K for K-NN Classifier
 
-Get the samples
+1.  Get the samples
 
-Define search grid and its granularity by K_min, K_max, and step_size
+2.  Split samples to training and test sets
 
-For each value $ \in [K_min, K_max, step_size]$ 
-  
-  Do K-fold cross validation
-  
-  record k and its metric
+3.  Get the training set
 
-Find the k value having the best metric
+4.  Create a K-NN classifier object
 
+5.  Set $K_{min}$, $K_{max}$, and $stepsize$ to define search grid and its granularity
 
-#### Grid Search from Scratch
+6.  Loop: For each integer $k \in [K_{min}, K_{max}, stepsize]$
 
-Not required
+    1.  Do K-fold cross validation with training set
 
-`numpy.arange`
+    2.  Record $k$ and its score
 
-`numpy.meshgrid`
+7.  Find the k value having the best score
 
+8.  Get the best or top-n estimators
 
-#### Scikit-Learn model_selection.GridSearch API
+#### 1.Create Model & Grid_Search Objects
+
+Scikit-Learn `model_selection.GridSearch` API
 
 ```{python}
 #| results: hold
-#| 
+#| output-location: fragment
 # Grid search w/ CV
 import numpy as np
 from time import time
@@ -283,7 +335,39 @@ import scipy.stats as stats
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 
-# Utility function to report best scores
+# Create KNN classifier object 
+knn = KNeighborsClassifier()
+
+# Define grid
+param_grid = {
+    "n_neighbors": np.arange(1,21)
+}
+# number of folds
+N_folds = 5
+
+# Create grid search object
+grid_search = GridSearchCV(knn, param_grid=param_grid, cv=StratifiedKFold(n_splits=N_folds, shuffle=False))
+
+# Run grid search
+start = time()
+grid_search.fit(X_train, y_train)
+
+```
+
+
+#### 2. View Output Structure `cv_results_`
+
+```{python}
+for obj in grid_search.cv_results_:
+  print(obj)
+
+```
+
+
+#### 3. Reporting 
+
+```{python}
+# Utility function to customize the report 
 def report(results, n_top=3):
   for i in range(1, n_top + 1):
     candidates = np.flatnonzero(results["rank_test_score"] == i)
@@ -295,27 +379,18 @@ def report(results, n_top=3):
       Parameters: {results["params"][candidate]}
       ''')
 
-knn = KNeighborsClassifier()
-# Define grid
-param_grid = {
-    "n_neighbors": np.arange(1,21)
-}
-N_folds = 5
-# run grid search
-grid_search = GridSearchCV(knn, param_grid=param_grid, cv=StratifiedKFold(n_splits=N_folds, shuffle=False))
-start = time()
-grid_search.fit(X_train, y_train)
-#
+# 
 print(f'''
 GridSearch with {N_folds}-Fold CV took {time()-start:.2f} seconds for {len(grid_search.cv_results_["params"])} candidate parameter settings.
+
 Best_estimator: {grid_search.best_estimator_}
 ''')
 
+# display top-k (3 default) estimators for parameters and score
 report(grid_search.cv_results_)
-
 ```
 
-#### Plot `K` vs. `mean_test_score`
+#### 4. Plotting `mean_test_score` vs. $K$
 
 ```{python}
 #| results: hold
@@ -330,21 +405,14 @@ colors = np.random.rand(len(ks))
 area = scores * 20
 plt.scatter(ks, scores, s=area, c=colors, alpha=0.5)
 #plt.plot(np.append(scores[0],scores), linestyle="dotted")
-plt.title('The change of mean_test_score with $K$ values')
+plt.title('Change of mean_test_score over $K$ values')
 plt.ylabel('mean_test_score')
+plt.grid()
 plt.show()
 ```
 
 
-#### Object names in `cv_results_`
-
-```{python}
-for obj in grid_search.cv_results_:
-  print(obj)
-
-```
-
-
+#### 5. Conclusion
 
 
 :::
@@ -352,26 +420,146 @@ for obj in grid_search.cv_results_:
 
 ### 2D-Grid Search
 
-Tuning two parameters simultaneously requires a 2-dimensional grid. 
+Tuning two parameters simultaneously requires a 2-dimensional grid.
+
+
+#### Create 2D-Meshgrid
+
+Each grid/dot represents one value pair of the combination (x, y)
+
+```{python}
+#| eval: true
+#| echo: true
+#| layout-ncol: 2
+#| 
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+import numpy as np
+ 
+# Define grid 
+x = np.linspace(0,3,4)
+y = np.linspace(0,3,4)
+X, Y = np.meshgrid(x,y)
+
+print(f'''
+x = {x}
+y = {y}
+X = 
+{X}
+Y = 
+{Y}
+''')
+ 
+#for pair in zip(X[0,:], Y[0,:]):
+#    print(pair)
+    
+Z= X**2 + Y**2
+
+print(f'''Z = $X^2 + Y^2$
+{Z}''')
+
+# 2d plot
+fig = plt.figure()
+_ = plt.contourf(X,Y,Z,cmap='plasma')
+_ = plt.axis('scaled')
+_ = plt.colorbar()
+#plt.savefig('contour1.png')
+plt.show()
+
+# 3d plot
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+_ = ax.plot_surface(X, Y, Z, cmap="plasma", linewidth=0, antialiased=False, alpha=0.5)
+_ = ax.set_xlabel('x')
+_ = ax.set_ylabel('y')
+_ = ax.set_zlabel('z');
+# rotation
+_ = ax.view_init(30, 60)
+#plt.savefig('3Dplot1.png',dpi=600)
+plt.show()
+```
+
+
+
+
+
+#### Exercise
+
+::: callout-tip
+#### Question: Meshgrid Plotting in 2D & 3D Plot 
+
+Write code to replicate the same 2D and 3D plots which visualize the function $Z = X^2 + Y^2$s. Set $x\in[-6, 6], y\in[-6,6], z = x^2 + y^2$.
+
+```{python}
+#| eval: true
+#| echo: false
+#| warning: false
+#| message: false
+#| layout-ncol: 2
+#| 
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+import numpy as np
+ 
+# Define grid 
+x = np.linspace(-6,6,13)
+y = np.linspace(-6,6,13)
+X, Y = np.meshgrid(x,y)
+ 
+#for pair in zip(X[0,:], Y[0,:]):
+#    print(pair)
+    
+Z= X**2 + Y**2
+
+# 2d plot
+fig = plt.figure()
+_ = plt.contourf(X,Y,Z,cmap='plasma')
+_ = plt.axis('scaled')
+_ = plt.colorbar()
+#plt.savefig('contour1.png')
+plt.show()
+
+# 3d plot
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+_ = ax.plot_surface(X, Y, Z, cmap="plasma", linewidth=0, antialiased=False, alpha=0.5)
+_ = ax.set_xlabel('x')
+_ = ax.set_ylabel('y')
+_ = ax.set_zlabel('z');
+# rotation
+_ = ax.view_init(30, 60)
+#plt.savefig('3Dplot1.png',dpi=600)
+plt.show()
+```
+
+:::
+
+
+
+### Tune SGD Classifier
 
 ::: panel-tabset
 
-#### Tuning learning_rate and stopping condition for SGD Classifier
 
-To tune a SGD classifier, define a 2-dimensional grid for the learning rate $alpha$ and stopping condition $tol$.
+#### Define 2D Grid ($\alpha, tol$)
 
+To fine-tune a SGD classifier, define a 2-dimensional grid for the learning rate $alpha$ and stopping condition $tol$.
 
 ```{python}
-#| eval: false
-n_alpha, n_tol = 10, 5
+#| eval: true
+#| echo: true
+n_alpha, n_tol = 20, 10
 param_grid = {
     "alpha": np.linspace(0.6, 1, n_alpha),
     "tol": np.linspace(0.001, 0.01, n_tol)
 }
-print(param_grid)
+print(f'''
+alpha: {param_grid["alpha"]}
+tol: {param_grid["tol"]}
+''')
 ```
 
-#### Scikit-Learn Code
+#### Create Objects
 
 ```{python}
 #| results: hold
@@ -401,13 +589,20 @@ grid_search.fit(X_train, y_train)
 
 ```
 
-#### Get Best Estimator
+#### View `cv_results_`
+
+```{python}
+for obj in grid_search.cv_results_:
+  print(obj)
+
+```
+
+#### Reporting
 
 ```{python}
 #| results: hold
 
-
-# Utility function to report best scores
+# Utility function to customize report
 def report(results, n_top=3):
   for i in range(1, n_top + 1):
     candidates = np.flatnonzero(results["rank_test_score"] == i)
@@ -428,15 +623,8 @@ report(grid_search.cv_results_, n_top=1)
 ```
 
 
-#### Object Names in `cv_results_`
 
-```{python}
-for obj in grid_search.cv_results_:
-  print(obj)
-
-```
-
-#### Contour Plot `(alpha,tol)` vs. `mean_test_score`
+#### Plotting `(alpha,tol)` vs. `mean_test_score`
 
 ```{python}
 #| eval: true
@@ -456,26 +644,37 @@ print(scores[0:5])
 A, T = np.meshgrid(alpha, tol)
 print(A.shape, T.shape)
 # 
-Z = np.reshape(np.flip(scores), (n_tol, n_alpha))
-plt.clf()
-plt.contourf(A, T, Z, 20, cmap='RdGy') #RdGy
-plt.colorbar()
-plt.title('How does mean_test_score vary with $(alpha, tol)$?')
-plt.show()
+Z = np.flipud(np.reshape(scores, (n_tol, n_alpha)))
+_ = plt.clf()
+_ = plt.contourf(A, T, Z, 20, cmap='RdGy') #RdGy
+_ = plt.colorbar()
+_ = plt.xlabel("$alpha$")
+_ = plt.ylabel("$tol$")
+_ = plt.title('How does mean_test_score vary with $(alpha, tol)$?')
+_ = plt.show()
 
 ```
-
 :::
 
 
 
+### Exercise
 
-### Question
+::: callout-tip
+### Question: Hyperparameter Tuning
 
 How would you modify the code given above so that it would fine-tune the following two hyperparameters for SGD classifier?
 
-- alpha \in [0.5, 1] 
-- max_iter \in []
-- 
+-   $alpha \in [0.5, 1]$
+-   $max\_iter \in [50, 100]$
+:::
+
+## Case Study
+
+Sections 15.4 and 15.5
 
 
+## References
+
+::: {#refs}
+:::

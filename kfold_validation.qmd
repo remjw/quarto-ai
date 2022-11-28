@@ -1,5 +1,13 @@
 ---
 title: K-Fold Cross-Validation
+format: 
+  html: 
+    code-fold: true 
+    code-tools: true
+    code-link: true
+#execute:
+#  echo: false 
+#  cache: true
 ---
 
 ::: callout-important
@@ -36,11 +44,11 @@ graph TD
 
 ## How it Works
 
-Say you have a training set of one hundred or no more than one thousand samples. To apply K-fold cross-validation to model evaluation,
+Say you have a training set of one hundred or no more than one thousand samples. To apply *K-fold cross-validation*,
 
-1.  Choose an integer value for K, the number of folds, which is often set to 5 or 10.
+1.  Choose an integer value for K, the number of folds, often set to 5 or 10.
 2.  Shuffle the data
-3.  Split the data into `K equally-sized` **folds/subsets**.
+3.  Split the data into `K equally-sized (and stratified)` **folds/subsets**.
 4.  Repeat modeling for **K times** by rotating the validation set over every subset.
 5.  The overall score is taken as the average performance of K resulting estimators.
 
