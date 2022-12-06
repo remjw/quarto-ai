@@ -1,0 +1,30 @@
+---
+title: "Read Data From File"
+---
+
+
+
+
+
+
+```{python}
+# Read CSV 
+import pandas as pd
+
+housing = pd.read_csv("data/housing.csv")
+
+# drop samples having Null values
+housing.dropna(subset=["total_bedrooms"], inplace=True)  
+# drop two columns
+X = housing.drop(["ocean_proximity","median_house_value"], axis=1)
+X.info()
+
+print(f"""
+X: dimension {X.shape}  
+""")
+
+y = housing["median_house_value"].copy()
+print(f"""y: dimension {y.shape}  
+""")
+
+```

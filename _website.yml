@@ -18,7 +18,7 @@ website:
       - sidebar:lessons
       - sidebar:advancedtopics
       - sidebar:discussions
-      - sidebar:competition
+      - sidebar:solutions
 
 
   sidebar:
@@ -53,6 +53,7 @@ website:
     - id: lessons
       title: "Lessons"
       contents:
+        - read_data.qmd
         - exploratory_data_analysis.qmd
         - sklearn-knn.qmd
 
@@ -70,11 +71,12 @@ website:
         - discussion_ibm_mlbook.qmd
         - discussion_ai.qmd
         - discussion_cloudcomputing.qmd
-
-    - id: competition
-      title: "Competition"
-      contents:
         - competition.qmd
+
+    - id: solutions
+      title: "Solution"
+      contents:
+        - key.qmd
         # navigation items
 
 

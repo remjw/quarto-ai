@@ -1,5 +1,13 @@
 ---
 title: k-Nearest Neighbors
+format: 
+  html: 
+    code-fold: true 
+    code-tools: 
+      source: false
+#execute:
+#  echo: false 
+#  cache: true
 ---
 
 ::: callout-important
@@ -337,9 +345,6 @@ plt.show()
 ![The heatmap of confusion matrix for a classification estimator](imgs/heatmap_confusion_matrix.png)
 -->
 ```
-
-
-
 ## K-Fold Cross-Validation
 
 ::: callout-note
@@ -465,3 +470,294 @@ Submit the following:
 -   Answer the questions embedded on this page
 -   The ipynb file or an URL to your online ipynb.
 -   A recording of a test run
+
+### Starter Program
+
+Use the following as a starter program:
+
+```{python eval=F, echo=T}
+from sklearn.datasets import load_wine, load_breast_cancer, load_iris
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+# imports for plotting 
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+N_folds = 10
+K_min, K_max = 1, 20
+
+# 1. Load Data
+dataset = load_wine() 
+# load_breast_cancer() 
+# load_iris()
+
+# check class names
+print(f'The class names are {dataset.target_names}')
+# feature sets & target
+X, y = dataset.data, dataset.target
+print(f'The shape of feature set X and target y: {X.shape} and {y.shape}')
+
+
+# 2. Split Data (one third hold out)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=11, test_size=1/3)
+print(f"""
+After one-third hold out, 
+Training set is X_train having {X_train.shape[0]} samples each of which has {X_train.shape[1]} features.
+Test set is y_train having {y_test.shape[0]} samples.
+""")
+
+# continue
+```
+
+### Sample Output
+
+::: panel-tabset
+#### Breast Cancer data
+
+```{python}
+#| results: hold
+#| echo: false
+'''
+Fitting a KNN classifier to Breast Cancer data
+'''
+from sklearn.datasets import load_wine, load_breast_cancer, load_iris
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+# imports for plotting 
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+test_size = 1/3
+N_folds = 10
+K_min, K_max = 1, 20
+random_state = 11
+
+# 1. Load Data
+dataset = load_breast_cancer()
+# check class names
+N_class = len(dataset.target_names)
+print(f"""
+The {N_class} class names are {dataset.target_names}
+""")
+# feature sets & target
+X, y = dataset.data, dataset.target
+print(f'The shape of feature set X and target y: {X.shape} and {y.shape}')
+
+# 2. Split Data (one third hold out)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=test_size)
+print(f"""
+After one-third hold out, 
+Training set is X_train having {X_train.shape[0]} samples each of which has {X_train.shape[1]} features.
+Test set is y_train having {y_test.shape[0]} samples.
+""")
+
+# 3. Model Training
+# create/instantiate an estimator named knn with default configuration
+knn = KNeighborsClassifier()
+# fit knn to training set
+knn.fit(X=X_train, y=y_train)
+# display the estimator parameters
+print(f'The KNN estimator configuration: \n{knn.get_params()}')
+
+# 4. Test model with test set
+predicted = knn.predict(X=X_test)
+#find wrong predictions
+expected = y_test
+wrong = [ (p, e) for (p, e) in zip(predicted, expected) if p != e ]
+print(f"""
+Run model with test set. 
+Wrong predictions: {wrong}
+Accuracy: { (len(expected) - len(wrong))/len(expected) }
+""")
+# scoring
+print(f'The score of knn estimator with default 5 neighbors = {knn.score(X_test, y_test):.5f}')
+
+# 5. Confusion Matrix
+confusion = confusion_matrix(y_true=expected, y_pred=predicted)
+print(f"""
+Confusion matrix with test set:
+{confusion}
+""")
+#accuracy per class by hand
+acc = [ confusion[i][i]/sum(confusion[i]) for i in range(0, N_class) ]
+print(f'Accuracy per class from confusion matrix: {acc}')
+
+# 6. Auto-Classification Report
+names = [ str(c) for c in dataset.target_names ]
+report = classification_report(expected, predicted, target_names=names)
+print(f"""
+Classificatioin Report:
+  {report}
+""")
+
+# 7. Visualize confusion matrix
+confusion_df = pd.DataFrame(confusion, index=range(N_class), columns=range(N_class))
+fig, ax = plt.subplots()
+sns.heatmap(confusion_df, annot=True, cmap='nipy_spectral_r')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+
+# 8. '''Run multiple models. Select the best one.'''
+# 1.use the KFold Object. shuffle data and create 10 folds
+kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+#group three estimator argument values in a dictionary object
+estimators = {
+     'KNeighborsClassifier': knn, 
+     'SVC': SVC(gamma='scale'),
+     'GaussianNB': GaussianNB()}
+
+for estimator_name, estimator_object in estimators.items():
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     scores = cross_val_score(estimator=estimator_object, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores.mean():.2%}; ' +
+           f'standard deviation={scores.std():.2%}')
+
+# 9. Hyperparameter Tuning: number of neighbors
+print(f'\nHyperparameter Tuning for number of neighbors:')
+for k in range(K_min, K_max, 2):
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     knn = KNeighborsClassifier(n_neighbors=k)
+     scores = cross_val_score(estimator=knn, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'k={k:<2}: mean accuracy={scores.mean():.2%} standard deviation={scores.std():.2%}')
+```
+
+#### IRIS data
+
+```{python}
+#| results: hold
+#| echo: false
+'''
+Fitting a KNN classifier to IRIS data
+'''
+from sklearn.datasets import load_wine, load_breast_cancer, load_iris
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+# imports for plotting 
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+test_size = 1/3
+N_folds = 10
+K_min, K_max = 1, 20
+random_state = 11
+
+# 1. Load Data
+dataset = load_iris()
+# check class names
+N_class = len(dataset.target_names)
+print(f"""
+The {N_class} class names are {dataset.target_names}
+""")
+# feature sets & target
+X, y = dataset.data, dataset.target
+print(f'The shape of feature set X and target y: {X.shape} and {y.shape}')
+
+# 2. Split Data (one third hold out)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=test_size)
+print(f"""
+After one-third hold out, 
+Training set is X_train having {X_train.shape[0]} samples each of which has {X_train.shape[1]} features.
+Test set is y_train having {y_test.shape[0]} samples.
+""")
+
+# 3. Model Training
+# create/instantiate an estimator named knn with default configuration
+knn = KNeighborsClassifier()
+# fit knn to training set
+knn.fit(X=X_train, y=y_train)
+# display the estimator parameters
+print(f'The KNN estimator configuration: \n{knn.get_params()}')
+
+# 4. Test model with test set
+predicted = knn.predict(X=X_test)
+#find wrong predictions
+expected = y_test
+wrong = [ (p, e) for (p, e) in zip(predicted, expected) if p != e ]
+print(f"""
+Run model with test set. 
+Wrong predictions: {wrong}
+Accuracy: { (len(expected) - len(wrong))/len(expected) }
+""")
+# scoring
+print(f'The score of knn estimator with default 5 neighbors = {knn.score(X_test, y_test):.5f}')
+
+# 5. Confusion Matrix
+confusion = confusion_matrix(y_true=expected, y_pred=predicted)
+print(f"""
+Confusion matrix with test set:
+{confusion}
+""")
+#accuracy per class by hand
+acc = [ confusion[i][i]/sum(confusion[i]) for i in range(0, N_class) ]
+print(f'Accuracy per class from confusion matrix: {acc}')
+
+# 6. Auto-Classification Report
+names = [ str(c) for c in dataset.target_names ]
+report = classification_report(expected, predicted, target_names=names)
+print(f"""
+Classificatioin Report:
+  {report}
+""")
+
+# 7. Visualize confusion matrix
+confusion_df = pd.DataFrame(confusion, index=range(N_class), columns=range(N_class))
+fig, ax = plt.subplots()
+sns.heatmap(confusion_df, annot=True, cmap='nipy_spectral_r')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+
+# 8. '''Run multiple models. Select the best one.'''
+# 1.use the KFold Object. shuffle data and create 10 folds
+kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+#group three estimator argument values in a dictionary object
+estimators = {
+     'KNeighborsClassifier': knn, 
+     'SVC': SVC(gamma='scale'),
+     'GaussianNB': GaussianNB()}
+
+for estimator_name, estimator_object in estimators.items():
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     scores = cross_val_score(estimator=estimator_object, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores.mean():.2%}; ' +
+           f'standard deviation={scores.std():.2%}')
+
+# 9. Hyperparameter Tuning: number of neighbors
+print(f'\nHyperparameter Tuning for number of neighbors:')
+for k in range(K_min, K_max, 2):
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     knn = KNeighborsClassifier(n_neighbors=k)
+     scores = cross_val_score(estimator=knn, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'k={k:<2}: mean accuracy={scores.mean():.2%} standard deviation={scores.std():.2%}')
+```
+:::
+
+## 
+
+## References

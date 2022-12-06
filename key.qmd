@@ -1,0 +1,668 @@
+---
+title: Sample Key
+format: 
+  html: 
+    code-fold: true 
+    code-tools: 
+      source: false
+#execute:
+#  echo: false 
+#  cache: true
+---
+
+::: callout-tip
+#### Sample Solutions
+:::
+
+
+## Scikit-Learn KNN Walk-through
+
+```{python}
+#| results: hide
+#| eval: false
+#| echo: true
+'''
+Fitting a KNN classifier to WINE data
+'''
+from sklearn.datasets import load_wine, load_breast_cancer, load_iris
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+# imports for plotting 
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+test_size = 1/3
+N_folds = 10
+K_min, K_max = 1, 20
+random_state = 11
+
+# 1. Load Data
+dataset = load_wine()
+# check class names
+N_class = len(dataset.target_names)
+print(f"""
+The {N_class} class names are {dataset.target_names}
+""")
+# feature sets & target
+X, y = dataset.data, dataset.target
+print(f'The shape of feature set X and target y: {X.shape} and {y.shape}')
+
+# 2. Split Data (one third hold out)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=test_size)
+print(f"""
+After one-third hold out, 
+Training set is X_train having {X_train.shape[0]} samples each of which has {X_train.shape[1]} features.
+Test set is y_train having {y_test.shape[0]} samples.
+""")
+
+# 3. Model Training
+# create/instantiate an estimator named knn with default configuration
+knn = KNeighborsClassifier()
+# fit knn to training set
+knn.fit(X=X_train, y=y_train)
+# display the estimator parameters
+print(f'The KNN estimator configuration: \n{knn.get_params()}')
+
+# 4. Test model with test set
+predicted = knn.predict(X=X_test)
+#find wrong predictions
+expected = y_test
+wrong = [ (p, e) for (p, e) in zip(predicted, expected) if p != e ]
+print(f"""
+Run model with test set. 
+Wrong predictions: {wrong}
+Accuracy: { (len(expected) - len(wrong))/len(expected) }
+""")
+# scoring
+print(f'The score of knn estimator with default 5 neighbors = {knn.score(X_test, y_test):.5f}')
+
+# 5. Confusion Matrix
+confusion = confusion_matrix(y_true=expected, y_pred=predicted)
+print(f"""
+Confusion matrix with test set:
+{confusion}
+""")
+#accuracy per class by hand
+acc = [ confusion[i][i]/sum(confusion[i]) for i in range(0, N_class) ]
+print(f'Accuracy per class from confusion matrix: {acc}')
+
+# 6. Auto-Classification Report
+names = [ str(c) for c in dataset.target_names ]
+report = classification_report(expected, predicted, target_names=names)
+print(f"""
+Classificatioin Report:
+  {report}
+""")
+
+# 7. Visualize confusion matrix
+confusion_df = pd.DataFrame(confusion, index=range(N_class), columns=range(N_class))
+fig, ax = plt.subplots()
+sns.heatmap(confusion_df, annot=True, cmap='nipy_spectral_r')
+ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+ax.grid(linestyle = '--', which='minor')
+plt.show()
+
+# 8. '''Run multiple models. Select the best one.'''
+# 1.use the KFold Object. shuffle data and create 10 folds
+kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+#group three estimator argument values in a dictionary object
+estimators = {
+     'KNeighborsClassifier': knn, 
+     'SVC': SVC(gamma='scale'),
+     'GaussianNB': GaussianNB()}
+
+for estimator_name, estimator_object in estimators.items():
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     scores = cross_val_score(estimator=estimator_object, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores.mean():.2%}; ' +
+           f'standard deviation={scores.std():.2%}')
+
+# 9. Hyperparameter Tuning: number of neighbors
+print(f'\nHyperparameter Tuning for number of neighbors:')
+for k in range(K_min, K_max, 2):
+     kfold = KFold(n_splits=N_folds, random_state=random_state, shuffle=True)
+     knn = KNeighborsClassifier(n_neighbors=k)
+     scores = cross_val_score(estimator=knn, 
+         X=X_train, y=y_train, cv=kfold)
+     print(f'k={k:<2}: mean accuracy={scores.mean():.2%} standard deviation={scores.std():.2%}')
+```
+
+## Confusion Matrix by hand
+
+The following is chosen from the submissions.
+
+![From one submission](imgs/ai/confusion_matrix_byhand.jpg)
+
+
+
+
+## Hands-on Performing Model Evaluation
+
+
+### Questions
+
+To answer the questions, observe the following three sets of classification report and confusion matrix from three cases: 
+
+- Predict safe (0) only
+- Predict not-safe (1) only 
+- Randomly predict safe or not-safe
+
+
+```{python}
+#| column: screen-inset-shaded
+#| layout-nrow: 1
+#| eval: true
+#| echo: false
+#| warning: false
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+# truth
+np.random.seed(99)
+labels = [0, 1]  
+y_true = np.random.choice(labels, size=100, replace=True)
+y_pred = np.repeat(0, 100)
+
+# confusion matrix
+cmat = confusion_matrix(y_true=y_true, y_pred=y_pred, labels=[0,1])
+print(cmat)
+report = classification_report(
+  y_true=y_true, 
+  y_pred=y_pred, 
+  labels=[0, 1], # set 0 as positive, 1 negative
+  target_names = ['safe', 'not-safe'])
+print(f'''Classification report: \n{report}''')
+
+# visualize matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+_ = ax.set_title('Case 1: Predict safe (0) only')
+
+_ = fig.colorbar(img)
+ticks = np.arange(len(labels))
+_ = ax.set_xticks(ticks)
+_ = ax.set_yticks(ticks)
+_ = ax.set_ylabel('Truth')
+_ = ax.set_xlabel('Prediction')
+_ = ax.minorticks_on()
+_ = ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.grid(linestyle = '--', which='minor')
+_ = plt.show()
+```
+
+
+Case 2
+```{python}
+#| column: screen-inset-shaded
+#| layout-nrow: 1
+#| eval: true
+#| echo: false
+#| warning: false
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+# truth
+np.random.seed(99)
+labels = [0, 1]  
+y_true = np.random.choice(labels, size=100, replace=True)
+y_pred = np.repeat(1, 100)
+
+# confusion matrix
+cmat = confusion_matrix(y_true=y_true, y_pred=y_pred, labels=[0,1])
+print(cmat)
+report = classification_report(
+  y_true=y_true, 
+  y_pred=y_pred, 
+  labels=[0, 1], # set 0 as positive, 1 negative
+  target_names = ['safe', 'not-safe'])
+print(f'''Classification report: \n{report}''')
+
+# visualize matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+_ = ax.set_title('Case 2: Predict not-safe (1) only')
+
+_ = fig.colorbar(img)
+ticks = np.arange(len(labels))
+_ = ax.set_xticks(ticks)
+_ = ax.set_yticks(ticks)
+_ = ax.set_ylabel('Truth')
+_ = ax.set_xlabel('Prediction')
+_ = ax.minorticks_on()
+_ = ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.grid(linestyle = '--', which='minor')
+_ = plt.show()
+```
+
+
+Case 3
+```{python}
+#| column: screen-inset-shaded
+#| layout-nrow: 1
+#| eval: true
+#| echo: false
+#| warning: false
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+# truth
+np.random.seed(99)
+labels = [0, 1]  
+y_true = np.random.choice(labels, size=100, replace=True)
+np.random.seed(1234)
+y_pred = np.random.choice(labels, size=100, replace=True)
+
+# confusion matrix
+cmat = confusion_matrix(y_true=y_true, y_pred=y_pred, labels=[0,1])
+print(cmat)
+report = classification_report(
+  y_true=y_true, 
+  y_pred=y_pred, 
+  labels=[0, 1], # set 0 as positive, 1 negative
+  target_names = ['safe', 'not-safe'])
+print(f'''Classification report: \n{report}''')
+
+# visualize matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+_ = ax.set_title('Case 3: Randomly-generated Predictions')
+
+_ = fig.colorbar(img)
+ticks = np.arange(len(labels))
+_ = ax.set_xticks(ticks)
+_ = ax.set_yticks(ticks)
+_ = ax.set_ylabel('Truth')
+_ = ax.set_xlabel('Prediction')
+_ = ax.minorticks_on()
+_ = ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.grid(linestyle = '--', which='minor')
+_ = plt.show()
+```
+
+
+
+
+> According to the classification report and the colormap from Case 3, if the classifier is used for detecting videos that are safe for kids, label 0 is safe and 1 is not safe, would you prefer the model with the performance report above?
+
+Firstly, we have observed the following from the three cases above:
+
+1.  0 and 1 denotes `safe` and `not-safe`, respectively.
+
+1.  `support` is 45 samples for safe class, and 55 for not-safe class. The two class labels are relatively evenly-represented/supported.
+
+1.  Assume the same label distribution in unseen data. 
+    - The safest (impractical) case is Case 2 which assigns *not-safe* to every new video, i.e., *filter out all the videos*\_, the kids have no access to neither safe nor not-safe video. Recall and precision of not-safe (TN rate) would be $100\%$ and $55\%$.
+    - The most dangerous case is Case 1 where we assign safe to every new video, i.e., pass all the videos to kids. Recall and Precision of safe (TP rate) would be $100\%$ and $45\%$. 
+    - Both Case 1 and Case 2 are impractical.
+    - Case 3 randomly assigns a label to a video, which has higher average $F_1$-score being $44\%$.
+
+Secondly, the problem context indicates that we should NOT prefer a model having the same performance as Case 3 which has **mistakenly classify 31 not-safe videos as (false) safe**. This leads to a high FP value.
+
+-   The purpose of applying machine learning to the problem is to protect the kids from dangerous videos. **Filtering false positive videos is more important than discovering all the positive (safe) videos**. `Precision should be weighed higher than recall`.
+
+- A good classifier should minimize the loss from assigning not-safe (negative) videos with safe (positive) label and delivering such FP (false positive) videos to kids.
+
+- A good classifier should have high precision for safe case and high recall for not-safe case.
+
+
+
+
+> In the four color cells of confusion matrix, which cell should ideally have a zero count? Why?
+
+|              |              |              |                |
+|--------------|--------------|--------------|----------------|
+|              |              | ***y_pred*** |                |
+|              |              | *safe (0)*   | *not-safe (1)* |
+| **y\_ true** | safe (0)     | TP = 20      | FN = 25        |
+|              | not-safe (1) | FP = 31      | TN = 24        |
+
+
+
+
+
+-   FP is the bottom left (yellow) cell of confusion matrix above.
+
+-   As FP decreases, the reliability is improved when a classifier has marked a video as safe. The associated metrics are `precision` of safe (0) class (TP rate = $\frac{TP}{TP+FP}$), and `specificity` of not-safe (1) class (TN rate = $\frac{TN}{TN+FP}$) which evaluate how good a classifier identifies not-safe class.
+
+-   In summery, FP should ideally be zero. A good classifier should minimize FP value so as to increase precision and specificity.
+
+
+::: callout-tip
+
+### Regarding the choice of performance metrics  
+
+[$F_\beta$-score](https://cisjw.sitehost.iu.edu/ai/performance_metrics.html#f_beta-score) should be used as metric instead of accuracy if any of the following conditions exists:
+
+- The cost of errors differs from their causes by false positive or false negative cases.
+- The class distribution is highly imbalance.
+
+The F-beta score is the weighted harmonic mean of precision and recall, reaching its optimal value at 1 and its worst value at 0.
+
+$$
+F_\beta\text{} = (1+\beta^2)\times\frac{precision\times recall}{\beta^2\times precision + recall} 
+$$
+Two commonly used values for $\beta$ are $2$, which weighs recall higher than precision, and $0.5$, which weighs precision higher than recall.
+
+In the video-filtering case for kids, precision is more important than recall and $\beta$ can be set to $0.5$.
+
+
+```{python}
+# Fbeta-score for positive label (0)
+import numpy as np
+from sklearn.metrics import fbeta_score
+# truth
+np.random.seed(99)
+labels = [0, 1]  
+y_true = np.random.choice(labels, size=100, replace=True)
+np.random.seed(1234)
+y_pred = np.random.choice(labels, size=100, replace=True)
+
+# report Fbeta-score for positive label
+fbeta_score(y_true, y_pred, average='binary', beta=0.5)
+```
+
+:::
+
+
+### Source Code
+
+The following is the source code.
+
+```{python}
+#| results: hide
+#| eval: false
+#| warning: false
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+# truth
+np.random.seed(99)
+labels = [0, 1]  
+y_true = np.random.choice(labels, size=100, replace=True)
+print(f'truth: {y_true}')
+
+# prediction
+np.random.seed(1234)
+y_pred = np.random.choice(labels, size=100, replace=True)
+print(f'prediction: {y_pred}')
+
+# confusion matrix
+cmat = confusion_matrix(y_true=y_true, y_pred=y_pred, labels=[0,1])
+print(cmat)
+report = classification_report(
+  y_true=y_true, 
+  y_pred=y_pred, 
+  labels=[0, 1], # set 0 as positive, 1 negative
+  target_names = ['safe', 'not-safe'])
+print(f'''Classification report: \n{report}''')
+
+# visualize matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+_ = ax.set_title('Confusion matrix')
+
+_ = fig.colorbar(img)
+ticks = np.arange(len(labels))
+_ = ax.set_xticks(ticks)
+_ = ax.set_yticks(ticks)
+_ = ax.set_ylabel('Truth')
+_ = ax.set_xlabel('Prediction')
+_ = ax.minorticks_on()
+_ = ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.grid(linestyle = '--', which='minor')
+_ = plt.show()
+```
+
+
+
+## K-Fold Cross-Validation
+
+
+```{python}
+#| results: 'hold'
+#| 
+# Perform *10-fold cross validation* to evaluate the *LinearRegression estimator* for predicting house price.
+from sklearn.model_selection import StratifiedKFold, train_test_split, cross_validate
+from sklearn.linear_model import LinearRegression
+# load california housing data
+from sklearn.datasets import fetch_california_housing
+housing = fetch_california_housing()
+#print(housing.DESCR)
+# get X and y
+X, y = housing.data, housing.target
+print(f"""
+X: dimension {X.shape}  
+y: dimension {y.shape}  
+""")
+
+N_folds = 10
+holdout = 0.3 
+# Holdout 70% for training, 30% for test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=holdout, shuffle=True, random_state=0)
+# configure model
+model = LinearRegression()
+# K-Fold CV using default score
+scores = cross_validate(model, X_train, y_train, cv=N_folds, return_train_score=True, return_estimator=False)
+print(scores)
+print(f'Mean-score: {scores["test_score"].mean()}')
+
+```
+
+
+```{python}
+#| include: false
+#| eval: false
+# Perform *10-fold cross validation* to evaluate the *LinearRegression estimator* for predicting median_house_value.
+from sklearn.model_selection import StratifiedKFold, train_test_split, cross_validate
+from sklearn.linear_model import LinearRegression
+
+# load california housing data
+import pandas as pd
+housing = pd.read_csv("data/housing.csv")
+housing.dropna(subset=["total_bedrooms"], inplace=True)  
+X = housing.drop(["ocean_proximity","median_house_value"], axis=1)
+X.info()
+print(f"""
+X: dimension {X.shape}  
+""")
+y = housing["median_house_value"].copy()
+print(f"""y: dimension {y.shape}  
+""")
+
+N_folds = 10
+holdout = 0.3 
+# Holdout 70% for training, 30% for test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=holdout, shuffle=True, random_state=0)
+# configure model
+model = LinearRegression()
+# K-Fold CV using default score
+scores = cross_validate(model, X_train, y_train, cv=N_folds, return_train_score=True, return_estimator=False)
+print(scores)
+print(f'Mean-score: {scores["test_score"].mean()}')
+
+```
+
+
+
+
+
+## The Best Model
+
+### 1
+
+```{python}
+#| results: hold
+#| eval: true
+
+# 1. Data Generation 
+import numpy as np
+# configuration
+np.random.seed(99) 
+labels = [0, 1]
+multiplier = 20
+N = 5 * multiplier
+N_folds = 5 # CV
+holdout = 1/3 # ratio 
+# A dataset of 2 features x1, x2 & 1 label y
+y = np.random.choice(labels, size=N, replace=True)
+x1 = np.array([0.1, 0.2, 0.3, 0.4, 0.5] * multiplier)
+x2 = np.random.sample(N)
+X = np.stack((x1, x2), axis=-1)
+
+# 2. Holdout 70% for training, 30% for test
+from sklearn.model_selection import StratifiedKFold, train_test_split, cross_validate
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=holdout, shuffle=True, random_state=0)
+
+# 3. Determine Model Candidates
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+
+# 4. group estimator names and objects in a dictionary
+estimators = {
+  'KNeighborsClassifier': KNeighborsClassifier(algorithm='auto',n_neighbors=5), 
+  'LogisticRegression': LogisticRegression(random_state=0),
+  'SGDClassifier': SGDClassifier(alpha=0.00001, max_iter=1000, early_stopping=False, tol=0.001),
+  'SVC': SVC(gamma='scale'),
+  'GaussianNB': GaussianNB()
+  }
+
+for estimator_name, estimator_object in estimators.items():
+  # kfold = KFold(n_splits=2, random_state=11, shuffle=True)
+  scores = cross_validate(estimator_object, X_train, y_train, cv=N_folds, return_train_score=True, return_estimator=True)
+  print(f'{estimator_name:>20}: ' + 
+           f'mean accuracy={scores["test_score"].mean():.2%}; ' +
+           f'standard deviation={scores["test_score"].std():.2%}')
+```
+
+### 2
+
+```{python}
+#| eval: true
+#| echo: true
+#| warning: false
+#| message: false
+#| layout-ncol: 2
+#| 
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+import numpy as np
+ 
+# Define grid 
+x = np.linspace(-6,6,13)
+y = np.linspace(-6,6,13)
+X, Y = np.meshgrid(x,y)
+ 
+#for pair in zip(X[0,:], Y[0,:]):
+#    print(pair)
+    
+Z= X**2 + Y**2
+
+# 2d plot
+fig = plt.figure()
+_ = plt.contourf(X,Y,Z,cmap='plasma')
+_ = plt.axis('scaled')
+_ = plt.colorbar()
+#plt.savefig('contour1.png')
+plt.show()
+
+# 3d plot
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+_ = ax.plot_surface(X, Y, Z, cmap="plasma", linewidth=0, antialiased=False, alpha=0.5)
+_ = ax.set_xlabel('x')
+_ = ax.set_ylabel('y')
+_ = ax.set_zlabel('z');
+# rotation
+_ = ax.view_init(30, 60)
+#plt.savefig('3Dplot1.png',dpi=600)
+plt.show()
+```
+
+
+### 3.
+
+```{python}
+#| eval: true
+#| results: hold
+
+# Grid search w/ CV
+import numpy as np
+from time import time
+import scipy.stats as stats
+
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import GridSearchCV
+
+# default: alpha=0.00001, max_iter=1000, early_stopping=False, tol=0.001
+sgd = SGDClassifier()
+# Define grid
+n_alpha, n_max_iter = 20, 10
+param_grid = {
+    "alpha": np.linspace(0.6, 1, n_alpha),
+    "max_iter": np.linspace(50, 100, n_max_iter)
+}
+N_folds = 5
+# run grid search
+grid_search = GridSearchCV(sgd, param_grid=param_grid, cv=StratifiedKFold(n_splits=N_folds, shuffle=False))
+
+start = time()
+grid_search.fit(X_train, y_train)
+
+# Display 2d data in a 2d plot
+# Display 2d data in a 2d plot
+import matplotlib.pyplot as plt
+import numpy as np
+np.random.seed(99)
+
+alpha = np.linspace(0.5, 1, n_alpha)
+max_iter = np.linspace(50, 100, n_max_iter)
+scores = grid_search.cv_results_["mean_test_score"]
+print(scores[0:5])
+
+A, T = np.meshgrid(alpha, max_iter)
+print(A.shape, T.shape)
+# 
+Z = np.flipud(np.reshape(scores, (n_max_iter, n_alpha)))
+_ = plt.clf()
+_ = plt.contourf(A, T, Z, 20, cmap='RdGy') #RdGy
+_ = plt.colorbar()
+_ = plt.xlabel("$alpha$")
+_ = plt.ylabel("$max_iter$")
+_ = plt.title('How does mean_test_score vary with $(alpha, max\_iter)$?')
+_ = plt.show()
+
+```
+:::
+
+## References

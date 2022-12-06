@@ -101,6 +101,10 @@ Accuracy is used to evaluate how good a binary classifier is. When the two class
 \text{balanced accuracy} = \frac{sensitivity+specificity}{2} \approx 0.452
 $$
 
+
+
+
+
 ### $F_1$-score
 
 In a binary classification, `F-score` or `F-measure` is calculated from the **precision** and **recall** of the test. The traditional F-score, $F_1-score$, is the average of precision and recall.
@@ -110,6 +114,13 @@ The highest possible value of an $F_1$-score is 1 and the lowest is 0.
 $$
 F_1\text{} = \frac{precision+recall}{2} \approx 0.615
 $$
+
+
+::: column-margin
+
+In his 1979 book Information Retrieval, Cornelis Joost van Rijsbergen defined a function very similar to the F-score, recognizing the inadequacy of accuracy as a metric for information retrieval systems. He called the metric the Effectiveness function, and assigned it the letter E, because it measures the _effectiveness of retrieval with respect to a user who attaches β times as much importance to recall as precision_. It is not known why the F-score is assigned the letter F today.
+:::
+
 
 ### $F_\beta$-score
 
@@ -151,28 +162,40 @@ Assume a binary classifier using `yes` as positive class and `no` as negative cl
 
 2.  Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
 
+```{=html}
+<!-- -->
 ```
 
-    [[45  0  0  0  0  0  0  0  0  0]
-     [ 0 45  0  0  0  0  0  0  0  0]
-     [ 0  0 54  0  0  0  0  0  0  0]
-     [ 0  0  0 42  0  1  0  1  0  0]
-     [ 0  0  0  0 49  0  0  1  0  0]
-     [ 0  0  0  0  0 38  0  0  0  0]
-     [ 0  0  0  0  0  0 42  0  0  0]
-     [ 0  0  0  0  0  0  0 45  0  0]
-     [ 0  1  1  2  0  0  0  0 39  1]
-     [ 0  0  0  0  1  0  0  0  1 41]]
-```
+        [[45  0  0  0  0  0  0  0  0  0]
+         [ 0 45  0  0  0  0  0  0  0  0]
+         [ 0  0 54  0  0  0  0  0  0  0]
+         [ 0  0  0 42  0  1  0  1  0  0]
+         [ 0  0  0  0 49  0  0  1  0  0]
+         [ 0  0  0  0  0 38  0  0  0  0]
+         [ 0  0  0  0  0  0 42  0  0  0]
+         [ 0  0  0  0  0  0  0 45  0  0]
+         [ 0  1  1  2  0  0  0  0 39  1]
+         [ 0  0  0  0  1  0  0  0  1 41]]
 
 Explain row 9 of the confusion matrix. And what is the precision and recall of the classifier for the 9th class?
 
 3.  Assume a binary classifier using `yes` as positive class and `no` as negative class. Given the following truth and prediction data.
 
+```{=html}
+<!-- -->
 ```
-    truth: "yes" "yes" "yes" "no" "no" "no" "no" "no" "no" "yes" 
-    prediction: "no" "yes" "no" "yes" "yes" "no" "no" "yes" "yes" "no"
-```
+        truth: "yes" "yes" "yes" "no" "no" "no" "no" "no" "no" "yes" 
+        prediction: "no" "yes" "no" "yes" "yes" "no" "no" "yes" "yes" "no"
 
 -   Calculate precision, recall/sensitivity, specificity, balanced accuracy.
 -   Discuss in general how to choose the $\beta$ value for $F_\beta$-score.
+
+
+
+
+## References
+
+
+
+
+

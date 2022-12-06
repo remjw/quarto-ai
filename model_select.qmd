@@ -3,8 +3,8 @@ title: The _"Best"_ Model
 format: 
   html: 
     code-fold: true 
-    code-tools: true
-    code-link: true
+    code-tools: 
+      source: false
 #execute:
 #  echo: false 
 #  cache: true
@@ -488,7 +488,7 @@ plt.show()
 ::: callout-tip
 #### Question: Meshgrid Plotting in 2D & 3D Plot 
 
-Write code to replicate the same 2D and 3D plots which visualize the function $Z = X^2 + Y^2$s. Set $x\in[-6, 6], y\in[-6,6], z = x^2 + y^2$.
+Write code to replicate the same 2D and 3D plots which visualize the function $Z = X^2 + Y^2$. Set $x\in[-6, 6], y\in[-6,6], z = x^2 + y^2$.
 
 ```{python}
 #| eval: true

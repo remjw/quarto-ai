@@ -1,5 +1,5 @@
 ---
-title: Confusion Matrix
+title: "Confusion Matrix"
 ---
 
 A confusion matrix is used to evaluate the goodness of a classifier model in performance evaluation. This name is used because the matrix makes it easy to visualize if a classifier model has confused or mislabeled two or more classes. The matrix records the number of occurrences of each possible combination of true and predicted labels.
@@ -221,19 +221,21 @@ ax.grid(linestyle = '--', which='minor')
 plt.show()
 ```
 
-
 ## Exercises
 
-Assume a binary classifier with the two labels `yes` and `no`. Given the following truth and prediction data. 
+Assume a binary classifier with the two labels `yes` and `no`. Given the following truth and prediction data.
 
     truth: "yes" "yes" "yes" "no"  "no"  "no"  "no"  "no"  "no"  "yes"
     prediction: "no"  "yes" "no"  "yes" "yes" "no"  "no"  "yes" "yes" "no"
 
-Do the following: 
+Do the following:
 
-1. Construct a confusion matrix by hand. 
-2. Calculate TP, FP, TN and FN.
-3. Calculate accuracy.
+1.  Construct a confusion matrix by hand.
+2.  Calculate TP, FP, TN and FN.
+3.  Calculate accuracy.
+
+
+
 
 
 ## Confusion Matrix in R

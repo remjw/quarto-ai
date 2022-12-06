@@ -386,6 +386,8 @@ print(f'Mean-Accuracy: {scores["test_score"].mean()}')
 Write Python code which runs the *10-fold cross validation* to evaluate the *LinearRegression estimator* for predicting house prices using the *California Housing data*.
 
 ```{python}
+# Perform *10-fold cross validation* to evaluate the *LinearRegression estimator* for predicting house prices using the *California Housing data*.
+
 # load california housing data
 from sklearn.datasets import fetch_california_housing
 housing = fetch_california_housing()
