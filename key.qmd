@@ -14,7 +14,6 @@ format:
 #### Sample Solutions
 :::
 
-
 ## Scikit-Learn KNN Walk-through
 
 ```{python}
@@ -142,20 +141,15 @@ The following is chosen from the submissions.
 
 ![From one submission](imgs/ai/confusion_matrix_byhand.jpg)
 
-
-
-
 ## Hands-on Performing Model Evaluation
-
 
 ### Questions
 
-To answer the questions, observe the following three sets of classification report and confusion matrix from three cases: 
+To answer the questions, observe the following three sets of classification report and confusion matrix from three cases:
 
-- Predict safe (0) only
-- Predict not-safe (1) only 
-- Randomly predict safe or not-safe
-
+-   Predict safe (0) only
+-   Predict not-safe (1) only
+-   Randomly predict safe or not-safe
 
 ```{python}
 #| column: screen-inset-shaded
@@ -204,8 +198,8 @@ _ = ax.grid(linestyle = '--', which='minor')
 _ = plt.show()
 ```
 
-
 Case 2
+
 ```{python}
 #| column: screen-inset-shaded
 #| layout-nrow: 1
@@ -253,8 +247,8 @@ _ = ax.grid(linestyle = '--', which='minor')
 _ = plt.show()
 ```
 
-
 Case 3
+
 ```{python}
 #| column: screen-inset-shaded
 #| layout-nrow: 1
@@ -303,33 +297,27 @@ _ = ax.grid(linestyle = '--', which='minor')
 _ = plt.show()
 ```
 
+> According to the classification report and the colormap from Case 3, if the classifier is used for detecting videos that are not-safe for kids, label 0 is safe and 1 is not safe, would you prefer the model with the performance report above?
 
+Firstly, we have observed the following from the three classification reports displayed above:
 
+1.  Assume 0 and 1 denotes `safe` and `not-safe`, respectively.
 
-> According to the classification report and the colormap from Case 3, if the classifier is used for detecting videos that are safe for kids, label 0 is safe and 1 is not safe, would you prefer the model with the performance report above?
+2.  Of 100 samples, `support` is 45 for safe class, and 55 for not-safe class. Not strictly, the two class labels are relatively evenly-represented and equally supported.
 
-Firstly, we have observed the following from the three cases above:
+3.  Assume the same label distribution in unseen data.
 
-1.  0 and 1 denotes `safe` and `not-safe`, respectively.
+    -   The safest case is Case 2 where the classfier assigns *not-safe* to every new video, i.e., *filter out all the videos*. The result is the kids have no access to neither safe nor not-safe video. The report shows that precision of not-safe (TN rate) is $55\%$ and recall is $100\%$.
+    -   The most dangerous case is Case 1 where the classifier assigns safe to every new video, i.e., *pass all the videos to kids*. Recall and Precision of safe (TP rate) is $100\%$ and $45\%$.
+    -   Both Case 1 and Case 2 are impractical. The practical ones should be in-betweens.
+    -   Case 3 runs a random number generator as a classifier, and randomly assigns either 0 or 1 to a video. Case 3 has higher average $F_1$-score being $44\%$.
 
-1.  `support` is 45 samples for safe class, and 55 for not-safe class. The two class labels are relatively evenly-represented/supported.
+Secondly, **the problem context indicates that we should NOT prefer a model having the same performance as Case 3** which has *mistakenly classify 31 not-safe videos as (false) safe*. The high FP value gives a very low precision $39\%$ .
 
-1.  Assume the same label distribution in unseen data. 
-    - The safest (impractical) case is Case 2 which assigns *not-safe* to every new video, i.e., *filter out all the videos*\_, the kids have no access to neither safe nor not-safe video. Recall and precision of not-safe (TN rate) would be $100\%$ and $55\%$.
-    - The most dangerous case is Case 1 where we assign safe to every new video, i.e., pass all the videos to kids. Recall and Precision of safe (TP rate) would be $100\%$ and $45\%$. 
-    - Both Case 1 and Case 2 are impractical.
-    - Case 3 randomly assigns a label to a video, which has higher average $F_1$-score being $44\%$.
+The purpose of applying machine learning to the problem is to protect the kids from dangerous videos. **Filtering false positive videos is more important than discovering all positive (safe) videos**. Thus, **precision should be weighed higher than recall for the safe video cases**. Taking this into account, we know that a good classifier should achieve the following objectives:
 
-Secondly, the problem context indicates that we should NOT prefer a model having the same performance as Case 3 which has **mistakenly classify 31 not-safe videos as (false) safe**. This leads to a high FP value.
-
--   The purpose of applying machine learning to the problem is to protect the kids from dangerous videos. **Filtering false positive videos is more important than discovering all the positive (safe) videos**. `Precision should be weighed higher than recall`.
-
-- A good classifier should minimize the loss from assigning not-safe (negative) videos with safe (positive) label and delivering such FP (false positive) videos to kids.
-
-- A good classifier should have high precision for safe case and high recall for not-safe case.
-
-
-
+-   A good classifier should minimize the loss from delivering FP (false positive) videos to kids.
+-   A good classifier should have high precision for safe case and high recall for not-safe case.
 
 > In the four color cells of confusion matrix, which cell should ideally have a zero count? Why?
 
@@ -340,35 +328,32 @@ Secondly, the problem context indicates that we should NOT prefer a model having
 | **y\_ true** | safe (0)     | TP = 20      | FN = 25        |
 |              | not-safe (1) | FP = 31      | TN = 24        |
 
+1.  FP is the bottom left (yellow) cell according to the layout of the confusion matrix above.
 
+2.  As FP decreases, level of confidence is improved when a classifier has marked a video as safe. FP value affects two metrics:
 
+| FP-related Metric                         | formula                      | evaluation                                                           |
+|------------------------|------------------------|------------------------|
+| `precision` of safe (positive) case       | TP rate = $\frac{TP}{TP+FP}$ | How confident a classifier is when it has marked a video as positive |
+| `specificity` of not-safe (negative) case | TN rate = $\frac{TN}{TN+FP}$ | how good a classifier discovers all the negative videos              |
 
-
--   FP is the bottom left (yellow) cell of confusion matrix above.
-
--   As FP decreases, the reliability is improved when a classifier has marked a video as safe. The associated metrics are `precision` of safe (0) class (TP rate = $\frac{TP}{TP+FP}$), and `specificity` of not-safe (1) class (TN rate = $\frac{TN}{TN+FP}$) which evaluate how good a classifier identifies not-safe class.
-
--   In summery, FP should ideally be zero. A good classifier should minimize FP value so as to increase precision and specificity.
-
+In summery, FP should ideally be zero. A good classifier should minimize FP value so as to increase both precision and specificity.
 
 ::: callout-tip
+### Regarding the choice of performance metrics
 
-### Regarding the choice of performance metrics  
+[$F_\beta$-score](https://cisjw.sitehost.iu.edu/ai/performance_metrics.html#f_beta-score) should be used as metric instead of accuracy if any of the following conditions is true:
 
-[$F_\beta$-score](https://cisjw.sitehost.iu.edu/ai/performance_metrics.html#f_beta-score) should be used as metric instead of accuracy if any of the following conditions exists:
-
-- The cost of errors differs from their causes by false positive or false negative cases.
-- The class distribution is highly imbalance.
+-   The cost incurred from different types of error must be weighed differently false positive or false negative cases.
+-   The class distribution is highly imbalance.
 
 The F-beta score is the weighted harmonic mean of precision and recall, reaching its optimal value at 1 and its worst value at 0.
 
 $$
 F_\beta\text{} = (1+\beta^2)\times\frac{precision\times recall}{\beta^2\times precision + recall} 
-$$
-Two commonly used values for $\beta$ are $2$, which weighs recall higher than precision, and $0.5$, which weighs precision higher than recall.
+$$ Set $\beta$ to $2$ which weighs recall higher than precision and to $0.5$ which weighs precision higher than recall.
 
-In the video-filtering case for kids, precision is more important than recall and $\beta$ can be set to $0.5$.
-
+In the video-filter for kids, a classifier must be confident and reliable when marking a video as safe. The level of confidence or reliability is measured by precision in a fraction. The higher precision is, the more faithful the classifier is. the confidence improving the reliability of safe-marked video precision is more important than recall as $\beta$ can be set to $0.5$.
 
 ```{python}
 # Fbeta-score for positive label (0)
@@ -384,9 +369,7 @@ y_pred = np.random.choice(labels, size=100, replace=True)
 # report Fbeta-score for positive label
 fbeta_score(y_true, y_pred, average='binary', beta=0.5)
 ```
-
 :::
-
 
 ### Source Code
 
@@ -442,10 +425,7 @@ _ = ax.grid(linestyle = '--', which='minor')
 _ = plt.show()
 ```
 
-
-
 ## K-Fold Cross-Validation
-
 
 ```{python}
 #| results: 'hold'
@@ -476,7 +456,6 @@ print(scores)
 print(f'Mean-score: {scores["test_score"].mean()}')
 
 ```
-
 
 ```{python}
 #| include: false
@@ -510,10 +489,6 @@ print(scores)
 print(f'Mean-score: {scores["test_score"].mean()}')
 
 ```
-
-
-
-
 
 ## The Best Model
 
@@ -609,7 +584,6 @@ _ = ax.view_init(30, 60)
 plt.show()
 ```
 
-
 ### 3.
 
 ```{python}
@@ -663,6 +637,7 @@ _ = plt.title('How does mean_test_score vary with $(alpha, max\_iter)$?')
 _ = plt.show()
 
 ```
+
 :::
 
 ## References

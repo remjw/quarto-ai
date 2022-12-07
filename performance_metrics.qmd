@@ -10,7 +10,7 @@ title: Performance Metrics
 Study both [the text's Jupyter Notebook](https://github.com/pdeitel/IntroToPython/blob/master/examples/ch15/snippets_ipynb/15_02-03.ipynb) and the code on this page.
 :::
 
-## Metrics for Model Scoring
+## Metrics for Model Scoring {#performancemetric}
 
 We use the following confusion matrix to learn a few performance metrics.
 
