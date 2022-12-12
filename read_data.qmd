@@ -1,11 +1,8 @@
 ---
-title: "Read Data From File"
+title: "File Input & Output"
 ---
 
-
-
-
-
+## Small-Medium Data Sets
 
 ```{python}
 # Read CSV 
@@ -28,3 +25,109 @@ print(f"""y: dimension {y.shape}
 """)
 
 ```
+
+
+
+
+## Writing and Reading Large Data Sets
+
+```{python}
+#| echo: true
+#| results: hold
+#| eval: false
+#| warning: false
+
+import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+N_samples, labels = 100000, [0, 1]
+np.random.seed(10)
+
+rng = np.random.default_rng()
+# numpy array 
+y_true = rng.choice(len(labels), N_samples, replace=True, p=[0.2, 0.8]) 
+print(f'truth: {y_true}')
+y_true.tofile('data/dummy_y_true.csv', sep=',')
+
+# numpy array
+y_pred = rng.choice(len(labels), N_samples, replace=True, p=[0.4, 0.6]) 
+print(f'prediction: {y_pred}')
+y_pred.tofile('data/dummy_y_pred.csv', sep=',')
+
+# merge two arrays
+dummy_y = np.array([y_true, y_pred])
+print(dummy_y.shape)
+
+# write dummy_y to file
+# 1. less size: numpy tofile, all in one row
+dummy_y.tofile('data/dummy_y_single.csv', sep=',')
+
+# 2. less size: file handling, N_samples rows of two columns each
+rows = ["{},{}".format(a, b) for a, b in zip(y_true, y_pred)]
+text = "\n".join(rows)
+with open('data/dummy_y_file.csv', 'w') as f:
+  _ = f.write(text)
+  
+# 3. worst way: larger size
+np.savetxt('data/dummy_y.csv', dummy_y, delimiter=',')
+
+```
+
+
+Load the data from dummy_y_file.csv:
+
+```{python}
+#| echo: false
+#| results: hold
+#| eval: false
+#| warning: false
+
+import numpy as np
+# numpy
+dummy_y = np.genfromtxt("data/dummy_y_file.csv", delimiter=',', dtype=None)
+
+```
+
+
+
+
+
+
+## Working With Large Data Sets
+
+Dask is a flexible library for parallel computing in Python.
+
+[@noauthor_indexing_nodate] A single workstation would work to process data sets that are not too big and up to 1 TB. The Python package **dask** provides three data structures that mimic regular Python data structures but perform computation in a distributed way to make optimal use of multiple cores easily.
+
+```{python}
+#| echo: true
+#| results: hold
+#| eval: false
+#| warning: false
+#| message: false
+
+! pip install dask
+
+import dask
+import dask.array as da
+import dask.bag as db
+import dask.dataframe as dd
+from dask import delayed
+
+dummy_y = dd.read_csv(
+  "data/dummy_y_file.csv", 
+  blocksize=25e6, 
+  header=None, 
+  names=['y_true','y_pred'], 
+  dtype={'y_true':np.int32,'y_pred':np.int32})
+
+# inspect columns
+print(f'Parititions: \n{dummy_y.map_partitions(len).compute()}')
+print(f'Partitions[0]: \n{dummy_y.partitions[0].compute()}')
+
+
+```
+
+

@@ -118,7 +118,7 @@ $$
 
 ::: column-margin
 
-In his 1979 book Information Retrieval, Cornelis Joost van Rijsbergen defined a function very similar to the F-score, recognizing the inadequacy of accuracy as a metric for information retrieval systems. He called the metric the Effectiveness function, and assigned it the letter E, because it measures the _effectiveness of retrieval with respect to a user who attaches β times as much importance to recall as precision_. It is not known why the F-score is assigned the letter F today.
+In his 1979 book Information Retrieval, Cornelis Joost van Rijsbergen defined a function very similar to the F-score, recognizing the inadequacy of accuracy as a metric for information retrieval systems. He called the metric the Effectiveness function, and assigned it the letter E, because it measures the _effectiveness of retrieval with respect to a user who attaches_ $\beta$ _times as much importance to recall as precision_. It is not known why the F-score is assigned the letter F today.
 :::
 
 
@@ -158,9 +158,13 @@ Assume a binary classifier using `yes` as positive class and `no` as negative cl
 
 ## Exercises
 
-1.  Define the following metrics for performance evaluation of classifiers: Accuracy, Precision, Recall, Sensitivity, Specificity, $F_1-score$, $F_\beta-score$
+### 1
 
-2.  Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
+Define the following metrics for performance evaluation of classifiers: Accuracy, Precision, Recall, Sensitivity, Specificity, $F_1-score$, $F_\beta-score$
+
+### 2
+
+Given a confusion matrix having the truth by columns and the predictions by rows. The matrix is used to evaluate a 9-class classifier.
 
 ```{=html}
 <!-- -->
@@ -179,7 +183,9 @@ Assume a binary classifier using `yes` as positive class and `no` as negative cl
 
 Explain row 9 of the confusion matrix. And what is the precision and recall of the classifier for the 9th class?
 
-3.  Assume a binary classifier using `yes` as positive class and `no` as negative class. Given the following truth and prediction data.
+### 3  
+
+Assume a binary classifier using `yes` as positive class and `no` as negative class. Given the following truth and prediction data.
 
 ```{=html}
 <!-- -->
@@ -192,6 +198,158 @@ Explain row 9 of the confusion matrix. And what is the precision and recall of t
 
 
 
+### 4
+
+A binary classifier needs to be employed in a medical screening and diagnosis application. You need to evaluate the classifier according to the given confusion matrix and its associated classification report. 
+
+Assume that 0 and 1 denote positive and negative classes, respectively. The class distribution in the training data is unevenly distributed. About 20% of cases are positive and the remaining ones are negative. 
+
+```{python}
+#| echo: false
+#| results: hold
+#| eval: true
+#| warning: false
+#| message: false
+#| 
+import dask
+import numpy as np
+import dask.array as da
+import dask.dataframe as dd
+# from dask import delayed
+
+dummy_y = dd.read_csv(
+  "data/dummy_y_file.csv", 
+  blocksize=25e6, 
+  header=None, 
+  names=['y_true','y_pred'], 
+  dtype={'y_true':np.int32,'y_pred':np.int32})
+
+labels = sorted(dummy_y['y_true'].unique().compute().tolist())
+print(f'Labels: {labels}')
+# inspect columns
+print(f"Class distribution (percentage) in the training set: \n{(dummy_y['y_true'].value_counts().compute())/(len(dummy_y))}")
+```
+
+The given confusion matrix is:
+
+```{python}
+#| echo: false
+#| results: hold
+#| eval: true
+#| warning: false
+#| message: false
+
+# confusion matrix
+from sklearn.metrics import confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+
+cmat = confusion_matrix(y_true=dummy_y['y_true'], y_pred=dummy_y['y_pred'], labels=labels)
+print(cmat)
+```
+
+```{r echo=F}
+df <- as.data.frame(py$cmat)
+names(df) <- c("y_pred = 0", "y_pred = 1")
+knitr::kable(as.data.frame(df, row.names = c("y_true = 0", "y_true = 1")))
+
+```
+
+```{python}
+#| echo: false
+#| results: hold
+#| eval: true
+#| warning: false
+#| message: false
+# visualize matrix
+# The viridis scale is good for colour blindness
+fig, ax = plt.subplots()
+img = ax.imshow(cmat, interpolation='nearest', cmap=plt.cm.get_cmap("viridis"))
+_ = ax.set_title('Confusion matrix')
+
+_ = fig.colorbar(img)
+ticks = np.arange(len(labels))
+_ = ax.set_xticks(ticks)
+_ = ax.set_yticks(ticks)
+_ = ax.set_ylabel('Truth')
+_ = ax.set_xlabel('Prediction')
+_ = ax.minorticks_on()
+_ = ax.xaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+_ = ax.grid(linestyle = '--', which='minor')
+_ = plt.show()
+```
+
+
+And its associated classification report is:
+
+```{python}
+#| echo: false
+#| results: hold
+#| eval: true
+#| warning: false
+#| message: false
+
+report = classification_report(
+  y_true=dummy_y['y_true'], 
+  y_pred=dummy_y['y_pred'], 
+  labels=labels, # set 0 as positive, 1 negative
+  target_names = ['positive(0)', 'negative(1)'])
+print(f'''Classification report: \n{report}''')
+```
+
+Assume that the classifier is required to have a high rate for both reliability and discovery of the positive class. Per the standard performance metrics, precision can measure the reliability of positive class, and recall can measure the discovery rate of positive class.
+
+
+Answer the questions:
+
+1. Which cell of confusion matrix should ideally be zero or minimized?
+
+
+2. As both precision and recall should be included in the performance evaluation, take $F_\beta-score$ as the performance metric.
+
+$$
+F_\beta\text{} = (1+\beta^2)\times\frac{precision\times recall}{\beta^2\times precision + recall} 
+$$
+
+Determine the value of $\beta$ and calculate $F_\beta-score$ for each of the following cases:
+
+
+- Both precision and recall for positive class should equally be weighed.
+
+- Discovering all the positive patients are more important than how reliable when the classifier has marked a case as being positive
+
+- The reliability of marking positive cases accounts more for the classifier performance than recalling all the true positive cases.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+You may use the link as reference: https://cisjw.sitehost.iu.edu/ai/key.html#questions
+
+
+
+The paper "Implications of False-Positives for Future Cancer Screenings"(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5992010/) studied 10 years of electronic medical records data and analyzed the association between prior receipt of a false-positive cancer screening test result and future participation in routine cancer screenings.
+
+The following conclusion was drawn from the study:
+
+"Prior experience with cancer screenings may influence a patient’s willingness to continue future screening. Patients who previously experienced a false-positive breast or prostate cancer screening were more likely to engage in future screening for all cancers, while women with a false-positive colorectal cancer FOBT screening were less likely to engage in future breast cancer screening. "
+
+Regarding the FP rate, the data from the paper showed that FP is common. "50–61% of women undergoing annual mammography and 10–12% of men undergoing regular PSA testing will experience a false-positive result."1–4
+
+-->
 
 ## References
 

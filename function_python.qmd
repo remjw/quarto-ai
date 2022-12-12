@@ -31,7 +31,6 @@ Module and class objects define functions in their namespaces. The function obje
 3.  (*5.1*) What is the function in computer programming?
     -   *A function is a group of statements that exist within a program for the purpose of performing a specific task.*
 
-
 ### Set-2
 
 1.  (*5.2*) `Defining a function` vs. `Calling a function`.
