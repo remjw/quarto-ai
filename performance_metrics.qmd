@@ -235,7 +235,6 @@ The given confusion matrix is:
 ```{python}
 #| echo: false
 #| results: hold
-#| eval: true
 #| warning: false
 #| message: false
 
@@ -245,10 +244,11 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator
 
 cmat = confusion_matrix(y_true=dummy_y['y_true'], y_pred=dummy_y['y_pred'], labels=labels)
-print(cmat)
+#print(cmat)
 ```
 
-```{r echo=F}
+```{r echo=F,eval=T}
+
 df <- as.data.frame(py$cmat)
 names(df) <- c("y_pred = 0", "y_pred = 1")
 knitr::kable(as.data.frame(df, row.names = c("y_true = 0", "y_true = 1")))
@@ -256,9 +256,7 @@ knitr::kable(as.data.frame(df, row.names = c("y_true = 0", "y_true = 1")))
 ```
 
 ```{python}
-#| echo: false
-#| results: hold
-#| eval: true
+#| include: false
 #| warning: false
 #| message: false
 # visualize matrix
@@ -286,7 +284,6 @@ And its associated classification report is:
 ```{python}
 #| echo: false
 #| results: hold
-#| eval: true
 #| warning: false
 #| message: false
 
@@ -295,7 +292,7 @@ report = classification_report(
   y_pred=dummy_y['y_pred'], 
   labels=labels, # set 0 as positive, 1 negative
   target_names = ['positive(0)', 'negative(1)'])
-print(f'''Classification report: \n{report}''')
+print(f'''\n{report}''')
 ```
 
 Assume that the classifier is required to have a high rate for both reliability and discovery of the positive class. Per the standard performance metrics, precision can measure the reliability of positive class, and recall can measure the discovery rate of positive class.
@@ -303,7 +300,7 @@ Assume that the classifier is required to have a high rate for both reliability 
 
 Answer the questions:
 
-1. Which cell of confusion matrix should ideally be zero or minimized?
+1. Which cell(s) of confusion matrix should ideally be zero or minimized?
 
 
 2. As both precision and recall should be included in the performance evaluation, take $F_\beta-score$ as the performance metric.
@@ -319,7 +316,7 @@ Determine the value of $\beta$ and calculate $F_\beta-score$ for each of the fol
 
 - Discovering all the positive patients are more important than how reliable when the classifier has marked a case as being positive
 
-- The reliability of marking positive cases accounts more for the classifier performance than recalling all the true positive cases.
+- The reliability of marking positive cases accounts more than recalling all the true positive cases.
 
 
 

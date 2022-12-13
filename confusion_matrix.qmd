@@ -234,10 +234,6 @@ Do the following:
 2.  Calculate TP, FP, TN and FN.
 3.  Calculate accuracy.
 
-
-
-
-
 ## Confusion Matrix in R
 
 ### Load libraries
@@ -253,7 +249,7 @@ library(tidyverse)
 
 Combine the truth and prediction variables as two columns in a 2D object *pair*, which is of type `tibble`.
 
-```{r pair}
+```{r}
 #| eval: true
 truth <- c(1,0,1,1,1,0,0,1,1,1)
 prediction <- c(1,1,1,0,0,1,0,1,1,0)
@@ -272,12 +268,11 @@ pair |>
 ::: panel-tabset
 #### TP (True Positive)
 
-The case count whose truth = 1 and prediction = 1
+The cases having truth = 1 and prediction = 1
 
 ```{r eval=TRUE}
 pair |>
-  filter(truth==1 & prediction==1) |>
-  summarise(TP=n()) 
+  filter(truth==1 & prediction==1)  
 ```
 
 #### FP (False Positive)
@@ -286,8 +281,7 @@ The number of cases whose truth = 0 and prediction = 1
 
 ```{r eval=TRUE}
 pair |>
-  filter(truth==0 & prediction==1) |>
-  summarise(FP=n()) 
+  filter(truth==0 & prediction==1) 
 ```
 
 #### TN (True Negative)
@@ -296,8 +290,7 @@ The number of cases whose truth = 0 and prediction = 0
 
 ```{r eval=TRUE}
 pair |>
-  filter(truth==0 & prediction==0) |>
-  summarise(TN=n()) 
+  filter(truth==0 & prediction==0) 
 ```
 
 #### FN (False Negative)
@@ -306,8 +299,7 @@ The number of cases whose truth = 1 and prediction = 0
 
 ```{r eval=TRUE}
 pair |> 
-  filter(truth==1 & prediction==0) |>
-  summarise(FN=n())
+  filter(truth==1 & prediction==0) 
 ```
 :::
 

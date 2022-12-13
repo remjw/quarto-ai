@@ -26,9 +26,6 @@ print(f"""y: dimension {y.shape}
 
 ```
 
-
-
-
 ## Writing and Reading Large Data Sets
 
 ```{python}
@@ -48,13 +45,16 @@ np.random.seed(10)
 rng = np.random.default_rng()
 # numpy array 
 y_true = rng.choice(len(labels), N_samples, replace=True, p=[0.2, 0.8]) 
+rng.shuffle(y_true)
 print(f'truth: {y_true}')
 y_true.tofile('data/dummy_y_true.csv', sep=',')
 
 # numpy array
-y_pred = rng.choice(len(labels), N_samples, replace=True, p=[0.4, 0.6]) 
+y_pred = rng.choice(len(labels), N_samples, replace=True, p=[0.3, 0.7]) 
+rng.shuffle(y_pred)
 print(f'prediction: {y_pred}')
 y_pred.tofile('data/dummy_y_pred.csv', sep=',')
+
 
 # merge two arrays
 dummy_y = np.array([y_true, y_pred])
@@ -75,11 +75,10 @@ np.savetxt('data/dummy_y.csv', dummy_y, delimiter=',')
 
 ```
 
-
-Load the data from dummy_y_file.csv:
+Load the data from dummy_y\_file.csv:
 
 ```{python}
-#| echo: false
+#| echo: true
 #| results: hold
 #| eval: false
 #| warning: false
@@ -90,26 +89,22 @@ dummy_y = np.genfromtxt("data/dummy_y_file.csv", delimiter=',', dtype=None)
 
 ```
 
-
-
-
-
-
 ## Working With Large Data Sets
 
 Dask is a flexible library for parallel computing in Python.
 
-[@noauthor_indexing_nodate] A single workstation would work to process data sets that are not too big and up to 1 TB. The Python package **dask** provides three data structures that mimic regular Python data structures but perform computation in a distributed way to make optimal use of multiple cores easily.
+[@noauthor_working_nodate] A single workstation would work to process data sets that are not too big and up to 1 TB. The Python package **dask** provides three data structures that mimic regular Python data structures but perform computation in a distributed way to make optimal use of multiple cores easily.
 
 ```{python}
 #| echo: true
 #| results: hold
-#| eval: false
+#| eval: true
 #| warning: false
 #| message: false
 
 ! pip install dask
 
+import numpy as np
 import dask
 import dask.array as da
 import dask.bag as db
@@ -129,5 +124,5 @@ print(f'Partitions[0]: \n{dummy_y.partitions[0].compute()}')
 
 
 ```
-
+## References
 
